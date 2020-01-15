@@ -235,7 +235,7 @@ namespace middler.Core {
             if (!allowedSchemes.Any(scheme => Wildcard.Match(uri.Scheme, scheme)))
                 return null;
 
-            if (!Wildcard.Match(uri.Host, rule.Hostname))
+            if (!Wildcard.Match($"{uri.Host}:{uri.Port}", rule.Hostname))
                 return null;
 
 

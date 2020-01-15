@@ -5,13 +5,17 @@ VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Common", "middler.Common\middler.Common.csproj", "{384D5000-5C0A-48C9-81BF-DBED0E06A2CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Core", "middler.Core\middler.Core.csproj", "{2B886E95-4137-47EB-8D56-F33957958E8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Core", "middler.Core\middler.Core.csproj", "{2B886E95-4137-47EB-8D56-F33957958E8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Common.Storage", "middler.Common.Storage\middler.Common.Storage.csproj", "{B37932D3-4C6E-404A-80D1-07EF31E845E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Common.Storage", "middler.Common.Storage\middler.Common.Storage.csproj", "{B37932D3-4C6E-404A-80D1-07EF31E845E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.WebHost", "middler.WebHost\middler.WebHost.csproj", "{A5D31203-7739-4A89-8ACD-F9EC28FA8B9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.WebHost", "middler.WebHost\middler.WebHost.csproj", "{A5D31203-7739-4A89-8ACD-F9EC28FA8B9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Common.Actions", "middler.Common.Actions\middler.Common.Actions.csproj", "{8C8EF293-169C-49F3-B753-F1155EDCF9AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Common.Actions", "middler.Common.Actions\middler.Common.Actions.csproj", "{8C8EF293-169C-49F3-B753-F1155EDCF9AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middlerApp.Server", "middlerApp.Server\middlerApp.Server.csproj", "{657907A6-29C6-4195-8CFC-ACD43A53DFBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{3E52E753-7CA6-4466-8C64-68718F4A0484}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{8C8EF293-169C-49F3-B753-F1155EDCF9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C8EF293-169C-49F3-B753-F1155EDCF9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C8EF293-169C-49F3-B753-F1155EDCF9AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

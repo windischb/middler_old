@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.ts"],"names":[],"mappings":";;;;;;;AAIA,aAJA,QAAA,iBACA,QAAA,qCACA,QAAA,kBAEA,QAAQ,IAAI","file":"index.js","sourceRoot":"..\\src","sourcesContent":["import \"./styles.scss\";\r\nimport \"./css/bootstrap/bootstrap.min.css\";\r\nimport \"./css/site.css\";\r\n\r\nconsole.log(\"hello world!\");"]}

@@ -9,6 +9,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.0" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.0.0" />
     <PackageReference Include="Reflectensions" Version="4.0.1" />
     <PackageReference Include="Reflectensions.Json" Version="4.0.0" />
     <PackageReference Include="Serilog" Version="2.9.0" />
@@ -32,8 +33,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\" />
+    <Content Include="webroot\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="src\assets\favicon.ico" />
+    <Content Include="src\css\bootstrap\bootstrap.min.css" />
+    <Content Include="src\css\bootstrap\bootstrap.min.css.map" />
+    <Content Include="src\css\open-iconic\FONT-LICENSE" />
+    <Content Include="src\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
+    <Content Include="src\css\open-iconic\font\fonts\open-iconic.eot" />
+    <Content Include="src\css\open-iconic\font\fonts\open-iconic.otf" />
+    <Content Include="src\css\open-iconic\font\fonts\open-iconic.svg" />
+    <Content Include="src\css\open-iconic\font\fonts\open-iconic.ttf" />
+    <Content Include="src\css\open-iconic\font\fonts\open-iconic.woff" />
+    <Content Include="src\css\open-iconic\ICON-LICENSE" />
+    <Content Include="src\css\open-iconic\README.md" />
+    <Content Include="src\css\site.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\" />
+  </ItemGroup>
 
 </Project>
