@@ -111,7 +111,7 @@ namespace middlerApp.Server
                 builder.UseEndpoints(endpoints =>
                 {
 
-                    endpoints.MapControllers();
+                    endpoints.MapControllersWithAttribute<AdminControllerAttribute>();
                     endpoints.MapHub<UIHub>("/signalr/ui");
                     endpoints.MapBlazorHub();
                     endpoints.MapFallbackToPage("/_Host");
@@ -128,13 +128,6 @@ namespace middlerApp.Server
                 {
                     map.On("http", "*", "/admin/{**path}", actions => actions.RedirectTo("https://127.0.0.1:4444/{path}"));
                     map.On("http", "*", "{**path}", actions => actions.RedirectTo("https://{HOST}/{path}"));
-
-                });
-
-                builder.UseEndpoints(endpoints =>
-                {
-
-                    endpoints.MapControllers();
 
                 });
 

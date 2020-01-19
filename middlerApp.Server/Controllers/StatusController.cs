@@ -11,6 +11,7 @@ using middlerApp.Server.Models;
 namespace middlerApp.Server.Controllers
 {
     [Route("api/status")]
+    [AdminController]
 
     public class StatusController: Controller
     {

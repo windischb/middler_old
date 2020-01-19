@@ -1,15 +1,21 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
 
+
+<div class="main-header spectrum spectrum--medium  spectrum--dark">
+    Hier ist der Header
+</div>
 <div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    <div class="main-nav">
+        <NavMenu />
     </div>
-
-    <div class="content px-4">
-        @Body
+    
+    <div class="main-content">
+        <div class="main-content-body">
+            @Body
+        </div>
     </div>
 </div>
+
+
+

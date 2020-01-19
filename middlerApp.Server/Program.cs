@@ -57,6 +57,7 @@ namespace middlerApp.Server
         {
             return Host.CreateDefaultBuilder(args)
                 .UseSerilog()
+                
                 .ConfigureAppConfiguration(BuildHostConfiguration)
 
                 .ConfigureWebHostDefaults(webBuilder => webBuilder

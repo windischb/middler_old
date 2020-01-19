@@ -1,0 +1,75 @@
+
+body {
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+app {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-header {
+    height: 56px;
+}
+
+.main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.main-nav {
+    width: 200px;
+    height: 100%;
+}
+
+.main-content {
+    flex-grow: 1;
+    height: 100%;
+    display: block;
+    background-color: white;
+    position: relative;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: auto;
+}
+
+.main-content-body {
+    margin: 4px;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 8px;
+    right: 8px;
+}
+
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+
+.spectrum-SideNav {
+    --spectrum-sidenav-item-border-radius: 0px
+}

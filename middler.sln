@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.WebHost", "middler.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Common.Actions", "middler.Common.Actions\middler.Common.Actions.csproj", "{8C8EF293-169C-49F3-B753-F1155EDCF9AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middlerApp.Server", "middlerApp.Server\middlerApp.Server.csproj", "{657907A6-29C6-4195-8CFC-ACD43A53DFBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middlerApp.Server", "middlerApp.Server\middlerApp.Server.csproj", "{657907A6-29C6-4195-8CFC-ACD43A53DFBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{3E52E753-7CA6-4466-8C64-68718F4A0484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Api", "middler.Api\middler.Api.csproj", "{F9CCFB7A-DC4C-40F8-986A-F78C785F7D2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{657907A6-29C6-4195-8CFC-ACD43A53DFBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E52E753-7CA6-4466-8C64-68718F4A0484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9CCFB7A-DC4C-40F8-986A-F78C785F7D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9CCFB7A-DC4C-40F8-986A-F78C785F7D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9CCFB7A-DC4C-40F8-986A-F78C785F7D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9CCFB7A-DC4C-40F8-986A-F78C785F7D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
