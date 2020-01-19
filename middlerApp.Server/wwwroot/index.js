@@ -238,6 +238,12 @@ module.exports = reloadCSS;
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/@spectrum-css/table/dist/index-vars.css":[function(require,module,exports) {
+
+        var reloadCSS = require('_css_loader');
+        module.hot.dispose(reloadCSS);
+        module.hot.accept(reloadCSS);
+      
 },{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"styles.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
@@ -357,6 +363,8 @@ require("../node_modules/@spectrum-css/button/dist/index-vars.css");
 
 require("../node_modules/@spectrum-css/sidenav/dist/index-vars.css");
 
+require("../node_modules/@spectrum-css/table/dist/index-vars.css");
+
 require("./styles.scss");
 
 // Include global variables first
@@ -366,15 +374,11 @@ require("./styles.scss");
 //import "../node_modules/@spectrum-css/vars/dist/spectrum-lightest.css";
 //import "../node_modules/@spectrum-css/vars/dist/spectrum-darkest.css";
 // Include index-vars.css for all components you need
-//import "./css/bootstrap/bootstrap.min.css";
-// import "./css/site.css";
-var loadIcons = require('loadicons'); //import * as loadIcons from "../node_modules/loadicons/index.js";
-
+var loadIcons = require('loadicons');
 
 loadIcons('assets/icons/spectrum-css-icons.svg');
 loadIcons('assets/icons/spectrum-icons.svg');
-console.log("hello world!");
-},{"../node_modules/@spectrum-css/vars/dist/spectrum-global.css":"../node_modules/@spectrum-css/vars/dist/spectrum-global.css","../node_modules/@spectrum-css/vars/dist/spectrum-medium.css":"../node_modules/@spectrum-css/vars/dist/spectrum-medium.css","../node_modules/@spectrum-css/vars/dist/spectrum-light.css":"../node_modules/@spectrum-css/vars/dist/spectrum-light.css","../node_modules/@spectrum-css/vars/dist/spectrum-dark.css":"../node_modules/@spectrum-css/vars/dist/spectrum-dark.css","../node_modules/@spectrum-css/page/dist/index-vars.css":"../node_modules/@spectrum-css/page/dist/index-vars.css","../node_modules/@spectrum-css/typography/dist/index-vars.css":"../node_modules/@spectrum-css/typography/dist/index-vars.css","../node_modules/@spectrum-css/icon/dist/index-vars.css":"../node_modules/@spectrum-css/icon/dist/index-vars.css","../node_modules/@spectrum-css/button/dist/index-vars.css":"../node_modules/@spectrum-css/button/dist/index-vars.css","../node_modules/@spectrum-css/sidenav/dist/index-vars.css":"../node_modules/@spectrum-css/sidenav/dist/index-vars.css","./styles.scss":"styles.scss","loadicons":"../node_modules/loadicons/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../node_modules/@spectrum-css/vars/dist/spectrum-global.css":"../node_modules/@spectrum-css/vars/dist/spectrum-global.css","../node_modules/@spectrum-css/vars/dist/spectrum-medium.css":"../node_modules/@spectrum-css/vars/dist/spectrum-medium.css","../node_modules/@spectrum-css/vars/dist/spectrum-light.css":"../node_modules/@spectrum-css/vars/dist/spectrum-light.css","../node_modules/@spectrum-css/vars/dist/spectrum-dark.css":"../node_modules/@spectrum-css/vars/dist/spectrum-dark.css","../node_modules/@spectrum-css/page/dist/index-vars.css":"../node_modules/@spectrum-css/page/dist/index-vars.css","../node_modules/@spectrum-css/typography/dist/index-vars.css":"../node_modules/@spectrum-css/typography/dist/index-vars.css","../node_modules/@spectrum-css/icon/dist/index-vars.css":"../node_modules/@spectrum-css/icon/dist/index-vars.css","../node_modules/@spectrum-css/button/dist/index-vars.css":"../node_modules/@spectrum-css/button/dist/index-vars.css","../node_modules/@spectrum-css/sidenav/dist/index-vars.css":"../node_modules/@spectrum-css/sidenav/dist/index-vars.css","../node_modules/@spectrum-css/table/dist/index-vars.css":"../node_modules/@spectrum-css/table/dist/index-vars.css","./styles.scss":"styles.scss","loadicons":"../node_modules/loadicons/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -402,7 +406,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52343" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51233" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

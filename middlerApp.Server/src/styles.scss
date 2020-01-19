@@ -48,12 +48,11 @@ app {
 }
 
 .main-content-body {
-    margin: 4px;
     position: absolute;
     top: 0px;
     bottom: 0px;
-    left: 8px;
-    right: 8px;
+    left: 0px;
+    right: 0px;
 }
 
 
@@ -69,7 +68,37 @@ app {
     z-index: 1000;
 }
 
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
 
 .spectrum-SideNav {
     --spectrum-sidenav-item-border-radius: 0px
+}
+
+
+.absolute-flex {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-table {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.flex-table-body {
+    flex-grow: 1;
+    overflow: auto;
 }

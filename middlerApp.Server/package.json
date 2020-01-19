@@ -37,6 +37,7 @@
     "@spectrum-css/icon": "^2.0.3",
     "@spectrum-css/page": "^2.0.3",
     "@spectrum-css/sidenav": "^2.0.0",
+    "@spectrum-css/table": "^2.0.0",
     "@spectrum-css/typography": "^2.0.3",
     "@spectrum-css/vars": "^2.0.3",
     "@types/node": "^13.1.7"

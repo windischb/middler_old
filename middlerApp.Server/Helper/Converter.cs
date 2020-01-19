@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using Reflectensions.JsonConverters;
 
-namespace middler.Api
+namespace middlerApp.Server.Helper
 {
     public static class Converter
     {

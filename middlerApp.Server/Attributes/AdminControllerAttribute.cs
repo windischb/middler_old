@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace middler.Api
+namespace middlerApp.Server.Attributes
 {
     public class AdminControllerAttribute: Attribute
     {

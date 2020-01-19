@@ -18,17 +18,12 @@ import "../node_modules/@spectrum-css/typography/dist/index-vars.css";
 import "../node_modules/@spectrum-css/icon/dist/index-vars.css";
 import "../node_modules/@spectrum-css/button/dist/index-vars.css";
 import "../node_modules/@spectrum-css/sidenav/dist/index-vars.css";
+import "../node_modules/@spectrum-css/table/dist/index-vars.css";
 
 
 import "./styles.scss";
-//import "./css/bootstrap/bootstrap.min.css";
-// import "./css/site.css";
 
 const loadIcons = require('loadicons');
 
-//import * as loadIcons from "../node_modules/loadicons/index.js";
-
 loadIcons('assets/icons/spectrum-css-icons.svg')
 loadIcons('assets/icons/spectrum-icons.svg');
-
-console.log("hello world!");
