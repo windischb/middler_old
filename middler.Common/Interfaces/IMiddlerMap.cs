@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Common.Interfaces
 {

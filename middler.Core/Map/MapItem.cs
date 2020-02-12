@@ -1,5 +1,5 @@
 ﻿using System;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Core.Map
 {

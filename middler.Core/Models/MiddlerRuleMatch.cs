@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using middler.Common.Enums;
-using middler.Common.Models;
+using middler.Common.SharedModels.Enums;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Core.Models
 {

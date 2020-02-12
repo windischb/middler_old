@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Text;
 using Microsoft.AspNetCore.Http;
-using middler.Common.ExtensionMethods;
 using middler.Common.Interfaces;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Common.Actions.UrlRewrite
 {
     public class UrlRewriteAction: MiddlerAction<UrlRewriteOptions>
     {
-        
+        internal static string DefaultActionType => "UrlRewrite";
+
         public override bool ContinueAfterwards => true;
 
         public override bool WriteStreamDirect => false;
+        public override string ActionType => DefaultActionType;
 
 
         public void ExecuteRequest(IMiddlerActionContext actionContext)

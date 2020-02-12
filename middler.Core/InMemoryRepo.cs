@@ -2,7 +2,7 @@
 using System.Linq;
 using middler.Common;
 using middler.Common.Interfaces;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Core
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Common.Storage
 {

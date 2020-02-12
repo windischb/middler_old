@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using middler.Common.Enums;
 using middler.Common.Interfaces;
-using middler.Common.Models;
+using middler.Common.SharedModels.Enums;
+using middler.Common.SharedModels.Interfaces;
 
 namespace middler.Core.Models {
     public class MiddlerOptions : IMiddlerOptions {

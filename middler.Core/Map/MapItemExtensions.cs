@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using middler.Common.Interfaces;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 using NamedServices.Microsoft.Extensions.DependencyInjection;
 
 namespace middler.Core.Map

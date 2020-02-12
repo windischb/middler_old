@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Core;
+using middler.Storage.LiteDB;
 using middlerApp.Server.Attributes;
 using middlerApp.Server.Controllers;
 using middlerApp.Server.Data;
@@ -51,6 +53,12 @@ namespace middlerApp.Server
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
 
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
+
 
 
 
@@ -69,6 +77,7 @@ namespace middlerApp.Server
                     .AddUrlRewriteAction()
 
             );
+            services.AddNamedMiddlerRepo("litedb", sp => new LiteDBRuleRepository("Filename=rules.db"));
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -80,10 +89,12 @@ namespace middlerApp.Server
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
+            app.UseResponseCompression();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBlazorDebugging();
             }
             else
             {
@@ -95,7 +106,7 @@ namespace middlerApp.Server
             {
                 options.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
                 options.MessageTemplate =
-                    "[{RequestMethod}] {RequestPath} | {User} |-> {StatusCode} in {Elapsed:0.0000} ms";
+                    "[{RequestMethod}] {RequestPath} | {User} | {StatusCode} in {Elapsed:0.0000} ms";
             });
 
 
@@ -105,18 +116,19 @@ namespace middlerApp.Server
 
             app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
             {
-                builder.UseRouting();
+               
 
                 builder.UseStaticFiles();
+                app.UseClientSideBlazorFiles<BlazorUI.Client.Program>();
 
+                builder.UseRouting();
 
                 builder.UseEndpoints(endpoints =>
                 {
 
                     endpoints.MapControllersWithAttribute<AdminControllerAttribute>();
                     endpoints.MapHub<UIHub>("/signalr/ui");
-                    endpoints.MapBlazorHub();
-                    endpoints.MapFallbackToPage("/_Host");
+                    endpoints.MapFallbackToClientSideBlazor<BlazorUI.Client.Program>("index.html");
 
                 });
             });
@@ -126,12 +138,7 @@ namespace middlerApp.Server
             {
                 builder.UseRouting();
 
-                builder.UseMiddler(map =>
-                {
-                    map.On("http", "*", "/admin/{**path}", actions => actions.RedirectTo("https://127.0.0.1:4444/{path}"));
-                    map.On("http", "*", "{**path}", actions => actions.RedirectTo("https://{HOST}/{path}"));
-
-                });
+                builder.UseMiddler(map => { map.AddNamedRepo("litedb"); });
 
             });
 

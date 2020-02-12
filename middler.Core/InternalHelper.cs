@@ -5,7 +5,8 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using middler.Common.Interfaces;
-using middler.Common.Models;
+using middler.Common.SharedModels.Interfaces;
+using middler.Common.SharedModels.Models;
 using Reflectensions.ExtensionMethods;
 
 namespace middler.Core

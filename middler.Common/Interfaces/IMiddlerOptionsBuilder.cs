@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using middler.Common.Enums;
+using middler.Common.SharedModels.Enums;
+using middler.Common.SharedModels.Interfaces;
 
 namespace middler.Common.Interfaces
 {

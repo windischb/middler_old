@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using middler.Common.Interfaces;
-using middler.Common.Models;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Core.Map {
     public class MiddlerMap : IMiddlerMap {

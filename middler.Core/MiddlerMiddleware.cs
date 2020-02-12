@@ -14,9 +14,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Routing.Constraints;
 using middler.Common;
-using middler.Common.Enums;
+
 using middler.Common.ExtensionMethods;
-using middler.Common.Models;
+using middler.Common.SharedModels.Enums;
+using middler.Common.SharedModels.Interfaces;
+using middler.Common.SharedModels.Models;
 using middler.Core.ExtensionMethods;
 using middler.Core.Models;
 using Reflectensions.ExtensionMethods;
