@@ -1,0 +1,34 @@
+<div class="absolute-flex">
+
+    <div>
+
+        <h3>Endpoint Rules</h3>
+        {{lastOrder}}
+    </div>
+
+
+
+    <div class="spectrum-Table spectrum-Table--quiet flex-table" role="grid">
+        <div class="spectrum-Table-head" style="display: flex" role="row">
+            <div class="spectrum-Table-headCell" style="flex: 1" role="columnheader">Name</div>
+            <div class="spectrum-Table-headCell" style="flex: 1" role="columnheader">Scheme</div>
+            <div class="spectrum-Table-headCell" style="flex: 1" role="columnheader">Host</div>
+            <div class="spectrum-Table-headCell" style="flex: 1" role="columnheader">Path</div>
+            <div class="spectrum-Table-headCell" style="flex: 1" role="columnheader">Actions</div>
+        </div>
+        <div class="spectrum-Table-body flex-table-body" role="rowgroup">
+            <div *ngFor="let rule of (rules$ | async)" class="spectrum-Table-row" style="display: flex" role="row" (dblclick)="editRule(rule.Id)">
+                <div class="spectrum-Table-cell" style="flex: 1" role="gridcell">{{rule.Name}}</div>
+                <div class="spectrum-Table-cell" style="flex: 1" role="gridcell">{{rule.Scheme}}</div>
+                <div class="spectrum-Table-cell" style="flex: 1" role="gridcell">{{rule.Hostname}}</div>
+                <div class="spectrum-Table-cell" style="flex: 1" role="gridcell">{{rule.Path}}</div>
+                <div class="spectrum-Table-cell" style="flex: 1" role="gridcell">{{FormatActions(rule.Actions)}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary">
+        Es sind insgemsamt {{(rules$ | async)?.length}} Endpoints
+    </div>
+
+</div>

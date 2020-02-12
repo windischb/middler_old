@@ -1,0 +1,117 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+app-root {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-header {
+  height: 56px;
+  background-color: #2f2f2f;
+  color: whitesmoke;
+}
+
+.main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.main-nav {
+  width: 16rem !important;
+  height: 100%;
+}
+
+.main-content {
+  flex-grow: 1;
+  height: 100%;
+  display: block;
+  background-color: white;
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: auto;
+}
+
+.main-content-body {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content-body > ng-component {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.padding-top-30 {
+  padding-top: 30px !important;
+}
+
+.absolute-flex {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-table {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.flex-table-body {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.flex-container {
+  display: flex;
+  -ms-flex-pack: justify;
+  height: 100%;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.flex-grow {
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.leftmenu {
+  width: 16rem !important;
+  height: 100%;
+  position: fixed;
+  border-radius: 0 !important;
+  border-top: 0px !important;
+  border-bottom: 0px;
+  border-left: 0px;
+  z-index: 100;
+}

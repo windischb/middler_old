@@ -1,0 +1,74 @@
+<ng-container *ngIf="(rule$ | async)">
+
+    <form [formGroup]="form" class="spectrum-Form spectrum-Form--labelsAbove" style="padding:10px;flex-grow: 1;">
+
+        <h2>{{form.value.Name}}</h2>
+        <spectrum-tabs mode="hide">
+
+            <spectrum-tab title="Basic" [content]="basic"></spectrum-tab>
+
+            <spectrum-tab title="Actions"></spectrum-tab>
+            <spectrum-tab title="Permissions"></spectrum-tab>
+        </spectrum-tabs>
+
+
+        <ng-template #basic>
+
+            <div class="spectrum-Form-item">
+                <label class="spectrum-Form-itemLabel" for="name">
+                    Name
+                </label>
+                <div class="spectrum-Form-itemField">
+                    <input class="spectrum-Textfield" formControlName="Name" aria-invalid="false" type="text"
+                        placeholder="" id="name" style="width: 100%;">
+                </div>
+            </div>
+
+            <div style="display: flex!important;">
+                <div sytle="width:100px;">
+                    <div class="spectrum-Form-item">
+                        <label class="spectrum-Form-itemLabel" for="name">
+                            Scheme
+                        </label>
+                        <div class="spectrum-Form-itemField">
+                            <input class="spectrum-Textfield" formControlName="Scheme" aria-invalid="false" type="text"
+                                placeholder="" id="name" style="width: 100px">
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-left: 10px; width:250px;">
+                    <div class="spectrum-Form-item">
+                        <label class="spectrum-Form-itemLabel" for="name">
+                            Hostname
+                        </label>
+                        <div class="spectrum-Form-itemField">
+                            <input class="spectrum-Textfield" formControlName="Hostname" aria-invalid="false"
+                                type="text" placeholder="" id="name" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+                <div style="flex-grow: 1;margin-left: 10px;">
+                    <div class="spectrum-Form-item">
+                        <label class="spectrum-Form-itemLabel" for="name">
+                            Path
+                        </label>
+                        <div class="spectrum-Form-itemField">
+                            <input class="spectrum-Textfield" formControlName="Path" aria-invalid="false" type="text"
+                                placeholder="" id="name" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </ng-template>
+
+        <pre>
+    {{rule$ | async | json}}
+</pre>
+
+    </form>
+</ng-container>

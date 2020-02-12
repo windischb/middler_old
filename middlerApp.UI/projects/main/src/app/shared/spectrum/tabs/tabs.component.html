@@ -1,0 +1,24 @@
+
+
+<div style="overflow: hidden; display: flex;flex-direction: column; position: relative;flex-grow:1;">
+
+
+
+    <div class="spectrum-Tabs spectrum-Tabs--horizontal">
+        <div [id]="tab.Id" class="spectrum-Tabs-item" [class.is-selected]="tab.active" tabindex="0" *ngFor="let tab of tabs$ | async; let i = index" (click)="Activate(i)">
+            <label class="spectrum-Tabs-itemLabel">{{tab.title}}</label>
+        </div>
+
+        <div class="spectrum-Tabs-selectionIndicator indicator" [style.width.px]="IndicatorWidth" [style.left.px]="IndicatorLeft"></div>
+    </div>
+
+    <div style="flex-grow:1; overflow: hidden; display: flex;flex-direction: column">
+        <div [ngClass]="tab.class" *ngFor="let tab of tabsContents$ | async; let i = index" [class.show]="(tab.active$ | async)" style="display:none; height: 100%; position: relative; flex-grow:1; overflow: hidden;flex-direction: column">
+          <ng-container [ngTemplateOutlet]="tab.content || tab.innerContent"></ng-container>
+        </div>
+      </div>
+
+
+
+</div>
+
