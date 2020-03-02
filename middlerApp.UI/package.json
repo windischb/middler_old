@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.0.0",
+    "@angular/cdk": "^9.0.1",
     "@angular/common": "~9.0.0",
     "@angular/compiler": "~9.0.0",
     "@angular/core": "~9.0.0",
@@ -19,6 +20,10 @@
     "@angular/platform-browser": "~9.0.0",
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/router": "~9.0.0",
+    "@fui/core": "file:../../../Data/NpmRepo/fui-core-0.0.1.tgz",
+    "@fui/dropdown": "file:../../../Data/NpmRepo/fui-dropdown-0.2.0.tgz",
+    "@fui/tabs": "file:../../../data/NpmRepo/fui-tabs-0.0.2.tgz",
+    "fast-json-patch": "^3.0.0-1",
     "fomantic-ui": "^2.8.3",
     "jquery": "^3.4.1",
     "linqts": "^1.12.6",

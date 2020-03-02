@@ -1,0 +1,130 @@
+// THE STYLE IS FROM CODEPEN
+
+
+
+.collection {
+    padding-left: 0;
+    list-style-type: none;
+    margin: .5rem 0 1rem 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .collection-item {
+    background-color: #fff;
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid #e0e0e0;
+    list-style-type: none;
+  }
+
+  .my-menu {
+    background-color: #fff;
+    border: 1px solid rosybrown;
+    padding: 20px;
+  }
+
+
+  .user-menu {
+    background-color: #fafafa;
+    padding: 4pt;
+    font-size: 10pt;
+    z-index: 1000;
+    box-shadow: 0 0 12pt rgba(0, 0, 0, 0.25);
+    border-radius: 4pt;
+    padding: 0.5em 0 0.5em 0;
+    animation: fadeIn 0.1s ease-out;
+    opacity:1.0;
+    display:block;
+  }
+
+
+  .user-menu hr {
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .user-menu div {
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    color: #333;
+    padding: 0.5em 2em 0.5em 0.75em;
+    max-width: 18em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-menu div:hover {
+    background-color: #333;
+    color: #fff;
+  }
+
+
+  .user-menu div::before {
+    content: '';
+    float: left;
+    margin-right: 0.75em;
+    width: 0.5em;
+    height: 1em;
+    display: inline-block;
+  }
+
+
+
+  /* Animatinons */
+  @-webkit-keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1.0;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1.0;
+    }
+  }
+
+  @-webkit-keyframes fadeOut {
+    from {
+      opacity: 1.0;
+    }
+    to {
+      opacity: 0.0;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1.0;
+    }
+    to {
+      opacity: 0.0;
+    }
+  }
+
+  .is-fadingIn {
+    -webkit-animation: fadeIn 0.1s ease-out;
+    animation: fadeIn 0.1s ease-out;
+    opacity: 1.0;
+    display: block;
+  }
+
+  .is-fadingOut {
+    -webkit-animation: fadeOut 0.1s ease-out;
+    animation: fadeOut 0.1s ease-out;
+    opacity: 0.0;
+    display: block;
+  }
+
+

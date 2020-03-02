@@ -1,74 +1,112 @@
-<ng-container *ngIf="(rule$ | async)">
+<ng-container *ngIf="(rule$ | async); let rule">
 
-    <form [formGroup]="form" class="spectrum-Form spectrum-Form--labelsAbove" style="padding:10px;flex-grow: 1;">
 
-        <h2>{{form.value.Name}}</h2>
-        <spectrum-tabs mode="hide">
 
-            <spectrum-tab title="Basic" [content]="basic"></spectrum-tab>
 
-            <spectrum-tab title="Actions"></spectrum-tab>
-            <spectrum-tab title="Permissions"></spectrum-tab>
-        </spectrum-tabs>
+    <form [formGroup]="form" class="ui form" style="padding:10px; flex-grow: 1; display: flex; flex-direction: column;">
 
+        <div>
+            <h2 *ngIf="!form.value.Name">New Rule</h2>
+            <h2 *ngIf="form.value.Name">{{form.value.Name}}</h2>
+        </div>
+
+        <fui-tabs>
+
+            <fui-tab title="Basic" icon="file alternate outline" [content]="basic"></fui-tab>
+            <fui-tab title="Actions" icon="list ol" [content]="actions"> Actions </fui-tab>
+            <fui-tab title="Permissions" icon="shield alternate"> Permissions </fui-tab>
+            <fui-tab title="Debug" icon="bug">
+                <pre>{{form.value | json}}</pre>
+            </fui-tab>
+        </fui-tabs>
 
         <ng-template #basic>
 
-            <div class="spectrum-Form-item">
-                <label class="spectrum-Form-itemLabel" for="name">
-                    Name
-                </label>
-                <div class="spectrum-Form-itemField">
-                    <input class="spectrum-Textfield" formControlName="Name" aria-invalid="false" type="text"
-                        placeholder="" id="name" style="width: 100%;">
+            <div class="ui grid" style="padding-top: 5px;">
+                <div class="row">
+                    <div class="eleven wide column">
+
+                        <div class="required field">
+                            <label>Name</label>
+                            <input type="text" formControlName="Name">
+                        </div>
+
+
+                        <div class="required field">
+                            <label>Path</label>
+                            <input type="text" formControlName="Path">
+                        </div>
+
+
+
+
+                        <!-- <query-parameters class="ui container" formControlName="QueryParameters" style="min-height: 200px;"></query-parameters> -->
+                    </div>
+
+                    <div class="five wide column" style="padding-top:23px;padding-right: 1.1rem;">
+                        <div class="ui styled fluid accordion" (fuiOnInit)="initRestrictionsAccordion($event)">
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Restrictions
+                            </div>
+                            <div class="content">
+                                <div class="field">
+                                    <label>Scheme</label>
+                                    <fui-dropdown placeholder="Scheme" formControlName="Scheme" class="selection"
+                                        multiple>
+                                        <fui-dropdown-item value="http">http</fui-dropdown-item>
+                                        <fui-dropdown-item value="https">https</fui-dropdown-item>
+                                    </fui-dropdown>
+                                </div>
+                                <div class="field">
+                                    <label>Hostname</label>
+                                    <input type="text" formControlName="Hostname">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-
-            <div style="display: flex!important;">
-                <div sytle="width:100px;">
-                    <div class="spectrum-Form-item">
-                        <label class="spectrum-Form-itemLabel" for="name">
-                            Scheme
-                        </label>
-                        <div class="spectrum-Form-itemField">
-                            <input class="spectrum-Textfield" formControlName="Scheme" aria-invalid="false" type="text"
-                                placeholder="" id="name" style="width: 100px">
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-left: 10px; width:250px;">
-                    <div class="spectrum-Form-item">
-                        <label class="spectrum-Form-itemLabel" for="name">
-                            Hostname
-                        </label>
-                        <div class="spectrum-Form-itemField">
-                            <input class="spectrum-Textfield" formControlName="Hostname" aria-invalid="false"
-                                type="text" placeholder="" id="name" style="width: 100%;">
-                        </div>
-                    </div>
-                </div>
-                <div style="flex-grow: 1;margin-left: 10px;">
-                    <div class="spectrum-Form-item">
-                        <label class="spectrum-Form-itemLabel" for="name">
-                            Path
-                        </label>
-                        <div class="spectrum-Form-itemField">
-                            <input class="spectrum-Textfield" formControlName="Path" aria-invalid="false" type="text"
-                                placeholder="" id="name" style="width: 100%;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
 
 
         </ng-template>
 
-        <pre>
-    {{rule$ | async | json}}
-</pre>
+
+        <ng-template #actions>
+
+            <!-- <div class="ui button" (click)="AddAction()">Add Action</div> -->
+
+
+            <middler-rule-actions formControlName="Actions"></middler-rule-actions>
+            <!-- <div class="ui relaxed selection divided list" style="padding:5px" formArrayName="Actions">
+                <div class="item" *ngFor="let action of ActionsArr.controls; let i = index" [formGroupName]="i"
+                    (contextmenu)="open($event, action.value); $event.preventDefault();">
+                    <i class="large github middle aligned icon"></i>
+                    <div class="content">
+                        <a class="header">{{ActionsArr.controls[i].value.ActionType}}</a>
+                        <div class="description">Updated 10 mins ago</div>
+                    </div>
+                </div>
+
+            </div> -->
+
+
+
+
+            <!-- <pre>{{form.value.Actions | json}}</pre> -->
+        </ng-template>
 
     </form>
+    <div class="ui bottom attached menu" style="overflow: hidden; width: 100%;">
+        <div class="item">
+            <div class="ui primary button" (click)="save()">Save</div>
+        </div>
+        <a class="item">Browse</a>
+        <a class="item">Submit</a>
+        <div class="right menu">
+            <a class="item">Sign Up</a>
+            <a class="item">Help</a>
+        </div>
+    </div>
 </ng-container>

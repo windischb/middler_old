@@ -44,7 +44,6 @@ export class MessageService {
     }
 
     public Invoke<T>(methodName: string, ...args: any[]) {
-        console.log(methodName, args)
         return from(this.initializer.isInitialized.then(() => from(this.harrrConnection.invoke<T>(methodName, ...args)))).pipe(mergeAll());
         //return from(this.harrrConnection.invoke<T>(methodName, args));
     }

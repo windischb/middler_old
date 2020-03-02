@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RulesComponent } from './rules.component';
 import { RuleDetailsComponent } from './rule-details.component';
+import { RulesListComponent } from './rules-list.component';
 
 
 const routes: Routes = [
-    { path: '', component: RulesComponent },
+    { path: '', component: RulesListComponent },
     { path: ':id', component: RuleDetailsComponent}
 ];
 

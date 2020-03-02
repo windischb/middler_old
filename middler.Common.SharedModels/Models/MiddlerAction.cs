@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using middler.Common.SharedModels.Interfaces;
 
 namespace middler.Common.SharedModels.Models {
     public class MiddlerAction: IMiddlerAction {
 
+        public Guid Id { get; set; } = Guid.NewGuid();
         public virtual bool ContinueAfterwards { get; set; } = false;
         public virtual bool WriteStreamDirect { get; set; } = false;
 

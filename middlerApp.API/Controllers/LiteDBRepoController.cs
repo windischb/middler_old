@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
 using middler.Common.Actions.UrlRedirect;
+using middler.Common.Actions.UrlRewrite;
 using middler.Common.Storage;
 using middler.Core.ExtensionMethods;
 using middler.Hosting.Models;
 using middlerApp.API.Attributes;
 using NamedServices.Microsoft.Extensions.DependencyInjection;
+using Reflectensions.ExtensionMethods;
 
 namespace middlerApp.API.Controllers
 {
@@ -36,9 +39,12 @@ namespace middlerApp.API.Controllers
                 r.Hostname = "*";
                 r.Path = "{**Path}";
                 var act = new UrlRedirectAction();
-                act.Parameters.RedirectTo = "https://{HOST}/{path}";
+                act.Parameters.RedirectTo = "https://google.at";
+
+               
                 
                 r.Actions.Add(act.ToBasicMiddlerAction());
+
                 r.Enabled = true;
 
                 Repo.AddAsync(r);
@@ -58,8 +64,8 @@ namespace middlerApp.API.Controllers
 
         [HttpPost]
         public async Task<ActionResult> Add([FromBody]CreateMiddlerRuleDto rule) {
-            var dbModel = _mapper.Map<MiddlerRuleDbModel>(rule);
 
+            var dbModel = _mapper.Map<MiddlerRuleDbModel>(rule);
 
             await Repo.AddAsync(dbModel);
             return Ok();
@@ -95,6 +101,30 @@ namespace middlerApp.API.Controllers
             await Repo.UpdateAsync(ruleInDb);
             var updated = await Repo.GetByIdAsync(id);
             return Ok(_mapper.Map<MiddlerRuleDto>(updated));
+        }
+
+        [HttpPatch("order")]
+        public async Task<ActionResult<MiddlerRuleDto>> OrderRules([FromBody]JsonPatchDocument<UpdateMiddlerRuleDto> patchDocument) {
+
+
+            foreach (var patchDocumentOperation in patchDocument.Operations)
+            {
+
+                var id = patchDocumentOperation.path.TrimStart('/');
+                switch (patchDocumentOperation.OperationType)
+                {
+                    case OperationType.Replace:
+                    {
+                        var rule = await Repo.GetByIdAsync(id.ToGuid());
+                        rule.Order = patchDocumentOperation.value.To<decimal>();
+                        await Repo.UpdateAsync(rule);
+                        break;
+                    }
+                }
+                
+            }
+
+            return Ok();
         }
         
     }

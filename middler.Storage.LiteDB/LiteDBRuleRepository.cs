@@ -14,14 +14,16 @@ using middler.Common.Storage;
 
 namespace middler.Storage.LiteDB
 {
-    public class LiteDBRuleRepository: IMiddlerRepository, IMiddlerStorage {
+    public class LiteDBRuleRepository : IMiddlerRepository, IMiddlerStorage
+    {
         public IObservable<MiddlerStorageEvent> EventObservable => this.EventSubject.AsObservable();
 
         private Subject<MiddlerStorageEvent> EventSubject { get; } = new Subject<MiddlerStorageEvent>();
         private LiteRepository Repository { get; }
-        
 
-        public LiteDBRuleRepository(string connectionString) {
+
+        public LiteDBRuleRepository(string connectionString)
+        {
             Repository = new LiteRepository(connectionString);
             Repository.Database.Mapper.Entity<MiddlerRuleDbModel>().Id(emp => emp.Id, true);
         }
@@ -29,12 +31,12 @@ namespace middler.Storage.LiteDB
 
         public List<MiddlerRule> ProvideRules()
         {
-            return Repository.Fetch<MiddlerRuleDbModel>().Where(r => r.Enabled).Select(r => r.ToMiddlerRule()).ToList();
+            return Repository.Fetch<MiddlerRuleDbModel>().Where(r => r.Enabled).OrderBy(r => r.Order).Select(r => r.ToMiddlerRule()).ToList();
         }
 
         public async Task<List<MiddlerRuleDbModel>> GetAllAsync()
         {
-            return Repository.Fetch<MiddlerRuleDbModel>();
+            return Repository.Fetch<MiddlerRuleDbModel>().OrderBy(r => r.Order).ToList();
         }
 
         public async Task<MiddlerRuleDbModel> GetByIdAsync(Guid id)
@@ -44,6 +46,11 @@ namespace middler.Storage.LiteDB
 
         public async Task AddAsync(MiddlerRuleDbModel employee)
         {
+
+            if (String.IsNullOrWhiteSpace(employee.Name))
+            {
+                employee.Name = await GenerateRuleName();
+            }
             Repository.Insert(employee);
             EventSubject.OnNext(new MiddlerStorageEvent(MiddlerStorageAction.Insert, employee));
         }
@@ -51,7 +58,7 @@ namespace middler.Storage.LiteDB
         public async Task RemoveAsync(Guid id)
         {
             Repository.Delete<MiddlerRuleDbModel>(emp => emp.Id == id);
-            EventSubject.OnNext(new MiddlerStorageEvent(MiddlerStorageAction.Insert, new MiddlerRuleDbModel(){Id = id}));
+            EventSubject.OnNext(new MiddlerStorageEvent(MiddlerStorageAction.Insert, new MiddlerRuleDbModel() { Id = id }));
         }
 
         public async Task UpdateAsync(MiddlerRuleDbModel employee)
@@ -60,6 +67,49 @@ namespace middler.Storage.LiteDB
             EventSubject.OnNext(new MiddlerStorageEvent(MiddlerStorageAction.Update, employee));
         }
 
-        
+
+        private async Task<string> GenerateRuleName()
+        {
+
+            int SplitNewRuleNames(string name)
+            {
+                if (name.Contains("("))
+                {
+                    var arr = name.Split("(");
+                    var strnumb = arr[1].Trim(')');
+                    return int.Parse(strnumb);
+                }
+
+                return 0;
+            }
+
+
+            var rules = await GetAllAsync();
+            var newRules = rules
+                .Where(r => r.Name?.StartsWith("New Rule") == true)
+                .Select(r => SplitNewRuleNames(r.Name))
+                .OrderBy(n => n)
+                .Distinct();
+
+            int curr = 0;
+            foreach (var newRule in newRules)
+            {
+                if (newRule == curr)
+                {
+                    curr++;
+                }
+                else
+                {
+                    break;
+                }
+
+            }
+
+            return curr == 0 ? "New Rule" : $"New Rule({curr})";
+
+
+        }
+
+
     }
 }

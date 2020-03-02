@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/cdk/overlay-prebuilt.css";
 
 body {
   margin: 0px;
@@ -33,7 +34,6 @@ app-root {
 }
 
 .main-nav {
-  width: 16rem !important;
   height: 100%;
 }
 
@@ -105,13 +105,10 @@ app-root {
   flex-grow: 1;
 }
 
-.leftmenu {
-  width: 16rem !important;
-  height: 100%;
-  position: fixed;
-  border-radius: 0 !important;
-  border-top: 0px !important;
-  border-bottom: 0px;
-  border-left: 0px;
-  z-index: 100;
-}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+    &.dark-backdrop {
+      background: #000;
+      opacity: 0.65 !important;
+    }
+  }

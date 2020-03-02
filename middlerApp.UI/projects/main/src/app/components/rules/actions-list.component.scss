@@ -1,0 +1,39 @@
+.item.selected {
+  background-color: #e0e1e2 !important;
+}
+
+.details {
+  height: 0px;
+  overflow: hidden;
+}
+.details.show {
+  height: auto;
+}
+
+.cdk-drag-placeholder {
+  background: #e0e1e2 !important;
+  //border: dotted 2px #999;
+  height: auto;
+  margin: 2px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.item.action-list-item {
+  margin: 10px !important;
+  border-radius: 0px !important;
+  box-shadow: 0px 0px 3px 1px #cecece;
+}
+
+.dragHandle {
+  cursor: grab;
+}
+.action-list-item :hover .dragHandle {
+  background-color: #e0e1e2;
+}
+
+.cdk-drop-list-dragging .dragHandle {
+  cursor: inherit;
+}
+.cdk-drop-list-dragging .action-list-item :hover .dragHandle {
+  background-color: inherit;
+}
