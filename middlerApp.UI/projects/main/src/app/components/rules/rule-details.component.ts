@@ -9,6 +9,7 @@ import { OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { compare } from 'fast-json-patch';
 import { ActionsListComponent } from './actions-list.component';
+import { UIService } from '../main/ui.service';
 
 declare var $: any;
 
@@ -58,7 +59,16 @@ export class RuleDetailsComponent implements OnInit {
 
             if (this.Id === 'create') {
                 rule.Order = this.calculateNewOrder();
+                this.uiService.HeaderTitle = "Create Rule";
+                this.uiService.HeaderIcon = "add"
+            } else {
+                this.uiService.HeaderTitle = "Edit Rule";
+                this.uiService.HeaderSubTitle = rule.Name
+                this.uiService.HeaderIcon = "edit"
             }
+
+
+
 
             this.form.patchValue(rule)
         })
@@ -75,7 +85,8 @@ export class RuleDetailsComponent implements OnInit {
 
     @ViewChild(ActionsListComponent) actionsList: ActionsListComponent;
 
-    constructor(private route: ActivatedRoute, private rulesService: RulesService, private fb: FormBuilder, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
+    constructor( private uiService: UIService, private route: ActivatedRoute, private rulesService: RulesService, private fb: FormBuilder, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
+
 
         this.form = this.fb.group({
             Id: [null],
@@ -162,6 +173,7 @@ export class RuleDetailsComponent implements OnInit {
 
     ngOnInit() {
 
+        this.form.get('Name').valueChanges.subscribe(name => this.uiService.HeaderSubTitle = name)
 
     }
 

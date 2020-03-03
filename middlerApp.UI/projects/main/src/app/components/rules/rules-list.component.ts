@@ -10,6 +10,7 @@ import { RulesService } from './rules.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MiddlerAction } from './models/middler-action';
 import { ActionHelper } from './actions/action-helper';
+import { UIService } from '../main/ui.service';
 
 
 declare var $: any;
@@ -49,8 +50,9 @@ export class RulesListComponent implements ControlValueAccessor {
 
     selected: Array<string> = []
 
-    constructor(public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef, private rulesService: RulesService, private router: Router, private route: ActivatedRoute) {
+    constructor(private ui: UIService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef, private rulesService: RulesService, private router: Router, private route: ActivatedRoute) {
 
+        ui.HeaderTitle = "Endpoint Rules"
     }
 
 
@@ -65,7 +67,7 @@ export class RulesListComponent implements ControlValueAccessor {
 
 
     clickAction($event: MouseEvent, action: ListItem) {
-
+        console.log($event, action)
         if ($event.ctrlKey) {
             action.Selected = !action.Selected
         } else {

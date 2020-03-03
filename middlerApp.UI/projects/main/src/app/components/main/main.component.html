@@ -1,0 +1,28 @@
+<ng-container *ngIf="uiContext$ | async; let ui">
+    <div class="main-header">
+
+
+        <div class="title-container ui container">
+            <div class="title-icon" *ngIf="ui.HeaderIcon">
+                <i class="big icon" [ngClass]="ui.HeaderIcon"></i>
+            </div>
+            <div>
+                <div class="title" [class.title-only]="!ui.HeaderSubTitle">
+                    {{ui.HeaderTitle}}
+                </div>
+                <div class="subtitle" *ngIf="ui.HeaderSubTitle">
+                    {{ui.HeaderSubTitle}}
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="main-content ui container">
+        <ng-content></ng-content>
+    </div>
+    <div class="main-footer">
+
+    </div>
+</ng-container>

@@ -1,13 +1,9 @@
 
-<div style="box-shadow: 0px 1px 5px 0px #afafaf;text-align: center;font-size: 2em;height: 50px;font-weight: bold;display: flex;flex-direction: column;justify-content: center;">
-        Endpoint Rules
-</div>
-
 
 <div class="outer" style="flex-grow: 1;" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
-    <div class="" style="padding:5px 5px 50px 5px" cdkDropList (cdkDropListDropped)="drop($event)"
+    <div class="" style="padding-bottom: 50px" cdkDropList (cdkDropListDropped)="drop($event)"
         #rulesList="cdkDropList" >
-        <div class="list-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected"
+        <div class="rule-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected"
             (click)="clickAction($event, rule)" (contextmenu)="contextAction($event, rule)" cdkDrag cdkDragLockAxis="y">
             <div style="display: flex;">
                 <div class="dragHandle" style="padding: 10px 0px 0px 5px;" (dblclick)="editRule(rule.Item.Id)" cdkDragHandle>
