@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Po
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Shared", "middler.Action.Scripting.Shared\middler.Action.Scripting.Shared.csproj", "{D86203C1-293E-45D6-850B-F38C42623029}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Action.Scripting.Typescript", "middler.Action.Typescript\middler.Action.Scripting.Typescript.csproj", "{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Action.Scripting.Typescript", "middler.Action.Scripting.Typescript\middler.Action.Scripting.Typescript.csproj", "{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

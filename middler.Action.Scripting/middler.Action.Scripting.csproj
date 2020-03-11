@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\middler.Action.Scripting.Javascript\middler.Action.Scripting.Javascript.csproj" />
     <ProjectReference Include="..\middler.Action.Scripting.Powershell\middler.Action.Scripting.Powershell.csproj" />
-    <ProjectReference Include="..\middler.Action.Typescript\middler.Action.Scripting.Typescript.csproj" />
+    <ProjectReference Include="..\middler.Action.Scripting.Typescript\middler.Action.Scripting.Typescript.csproj" />
     <ProjectReference Include="..\middler.Common\middler.Common.csproj" />
   </ItemGroup>
 
