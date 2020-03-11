@@ -3,19 +3,29 @@
 
 
         <div class="title-container ui container">
-            <div class="title-icon" *ngIf="ui.HeaderIcon">
-                <i class="big icon" [ngClass]="ui.HeaderIcon"></i>
+            <div class="title-icon" *ngIf="ui.Header.Icon">
+                <i class="big icon" [ngClass]="ui.Header.Icon"></i>
             </div>
-            <div>
-                <div class="title" [class.title-only]="!ui.HeaderSubTitle">
-                    {{ui.HeaderTitle}}
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <div class="title" [class.title-only]="!ui.Header.SubTitle">
+                    {{ui.Header.Title}}
                 </div>
-                <div class="subtitle" *ngIf="ui.HeaderSubTitle">
-                    {{ui.HeaderSubTitle}}
+                <div class="subtitle" *ngIf="ui.Header.SubTitle">
+                    {{ui.Header.SubTitle}}
                 </div>
             </div>
 
+            <div class="whitespace">
+
+            </div>
+
+            <div *ngIf="ui.Header.Outlet">
+                <ng-container [ngTemplateOutlet]="ui.Header.Outlet"></ng-container>
+            </div>
+
         </div>
+
+
 
 
     </div>
@@ -23,6 +33,30 @@
         <ng-content></ng-content>
     </div>
     <div class="main-footer">
+        <div class="ui container">
+            <ng-container *ngIf="ui.FooterTemplate">
+                <ng-container [ngTemplateOutlet]="ui.FooterTemplate"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="!ui.FooterTemplate">
+                <div class="ui primary button" *ngIf="ui.Footer.Button1?.Visible" (click)="ui.Footer.Button1?.OnClick()"
+                    [class.disabled]="ui.Footer.Button1.Disabled" [class.loading]="ui.Footer.Button1.Loading">
+                    {{ui.Footer.Button1?.Text}}</div>
+                <div class="ui grey button" *ngIf="ui.Footer.Button2?.Visible" (click)="ui.Footer.Button2?.OnClick()"
+                    [class.disabled]="ui.Footer.Button2.Disabled" [class.loading]="ui.Footer.Button2.Loading">
+                    {{ui.Footer.Button2?.Text}}</div>
+
+                <div class="whitespace">
+
+                </div>
+
+                <div *ngIf="ui.Footer.Outlet">
+                    <ng-container [ngTemplateOutlet]="ui.Footer.Outlet"></ng-container>
+                </div>
+
+            </ng-container>
+
+
+        </div>
 
     </div>
 </ng-container>

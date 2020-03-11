@@ -5,23 +5,46 @@
 }
 
 .rule-item {
-  margin: 10px 0px!important;
+  margin: 10px 0px !important;
   border-radius: 0px !important;
   box-shadow: 0px 0px 3px 1px #cecece;
   background-color: white;
-  transform: scale(1);
+}
+
+.rule-item.disabled {
+    opacity: 0.6;
+    box-shadow: none;
+    background-color: #e2e2e2;
+}
+
+
+.rule-item .dragHandle {
+  border-right: 1px solid white;
+}
+
+.rule-item:hover .dragHandle {
+  background-color: #525e76;
+  color: white;
+}
+
+.rule-item.selected .dragHandle {
+  background-color: #292f3b;
+  color: white;
 }
 
 .rule-item:hover {
-  background-color: #ececec;
-  transform: scale(1.01);
-  transition: 0.1s;
+  background-color: rgb(178, 183, 194);
+  //color: white;
 }
 
-.rule-item.selected {
-    background-color: #e0e1e2;
-  }
+.new-rule.ui.button {
+  margin: 0px;
+}
 
+.options {
+  background-color: gray;
+  height: 50px;
+}
 
 .list-item i {
   background-color: inherit !important;
@@ -31,11 +54,10 @@
   background-color: inherit;
 }
 
-
 .dragHandle {
   cursor: grab;
 }
-.list-item :hover .dragHandle {
+.list-item:hover .dragHandle {
   background-color: #e0e1e2;
 }
 

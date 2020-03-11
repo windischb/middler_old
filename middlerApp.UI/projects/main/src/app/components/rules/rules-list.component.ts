@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, TemplateRef, ElementRef, ViewContainerRef, ChangeDetectorRef, ComponentRef, Injector, HostListener } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, TemplateRef, ElementRef, ViewContainerRef, ChangeDetectorRef, ComponentRef, Injector, HostListener, AfterViewInit } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription, fromEvent } from 'rxjs';
 import { filter, take, map, tap } from 'rxjs/operators';
@@ -26,9 +26,10 @@ declare var $: any;
     }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RulesListComponent implements ControlValueAccessor {
+export class RulesListComponent implements ControlValueAccessor, AfterViewInit {
 
     @ViewChild('contextMenu') contextMenu: TemplateRef<any>;
+    @ViewChild('addRuleTemplate') addRuleTemplate: TemplateRef<any>;
     overlayRef: OverlayRef | null;
     sub: Subscription;
 
@@ -36,7 +37,19 @@ export class RulesListComponent implements ControlValueAccessor {
     private rulesSubject$ = new BehaviorSubject<Array<ListItem<MiddlerRuleDto>>>(this._rules);
     @Input()
     set rules(value: Array<MiddlerRuleDto>) {
-        this._rules = (value || []).map(act => new ListItem(act));
+
+        this._rules =  (value || []).map(v => {
+            const f = this._rules.find(r => r.Item.Id === v.Id)
+            if(f) {
+                f.Item = v
+                return f;
+            } else {
+                return new ListItem(v)
+            }
+
+        })
+
+        //this._rules = (value || []).map(act => new ListItem(act));
         this.rulesSubject$.next(this._rules)
     }
     get rules() {
@@ -52,7 +65,12 @@ export class RulesListComponent implements ControlValueAccessor {
 
     constructor(private ui: UIService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef, private rulesService: RulesService, private router: Router, private route: ActivatedRoute) {
 
-        ui.HeaderTitle = "Endpoint Rules"
+        ui.Set(value => {
+            value.Header.Title = "Endpoint Rules"
+            value.Header.Icon = 'stream';
+        })
+
+
     }
 
 
@@ -65,12 +83,17 @@ export class RulesListComponent implements ControlValueAccessor {
         ).subscribe()
     }
 
+    ngAfterViewInit() {
+        this.ui.Set(ui => ui.Footer.Outlet = this.addRuleTemplate)
+    }
+
 
     clickAction($event: MouseEvent, action: ListItem) {
-        console.log($event, action)
+        //console.log($event, action)
         if ($event.ctrlKey) {
             action.Selected = !action.Selected
         } else {
+
             this._rules = this._rules.map(act => {
                 if (act == action) {
                     act.Selected = true;
@@ -120,7 +143,10 @@ export class RulesListComponent implements ControlValueAccessor {
         })
     }
 
+    SetRuleEnabled(rule: MiddlerRuleDto, value: boolean) {
 
+        this.rulesService.SetRuleEnabled(rule, value)
+    }
 
     GetActionByIndex(index: number) {
         return this.rules[index];
@@ -147,6 +173,16 @@ export class RulesListComponent implements ControlValueAccessor {
         $($event.nativeElement).dropdown({})
     }
 
+    AddRuleOnEnd() {
+
+        let rule = new MiddlerRuleDto();
+
+        rule.Enabled = false;
+        rule.Order = this.rulesService.GetNextLastOrder();
+        this.rulesService.Add(rule).subscribe();
+
+    }
+
     open($event: MouseEvent) {
 
         if ($event.ctrlKey) {
@@ -154,6 +190,7 @@ export class RulesListComponent implements ControlValueAccessor {
         }
 
         $event.preventDefault();
+        
 
         const clickTarget = event.target as HTMLElement;
         const isList = clickTarget.classList.contains('cdk-drop-list');
@@ -256,6 +293,7 @@ export class RulesListComponent implements ControlValueAccessor {
 
     calculateRuleOrder(index: number) {
 
+
         if (this.rules.length === 0) {
             return 10;
         }
@@ -314,12 +352,14 @@ export class RulesListComponent implements ControlValueAccessor {
 
             moveItemInArray(this.rulesService.MiddlerRules, event.previousIndex, event.currentIndex);
             this.rulesService.MiddlerRules = [...this.rulesService.MiddlerRules]
+            this.SaveOrder();
         } else {
 
             //console.log(this.calculateRuleOrder(event.currentIndex))
             let rule = new MiddlerRuleDto();
 
             rule.Enabled = false;
+            console.log(event)
             rule.Order = this.calculateRuleOrder(event.currentIndex)
             this.rulesService.Add(rule).subscribe();
             // this.rulesService.Add(rule);

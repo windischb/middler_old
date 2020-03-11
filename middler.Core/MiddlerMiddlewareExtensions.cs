@@ -14,7 +14,7 @@ namespace middler.Core {
 
             services.AddSingleton<IMiddlerMap, MiddlerMap>();
             services.AddSingleton<IMiddlerOptions>(sp => options);
-
+            services.AddTransient<InternalHelper>(sp => new InternalHelper(sp));
             services.AddTransient<IMiddlerMapActionsBuilder, MiddlerMapActionsBuilder>();
 
             return services;

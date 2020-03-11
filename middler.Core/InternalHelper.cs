@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using middler.Common.Interfaces;
 using middler.Common.SharedModels.Interfaces;
 using middler.Common.SharedModels.Models;
+using Reflectensions;
 using Reflectensions.ExtensionMethods;
 
 namespace middler.Core
@@ -34,7 +35,7 @@ namespace middler.Core
             if (hasParameters)
             {
                 var genT = actType.BaseType.GenericTypeArguments[0];
-                var actParams = JsonSerializer.Deserialize(JsonSerializer.Serialize(middlerAction.Parameters), genT);
+                var actParams = Converter.Json.ToObject(Converter.Json.ToJson(middlerAction.Parameters), genT);
                 concreteAction.SetPropertyValue("Parameters", actParams);
             }
 

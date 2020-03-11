@@ -6,9 +6,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
+using middler.Action.Scripting;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Common.Storage;
+using middler.Core;
 using middler.Core.ExtensionMethods;
 using middler.Hosting.Models;
 using middlerApp.API.Attributes;
@@ -23,32 +25,34 @@ namespace middlerApp.API.Controllers
     public class LiteDBRepoController: Controller
     {
         private readonly IMapper _mapper;
+        private readonly InternalHelper _internalHelper;
         private IMiddlerStorage Repo { get; }
 
-        public LiteDBRepoController(IServiceProvider serviceProvider, IMapper mapper)
+        public LiteDBRepoController(IServiceProvider serviceProvider, IMapper mapper, InternalHelper internalHelper)
         {
             _mapper = mapper;
+            _internalHelper = internalHelper;
             Repo = serviceProvider.GetNamedService<IMiddlerStorage>("litedb");
 
-            var r = new MiddlerRuleDbModel();
-            r.Name = "Redirect All HTTP to HTTPS";
+            //var r = new MiddlerRuleDbModel();
+            //r.Name = "Redirect All HTTP to HTTPS";
 
-            var found = Repo.GetAllAsync().GetAwaiter().GetResult().FirstOrDefault(rule => rule.Name == r.Name);
-            if (found == null) {
-                r.Scheme = new List<string> { "http" };
-                r.Hostname = "*";
-                r.Path = "{**Path}";
-                var act = new UrlRedirectAction();
-                act.Parameters.RedirectTo = "https://google.at";
+            //var found = Repo.GetAllAsync().GetAwaiter().GetResult().FirstOrDefault(rule => rule.Name == r.Name);
+            //if (found == null) {
+            //    r.Scheme = new List<string> { "http" };
+            //    r.Hostname = "*";
+            //    r.Path = "{**Path}";
+            //    var act = new UrlRedirectAction();
+            //    act.Parameters.RedirectTo = "https://google.at";
 
                
                 
-                r.Actions.Add(act.ToBasicMiddlerAction());
+            //    r.Actions.Add(act.ToBasicMiddlerAction());
 
-                r.Enabled = true;
+            //    r.Enabled = true;
 
-                Repo.AddAsync(r);
-            }
+            //    Repo.AddAsync(r);
+            //}
 
         }
 
@@ -66,7 +70,7 @@ namespace middlerApp.API.Controllers
         public async Task<ActionResult> Add([FromBody]CreateMiddlerRuleDto rule) {
 
             var dbModel = _mapper.Map<MiddlerRuleDbModel>(rule);
-
+            UpdateActions(dbModel);
             await Repo.AddAsync(dbModel);
             return Ok();
         }
@@ -83,6 +87,7 @@ namespace middlerApp.API.Controllers
         {
             var dbModel = _mapper.Map<MiddlerRuleDbModel>(rule);
             dbModel.Id = id;
+            UpdateActions(dbModel);
             await Repo.UpdateAsync(dbModel);
             var updated = await Repo.GetByIdAsync(id);
             return Ok(_mapper.Map<MiddlerRuleDto>(updated));
@@ -97,7 +102,7 @@ namespace middlerApp.API.Controllers
             patchDocument.ApplyTo(updDto, ModelState);
 
             _mapper.Map(updDto, ruleInDb);
-
+            UpdateActions(ruleInDb);
             await Repo.UpdateAsync(ruleInDb);
             var updated = await Repo.GetByIdAsync(id);
             return Ok(_mapper.Map<MiddlerRuleDto>(updated));
@@ -126,6 +131,19 @@ namespace middlerApp.API.Controllers
 
             return Ok();
         }
-        
+
+
+        private void UpdateActions(MiddlerRuleDbModel ruleDbModel)
+        {
+            foreach (var middlerAction in ruleDbModel.Actions)
+            {
+                if (middlerAction.ActionType == "Script")
+                {
+                    var scriptAction = _internalHelper.BuildConcreteActionInstance(middlerAction) as ScriptingAction;
+                    scriptAction?.CompileScriptIfNeeded();
+                    middlerAction.Parameters["CompiledCode"] = scriptAction.Parameters.CompiledCode;
+                }
+            }
+        }
     }
 }

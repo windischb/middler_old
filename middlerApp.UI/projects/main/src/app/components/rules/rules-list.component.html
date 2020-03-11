@@ -1,20 +1,19 @@
 
 
 <div class="outer" style="flex-grow: 1;" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
-    <div class="" style="padding-bottom: 50px" cdkDropList (cdkDropListDropped)="drop($event)"
-        #rulesList="cdkDropList" >
-        <div class="rule-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected"
-            (click)="clickAction($event, rule)" (contextmenu)="contextAction($event, rule)" cdkDrag cdkDragLockAxis="y">
+    <div class="" style="padding-bottom: 50px" cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
+        <div class="rule-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected" [class.disabled]="!rule.Item.Enabled"
+            (click)="clickAction($event, rule)" (contextmenu)="contextAction($event, rule)" cdkDrag cdkDragLockAxis="y" (dblclick)="editRule(rule.Item.Id)">
             <div style="display: flex;">
-                <div class="dragHandle" style="padding: 10px 0px 0px 5px;" (dblclick)="editRule(rule.Item.Id)" cdkDragHandle>
+                <div class="dragHandle" style="padding: 10px 0px 0px 5px;" cdkDragHandle>
                     <i class="ellipsis vertical icon"></i>
                 </div>
                 <div style="padding: 5px; min-width: 50%; max-width: 50%;">
-                    <div>
+                    <div (dblclick)="$event.preventDefault(); $event.stopPropagation()">
                         <h2>{{rule.Item.Name}}</h2>
                     </div>
                     <div>{{rule.Item.Path}}</div>
-                    <!-- <div>{{rule.Item.Order}}</div> -->
+                    <div>{{rule.Item.Order}}</div>
                 </div>
                 <div style="padding: 5px; min-width: 200px; max-width: 200px; ">
                     <div>{{rule.Item.Scheme}}</div>
@@ -25,7 +24,7 @@
                         {{rule.Item.Actions?.length || 0}} Actions
                     </div>
                     <span *ngFor="let action of rule.Item.Actions" [attr.data-tooltip]="action.ActionType">
-                        <i class="icon"  [ngClass]="GetIcon(action)" ></i>
+                        <i class="icon" [ngClass]="GetIcon(action)"></i>
                     </span>
 
                 </div>
@@ -38,22 +37,15 @@
 </div>
 
 
-<div style="overflow: hidden;width: 100%;display: flex;height: 50px;align-items: center;box-shadow: 0px -1px 5px 0px #afafaf;">
-    <div class="item" style="padding: 0px 10px;">
-        <div class="ui primary button" (click)="SaveOrder()">Save Order</div>
+<ng-template #addRuleTemplate>
+    <div cdkDropList [cdkDropListConnectedTo]="[rulesList, nullList]"
+        style="height: 100%;align-items: center;display: flex;background-color: #e0e1e2;">
+        <div class="new-rule ui labeled icon fluid primary button" style="width: 200px; " cdkDrag (click)="AddRuleOnEnd()">
+            <i class="plus icon"></i>
+            Add New Rule
+        </div>
     </div>
-    <div class="item" style="flex-grow: 1;">
-
-    </div>
-
-
-    <div class="item" cdkDropList [cdkDropListConnectedTo]="[rulesList, nullList]"
-        style="padding: 0px 10px; width: 180px; height: 100%;align-items: center;display: flex;background-color: #e0e1e2;">
-        <div class="new-rule ui fluid button" cdkDrag>Add New Rule</div>
-    </div>
-
-</div>
-
+</ng-template>
 
 
 
@@ -65,6 +57,12 @@
         <div class="item" *ngIf="context.Single" style="font-weight: bold;">
             {{context.Single?.Name}}
         </div>
+        <a class="item" *ngIf="context.Single?.Enabled === false" (click)="SetRuleEnabled(context.Single, true)">
+            <i class="toggle on icon"></i> Enable
+        </a>
+        <a class="item" *ngIf="context.Single?.Enabled" (click)="SetRuleEnabled(context.Single, false)">
+            <i class="toggle off icon"></i> Disable
+        </a>
         <a class="item" *ngIf="context.Single" (click)="editRule(context.Single.Id)">
             <i class="edit icon"></i> Edit
         </a>

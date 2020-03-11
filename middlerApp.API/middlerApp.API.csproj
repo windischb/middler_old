@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\middler.Action.Scripting\middler.Action.Scripting.csproj" />
     <ProjectReference Include="..\middler.Common.Actions\middler.Common.Actions.csproj" />
     <ProjectReference Include="..\middler.Common\middler.Common.csproj" />
     <ProjectReference Include="..\middler.Core\middler.Core.csproj" />

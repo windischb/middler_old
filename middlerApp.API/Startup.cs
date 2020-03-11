@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using middler.Action.Scripting;
+using middler.Action.Scripting.Powershell;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Core;
@@ -44,6 +46,7 @@ namespace middlerApp.API
             {
                 options.SerializerSettings.Formatting = Formatting.Indented;
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                options.SerializerSettings.Converters.Add(new PSObjectJsonConverter());
             });
 
             services.AddResponseCompression();
@@ -64,6 +67,7 @@ namespace middlerApp.API
                 options
                     .AddUrlRedirectAction()
                     .AddUrlRewriteAction()
+                    .AddScriptingAction()
 
             );
             services.AddNamedMiddlerRepo("litedb", sp => new LiteDBRuleRepository("Filename=rules.db"));

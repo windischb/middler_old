@@ -12,9 +12,13 @@ import { ActionsListComponent } from './actions-list.component';
 import { ActionListItemComponent } from './action-list-item.component';
 import { ActionEditModalComponent } from './modal/action-edit-modal.component';
 import { ActionEditModalService } from './modal/action-modal.service';
-import { UrlRedirectModalComponent } from './actions/url-redirect-modal.component';
+import { UrlRedirectModalComponent } from './actions/url-redirect/url-redirect-modal.component';
 import { RulesListComponent } from './rules-list.component';
-
+import { FuiCheckboxModule } from "@fui/checkbox";
+import { UrlRewriteModalComponent } from './actions/url-rewrite/url-rewrite-modal.component';
+import { PRoxyModalComponent } from './actions/proxy/proxy-modal.component';
+import { ScriptModalComponent } from './actions/script/script-modal.component';
+import { FuiEditorModule } from "@fui/editor";
 @NgModule({
     imports: [
         CommonModule,
@@ -25,7 +29,9 @@ import { RulesListComponent } from './rules-list.component';
         FuiTabsModule,
         FuiDropdownModule,
         OverlayModule,
-        DragDropModule
+        DragDropModule,
+        FuiCheckboxModule,
+        FuiEditorModule
     ],
     declarations: [
         ...RoutingComponents,
@@ -33,11 +39,17 @@ import { RulesListComponent } from './rules-list.component';
         ActionListItemComponent,
         ActionEditModalComponent,
         UrlRedirectModalComponent,
-        RulesListComponent
+        UrlRewriteModalComponent,
+        RulesListComponent,
+        PRoxyModalComponent,
+        ScriptModalComponent
     ],
     entryComponents: [
         ActionEditModalComponent,
-        UrlRedirectModalComponent
+        UrlRedirectModalComponent,
+        UrlRewriteModalComponent,
+        PRoxyModalComponent,
+        ScriptModalComponent
     ],
     providers: [
         ActionEditModalService

@@ -11,6 +11,12 @@ export class ActionHelper {
             case 'UrlRewrite': {
                 return 'pencil alternate'
             }
+            case 'Proxy': {
+                return 'random'
+            }
+            case 'Script': {
+                return 'code'
+            }
         }
 
         return 'hat wizard'

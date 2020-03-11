@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppInitializeService } from './app-initialize.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ export class AppComponent {
 
   title = 'main';
 
-  constructor() {
+  constructor(private appInitializeService: AppInitializeService) {
 
 
   }

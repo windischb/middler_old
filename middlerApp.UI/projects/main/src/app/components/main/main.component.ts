@@ -15,4 +15,8 @@ export class MainComponent {
     constructor(private uiService: UIService) {
 
     }
+
+    initSidebar($event) {
+        console.log($event)
+    }
 }

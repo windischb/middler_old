@@ -1,15 +1,15 @@
-import { Component, OnInit, ElementRef, ViewChild, TemplateRef, ViewContainerRef, ChangeDetectionStrategy, ContentChild } from "@angular/core";
+import { Component, OnInit, ElementRef, ViewChild, ViewContainerRef, ChangeDetectionStrategy, TemplateRef, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute } from '@angular/router';
 import { RulesService } from './rules.service';
 import { MiddlerRuleDto } from './models/middler-rule-dto';
-import { Observable, Subject, Subscription, fromEvent, of, combineLatest } from 'rxjs';
-import { map, mergeAll, tap, filter, take } from 'rxjs/operators';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { OverlayRef, Overlay } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { combineLatest } from 'rxjs';
+import { map, mergeAll, tap } from 'rxjs/operators';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Overlay } from '@angular/cdk/overlay';
 import { compare } from 'fast-json-patch';
 import { ActionsListComponent } from './actions-list.component';
 import { UIService } from '../main/ui.service';
+
 
 declare var $: any;
 
@@ -21,73 +21,57 @@ declare var $: any;
 export class RuleDetailsComponent implements OnInit {
 
 
-    //public ruleSubject$: Subject<MiddlerRuleDto> = new Subject<MiddlerRuleDto>();
-    private originalRule: MiddlerRuleDto;
+
 
     private Id: string;
     private Index: string;
     private Order: number;
 
-    public rule$ = combineLatest(this.route.queryParamMap, this.route.paramMap).pipe(
-        map(([queryParamMap, paramMap]) => {
+    public rule$ = combineLatest(this.route.queryParamMap, this.route.paramMap, this.route.fragment).pipe(
+        map(([queryParamMap, paramMap, fragment]) => {
             this.Id = paramMap.get('id')
-
             this.Index = queryParamMap.get('index')
-
-            if (this.Id === 'create') {
-
-                if (!this.rulesService.MiddlerRules || this.rulesService.MiddlerRules.length == 0) {
-
-                    return this.rulesService.GetAll()
-                        .pipe(
-                            map(res => of(new MiddlerRuleDto())),
-                            mergeAll()
-                        )
-
-                }
-                return of(new MiddlerRuleDto())
-            }
-
-
             return this.rulesService.Get(this.Id);
         }),
         mergeAll(),
         tap(rule => {
-            if (!this.originalRule) {
-                this.originalRule = JSON.parse(JSON.stringify(rule));
+            if(!this.BaseRule) {
+                this.BaseRule = rule;
             }
 
-            if (this.Id === 'create') {
-                rule.Order = this.calculateNewOrder();
-                this.uiService.HeaderTitle = "Create Rule";
-                this.uiService.HeaderIcon = "add"
-            } else {
-                this.uiService.HeaderTitle = "Edit Rule";
-                this.uiService.HeaderSubTitle = rule.Name
-                this.uiService.HeaderIcon = "edit"
-            }
+            this.uiService.Set(ui => {
+                ui.Header.Title = "Endpoint Rule";
+                ui.Header.SubTitle = rule.Name
+                ui.Header.Icon = "edit"
 
-
-
+                ui.Footer.Button1.Visible = true;
+                ui.Footer.Button2.Visible = true;
+            })
 
             this.form.patchValue(rule)
         })
     )
 
-
-
     form: FormGroup;
 
-    // get ActionsArr() {
-    //     let acts = this.form.get("Actions") as FormArray;
-    //     return acts;
-    // }
-
     @ViewChild(ActionsListComponent) actionsList: ActionsListComponent;
+    @ViewChildren('addActionTemplate') addActionTemplate: QueryList<TemplateRef<any>>;
 
-    constructor( private uiService: UIService, private route: ActivatedRoute, private rulesService: RulesService, private fb: FormBuilder, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
+    constructor(private uiService: UIService, private route: ActivatedRoute, private rulesService: RulesService, private fb: FormBuilder, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
+
+        this.uiService.Set(ui => {
 
 
+            ui.Footer.Button1.OnClick = () => {
+                this.save()
+            }
+
+            ui.Footer.Button2.Text = "Reset";
+            ui.Footer.Button2.OnClick = () => {
+                this.form.reset(this.BaseRule);
+            }
+
+        })
         this.form = this.fb.group({
             Id: [null],
             Name: [null, Validators.required],
@@ -102,79 +86,24 @@ export class RuleDetailsComponent implements OnInit {
         })
 
 
-    }
-
-    private calculateNewOrder() {
-
-        if (!this.Index) {
-            this.Index = 'last'
-        }
-        if (!this.rulesService.MiddlerRules) {
-            return 10
-        } else {
-
-            const rulesLength = this.rulesService.MiddlerRules.length;
-
-            if (this.Index === 'first') {
-
-                let f = this.rulesService.MiddlerRules[0].Order
-                return f / 2
-
-            } else if (this.Index === 'last') {
-
-                let f = this.rulesService.MiddlerRules[rulesLength - 1].Order
-                return f + 10
-
-            } else {
-
-                const ind = parseInt(this.Index)
-
-                if(ind <= (rulesLength -1)) {
-                    let before = this.rulesService.MiddlerRules[ind -1].Order;
-                    let after = this.rulesService.MiddlerRules[ind].Order;
-                    return ((after - before) / 2) + before
-                } else {
-                    let f = this.rulesService.MiddlerRules[rulesLength - 1].Order
-                    return f + 10
-                }
-
-            }
-
-        }
 
     }
-
-    // private buildActionFormgroup() {
-    //     const fg = this.fb.group({
-    //         ActionType: [null, Validators.required],
-    //         ContinueAfterwards: [false],
-    //         WriteStreamDirect: [false],
-    //         Parameters: this.fb.group({})
-    //     })
-    //     fg.get('ActionType').valueChanges.subscribe(val => {
-    //         switch (val) {
-    //             case 'UrlRedirect': {
-    //                 fg.setControl('Parameters', this.buildUrlRedirectFormGroup())
-    //             }
-    //         }
-    //     })
-
-    //     return fg;
-    // }
-
-    // private buildUrlRedirectFormGroup() {
-    //     const fg = this.fb.group({
-    //         RedirectTo: [null, Validators.required],
-    //         Permanent: [false],
-    //         PreserveMethod: [false]
-    //     })
-    //     return fg;
-    // }
 
     ngOnInit() {
 
-        this.form.get('Name').valueChanges.subscribe(name => this.uiService.HeaderSubTitle = name)
+        this.form.get('Name').valueChanges.subscribe(name => this.uiService.Set(ui => ui.Header.SubTitle = name))
+        this.form.valueChanges.subscribe(v => {
 
+            if (!this.form.valid) {
+                this.uiService.Set(ui => {
+                    ui.Footer.Button1.Disabled = true;
+                    ui.Footer.Button1.Text = "Form not valid!"
+                })
+            } else {
+                this.SetButtonStatus(v);
+            }
+
+        })
     }
 
     onrightClick($event: MouseEvent) {
@@ -186,16 +115,43 @@ export class RuleDetailsComponent implements OnInit {
         $($event.nativeElement).accordion()
     }
 
+
     GeneratePatchDocument() {
-        var patchDocument = compare(this.originalRule, this.form.value);
+        var patchDocument = compare(this.BaseRule, this.form.value);
         return patchDocument;
     }
 
+
+
     save() {
-        if (this.Id === 'create') {
-            this.rulesService.Add(this.form.value).subscribe()
+        this.rulesService.UpdatePartial(this.Id, this.GeneratePatchDocument()).pipe(
+            tap(() => {
+                this.BaseRule = this.form.value
+                this.SetButtonStatus(this.BaseRule)
+            })
+        ).subscribe()
+    }
+
+    private SetButtonStatus(rule: MiddlerRuleDto) {
+        var patch = compare(this.BaseRule, rule)
+
+        if (patch.length > 0) {
+            this.uiService.Set(ui => {
+                ui.Footer.Button1.Disabled = false;
+                ui.Footer.Button1.Text = "Save Changes"
+
+
+                ui.Footer.Button2.Disabled = false;
+
+            })
+
         } else {
-            this.rulesService.UpdatePartial(this.Id, this.GeneratePatchDocument())
+            this.uiService.Set(ui => {
+                ui.Footer.Button1.Disabled = true;
+                ui.Footer.Button1.Text = "No Changes"
+
+                ui.Footer.Button2.Disabled = true;
+            })
         }
     }
 
@@ -205,4 +161,12 @@ export class RuleDetailsComponent implements OnInit {
 
     }
 
+    private _baseRule: MiddlerRuleDto;
+    private set BaseRule(rule: MiddlerRuleDto) {
+        this._baseRule = JSON.parse(JSON.stringify(rule));
+
+    }
+    private get BaseRule() {
+        return this._baseRule;
+    }
 }

@@ -1,19 +1,25 @@
-import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, TemplateRef, ElementRef, ViewContainerRef, ChangeDetectorRef, ComponentRef, Injector } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, TemplateRef, ElementRef, ViewContainerRef, ChangeDetectorRef, ComponentRef, Injector, QueryList, ViewChildren } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { MiddlerAction } from './models/middler-action';
 import { BehaviorSubject, Observable, Subscription, fromEvent } from 'rxjs';
 import { map, filter, take } from 'rxjs/operators';
 import { OverlayRef, Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { TemplatePortal, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
-import { UrlRedirectParameters, UrlRedirectAction } from './actions/url-redirect-action';
+import { UrlRedirectParameters, UrlRedirectAction } from './actions/url-redirect/url-redirect-action';
 import { ActionEditModalService } from './modal/action-modal.service';
 import { ActionEditModalOverlayRef } from './modal/action-edit-modal-overlay-ref';
 import { ActionEditModalComponent } from './modal/action-edit-modal.component';
 import { ACTION_DIALOG_DATA } from './modal/action-edit-modal.tokens';
-import { UrlRedirectModalComponent } from './actions/url-redirect-modal.component';
+import { UrlRedirectModalComponent } from './actions/url-redirect/url-redirect-modal.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
-import { UrlRewriteAction } from './actions/url-rewrite-action';
+import { UrlRewriteAction, UrlRewriteParameters } from './actions/url-rewrite/url-rewrite-action';
 import { ActionHelper } from './actions/action-helper';
+import { UIService } from '../main/ui.service';
+import { UrlRewriteModalComponent } from './actions/url-rewrite/url-rewrite-modal.component';
+import { ProxyParameters, ProxyAction } from './actions/proxy/proxy-action';
+import { PRoxyModalComponent } from './actions/proxy/proxy-modal.component';
+import { ScriptAction, ScriptParameters } from './actions/script/script-action';
+import { ScriptModalComponent } from './actions/script/script-modal.component';
 
 declare var $: any;
 
@@ -31,6 +37,7 @@ declare var $: any;
 export class ActionsListComponent implements ControlValueAccessor {
 
     @ViewChild('userMenu') userMenu: TemplateRef<any>;
+    @ViewChildren('addActionTemplate') addActionTemplate: QueryList<TemplateRef<any>>;
     overlayRef: OverlayRef | null;
     sub: Subscription;
 
@@ -52,13 +59,15 @@ export class ActionsListComponent implements ControlValueAccessor {
 
     newActions: Array<MiddlerAction> = [
         new UrlRedirectAction(),
-        new UrlRewriteAction()
+        new UrlRewriteAction(),
+        new ProxyAction(),
+        new ScriptAction()
     ]
 
 
     selected: Array<string> = []
 
-    constructor(private modal: ActionEditModalService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef) {
+    constructor(private uiService: UIService, private modal: ActionEditModalService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef) {
 
         console.log("Constructor")
         // this.formGroup = this.fb.group({
@@ -82,6 +91,43 @@ export class ActionsListComponent implements ControlValueAccessor {
         //         console.log(element)
         //     });
         // })
+    }
+
+    ngAfterViewInit() {
+
+        this.addActionTemplate.changes.subscribe(templs => {
+            if(this.addActionTemplate.toArray().length > 0) {
+                this.uiService.Set(ui => ui.Footer.Outlet = this.addActionTemplate.toArray()[0])
+            } else {
+                this.uiService.Set(ui => ui.Footer.Outlet = null)
+            }
+
+        })
+        this.uiService.Set(ui => {
+            if(this.addActionTemplate.toArray().length > 0) {
+                this.uiService.Set(ui => ui.Footer.Outlet = this.addActionTemplate.toArray()[0])
+            } else {
+                this.uiService.Set(ui => ui.Footer.Outlet = null)
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.uiService.Set(ui => {
+            ui.Footer.Outlet = null
+        });
+    }
+
+
+    initAddActionTemplate($event) {
+        $($event.nativeElement).dropdown({
+            action: 'hide',
+            on: 'hover',
+            delay : {
+                hide   : 300,
+                show   : 100,
+              }
+        })
     }
 
     // private buildActionFormgroup(action?: any) {
@@ -308,9 +354,40 @@ export class ActionsListComponent implements ControlValueAccessor {
                     actionContext: action,
                     onOk: (value: UrlRedirectParameters) => {
                         action.Parameters = value;
-                        //this.propagateChange([...this.actions])
-
+                        this.propagateChange([...this.actions])
                     }
+                })
+                break;
+            }
+            case 'UrlRewrite': {
+                this.modal.OpenComponent(UrlRewriteModalComponent, {
+                    actionContext: action,
+                    onOk: (value: UrlRewriteParameters) => {
+                        action.Parameters = value;
+                        this.propagateChange([...this.actions])
+                    }
+                })
+                break;
+            }
+            case 'Proxy': {
+                this.modal.OpenComponent(PRoxyModalComponent, {
+                    actionContext: action,
+                    onOk: (value: ProxyParameters) => {
+                        action.Parameters = value;
+                        this.propagateChange([...this.actions])
+                    }
+                })
+                break;
+            }
+            case 'Script': {
+                this.modal.OpenComponent(ScriptModalComponent, {
+                    actionContext: action,
+                    onOk: (value: ScriptParameters) => {
+                        action.Parameters = value;
+                        this.propagateChange([...this.actions])
+                    },
+                    width: "80%",
+                    height: "90%"
                 })
                 break;
             }

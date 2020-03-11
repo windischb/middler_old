@@ -8,7 +8,7 @@
         <fui-tabs>
 
             <fui-tab title="Basic" icon="file alternate outline" [content]="basic"></fui-tab>
-            <fui-tab title="Actions" icon="list ol" [content]="actions"> Actions </fui-tab>
+            <fui-tab title="Actions" icon="list ol" [content]="actions" mode="remove"> Actions </fui-tab>
             <fui-tab title="Permissions" icon="shield alternate"> Permissions </fui-tab>
             <fui-tab title="Debug" icon="bug">
                 <pre>{{form.value | json}}</pre>
@@ -39,7 +39,22 @@
                     </div>
 
                     <div class="five wide column" style="padding-top:23px;padding-right: 1.1rem;">
+
+
                         <div class="ui styled fluid accordion" (fuiOnInit)="initRestrictionsAccordion($event)">
+                            <div class="active title">
+                                <i class="dropdown icon"></i>
+                                Options
+                            </div>
+                            <div class="active content">
+                                <div class="field">
+                                    <fui-checkbox mode="toggle" formControlName="Enabled" #en>
+                                        <span *ngIf="en.checked">Enabled</span>
+                                        <span  *ngIf="!en.checked">Disabled</span>
+                                    </fui-checkbox>
+                                </div>
+
+                            </div>
                             <div class="title">
                                 <i class="dropdown icon"></i>
                                 Restrictions
@@ -70,38 +85,13 @@
 
         <ng-template #actions>
 
-            <!-- <div class="ui button" (click)="AddAction()">Add Action</div> -->
-
-
             <middler-rule-actions formControlName="Actions"></middler-rule-actions>
-            <!-- <div class="ui relaxed selection divided list" style="padding:5px" formArrayName="Actions">
-                <div class="item" *ngFor="let action of ActionsArr.controls; let i = index" [formGroupName]="i"
-                    (contextmenu)="open($event, action.value); $event.preventDefault();">
-                    <i class="large github middle aligned icon"></i>
-                    <div class="content">
-                        <a class="header">{{ActionsArr.controls[i].value.ActionType}}</a>
-                        <div class="description">Updated 10 mins ago</div>
-                    </div>
-                </div>
 
-            </div> -->
-
-
-
-
-            <!-- <pre>{{form.value.Actions | json}}</pre> -->
         </ng-template>
 
     </form>
-    <div class="ui bottom attached menu" style="overflow: hidden; width: 100%;">
-        <div class="item">
-            <div class="ui primary button" (click)="save()">Save</div>
-        </div>
-        <a class="item">Browse</a>
-        <a class="item">Submit</a>
-        <div class="right menu">
-            <a class="item">Sign Up</a>
-            <a class="item">Help</a>
-        </div>
-    </div>
+
+
+
+
 </ng-container>

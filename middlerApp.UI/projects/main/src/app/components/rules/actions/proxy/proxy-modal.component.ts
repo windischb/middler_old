@@ -1,14 +1,14 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActionEditModalOverlayRef } from '../modal/action-edit-modal-overlay-ref';
-import { ACTION_DIALOG_DATA } from '../modal/action-edit-modal.tokens';
-import { MiddlerAction } from '../models/middler-action';
+import { ActionEditModalOverlayRef } from '../../modal/action-edit-modal-overlay-ref';
+import { ACTION_DIALOG_DATA } from '../../modal/action-edit-modal.tokens';
+import { MiddlerAction } from '../../models/middler-action';
 
 @Component({
-    templateUrl: './url-redirect-modal.component.html',
-    styleUrls: ['./url-redirect-modal.component.scss']
+    templateUrl: './proxy-modal.component.html',
+    styleUrls: ['./proxy-modal.component.scss']
 })
-export class UrlRedirectModalComponent implements OnInit {
+export class PRoxyModalComponent implements OnInit {
 
 
 
@@ -23,9 +23,10 @@ export class UrlRedirectModalComponent implements OnInit {
     ngOnInit() {
 
         this.form = this.fb.group({
-            RedirectTo: [],
-            Permanent: [],
-            PreserveMethod: []
+            DestinationUrl: [],
+            UserIntermediateStream: [],
+            AddXForwardedHeaders: [],
+            CopyXForwardedHeaders: []
         });
 
         this.form.patchValue(this.actionContext.Parameters)

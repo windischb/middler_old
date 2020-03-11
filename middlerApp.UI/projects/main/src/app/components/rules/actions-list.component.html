@@ -1,5 +1,43 @@
 
-<div class="ui bottom attached segment pushable">
+<div class="outer" style="flex-grow: 1; padding: 0px 8px" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
+    <div class="" style="padding-bottom: 50px" cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
+        <div class="action-item" *ngFor="let action of (actions$ | async); let i = index;" [class.selected]="action.Selected"
+            (click)="clickAction($event, action)" (contextmenu)="contextAction($event, action)" cdkDrag cdkDragLockAxis="y" (dblclick)="openModal(action.Item)">
+            <div style="display: flex;">
+                <div class="dragHandle" style="padding: 10px 0px 0px 5px;" cdkDragHandle>
+                    <i class="big middle aligned icon" [ngClass]="GetIcon(action.Item)"></i>
+                </div>
+                <div style="padding: 5px; min-width: 50%; max-width: 50%;">
+                    <div>
+
+                        <h2>{{action.Item.ActionType}}</h2>
+                    </div>
+                    <action-list-item [action]="action.Item"></action-list-item>
+                    <!-- <div>{{action.Item.Path}}</div>
+                    <div>{{action.Item.Order}}</div> -->
+                </div>
+                <!-- <div style="padding: 5px; min-width: 200px; max-width: 200px; ">
+                    <div>{{action.Item.Scheme}}</div>
+                    <div>{{action.Item.Hostname}}</div>
+                </div>
+                <div style="padding: 5px;">
+                    <div>
+                        {{rule.Item.Actions?.length || 0}} Actions
+                    </div>
+                    <span *ngFor="let action of rule.Item.Actions" [attr.data-tooltip]="action.ActionType">
+                        <i class="icon" [ngClass]="GetIcon(action)"></i>
+                    </span>
+
+                </div> -->
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<!-- <div class="ui bottom attached segment pushable">
     <div class="ui right vertical sidebar menu" style="" (fuiOnInit)="initSidebar($event)" [cdkDropListData]="newActions" cdkDropList [cdkDropListConnectedTo]="[actionsList]">
         <div *ngFor="let newAction of newActions" class="item" cdkDrag>
             {{newAction.ActionType}}
@@ -7,6 +45,9 @@
 
     </div>
     <div class="pusher" style="display: flex;">
+
+
+
         <div class="ui relaxed selection list" style="padding:5px; flex-grow: 1;" cdkDropList (cdkDropListDropped)="drop($event)" #actionsList="cdkDropList" (contextmenu)="open($event)">
             <div class="item action-list-item" *ngFor="let action of (actions$ | async); let i = index;" [class.selected]="action.Selected" (click)="clickAction($event, action)" (contextmenu)="contextAction($event, action)"  cdkDrag>
 
@@ -23,7 +64,7 @@
 
         </div>
     </div>
-</div>
+</div> -->
 
 
 <ng-template #userMenu let-context>
@@ -55,4 +96,28 @@
 
 
 
+</ng-template>
+
+<ng-template #addActionTemplate>
+    <div class="ui labeled icon top left floating dropdown primary button" style="width: 200px; margin-right:0px"
+        (fuiOnInit)="initAddActionTemplate($event)">
+        <i class="plus icon"></i>
+        Add new Action
+
+        <div class="menu" [cdkDropListData]="newActions" cdkDropList
+            [cdkDropListConnectedTo]="[rulesList]">
+
+            <!-- <div class="ui search icon input">
+                <i class="search icon"></i>
+                <input type="text" name="search" placeholder="FIlter Action...">
+            </div>
+            <div class="divider"></div> -->
+            <div *ngFor="let newAction of newActions" class="item" cdkDrag>
+                <i class="large icon" [ngClass]="GetIcon(newAction)"></i>
+                {{newAction.ActionType}}
+            </div>
+
+
+        </div>
+    </div>
 </ng-template>

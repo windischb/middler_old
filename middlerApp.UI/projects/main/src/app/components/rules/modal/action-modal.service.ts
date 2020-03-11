@@ -13,7 +13,7 @@ export interface ActionContext {
     url: string;
 }
 
-interface ActionEditModalConfig {
+interface ActionEditModalConfig extends OverlayConfig {
     panelClass?: string;
     hasBackdrop?: boolean;
     backdropClass?: string;
@@ -24,7 +24,7 @@ interface ActionEditModalConfig {
 const DEFAULT_CONFIG: ActionEditModalConfig = {
     hasBackdrop: true,
     backdropClass: 'dark-backdrop',
-    panelClass: 'tm-file-preview-dialog-panel',
+    panelClass: 'action-panel',
     actionContext: null,
     onOk: null
 }
@@ -68,17 +68,6 @@ export class ActionEditModalService {
         return containerRef.instance;
     }
 
-    private attachTemplateToDialogContainer<T>(overlayRef: OverlayRef, config: ActionEditModalConfig, template: TemplateRef<any>) {
-
-        const containerPortal = new TemplatePortal(template, null, {
-            $implicit: config.actionContext
-        });
-        const containerRef: EmbeddedViewRef<T> = overlayRef.attach(containerPortal);
-
-
-        return containerRef;
-    }
-
     private createInjector(config: ActionEditModalConfig, dialogRef: ActionEditModalOverlayRef): PortalInjector {
         const injectionTokens = new WeakMap();
 
@@ -91,17 +80,25 @@ export class ActionEditModalService {
     private getOverlayConfig(config: ActionEditModalConfig): OverlayConfig {
         const positionStrategy = this.overlay.position()
             .global()
+            .top("50px")
+
             .centerHorizontally()
-            .centerVertically();
 
-        const overlayConfig = new OverlayConfig({
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
-            scrollStrategy: this.overlay.scrollStrategies.block(),
+
+        const oConfig = {
+            ...config
+            , scrollStrategy: this.overlay.scrollStrategies.block(),
             positionStrategy
-        });
+        }
 
-        return overlayConfig;
+        // const overlayConfig = new OverlayConfig({
+        //     hasBackdrop: config.hasBackdrop,
+        //     backdropClass: config.backdropClass,
+        //     panelClass: config.panelClass,
+        //     scrollStrategy: this.overlay.scrollStrategies.block(),
+        //     positionStrategy
+        // });
+
+        return oConfig;
     }
 }

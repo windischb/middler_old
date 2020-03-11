@@ -1,4 +1,4 @@
-import { MiddlerAction } from '../models/middler-action';
+import { MiddlerAction } from '../../models/middler-action';
 
 export class UrlRedirectParameters {
     RedirectTo: string = "";

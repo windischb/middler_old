@@ -25,7 +25,12 @@
                         "aot": true,
                         "assets": [
                             "projects/main/src/favicon.ico",
-                            "projects/main/src/assets"
+                            "projects/main/src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "./node_modules/monaco-editor/min",
+                                "output": "./assets/monaco-editor"
+                            }
                         ],
                         "styles": [
                             "semantic/dist/semantic.css",

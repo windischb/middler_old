@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using middler.Common.Interfaces;
 using middler.Common.SharedModels.Models;
 
@@ -15,18 +16,18 @@ namespace middler.Common.Actions.UrlRewrite
         public override string ActionType => DefaultActionType;
 
 
-        public void ExecuteRequest(IMiddlerActionContext actionContext)
+        public void ExecuteRequest(HttpContext httpContext)
         {
 
-            var builder = new UriBuilder(actionContext.Request.Uri);
+            var builder = new UriBuilder(httpContext.Request.GetDisplayUrl());
             builder.Path = Parameters.RewriteTo;
-            actionContext.HttpContext.Request.Path = builder.Uri.LocalPath;
+            httpContext.Request.Path = builder.Uri.LocalPath;
         }
 
-        public void ExecuteResponse(IMiddlerActionContext actionContext)
+        public void ExecuteResponse(HttpContext httpContext)
         {
-            actionContext.HttpContext.Response.Headers.Add("TestHeader", "irgendwas");
-            actionContext.HttpContext.Response.WriteAsync($" - {GetType().Name}");
+            httpContext.Response.Headers["TestHeader"] = "irgendwas";
+            httpContext.Response.WriteAsync($" - {GetType().Name}");
         }
     }
 }

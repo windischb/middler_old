@@ -12,28 +12,9 @@ export class UIService {
     private UIContextSubject$ = new BehaviorSubject<UIContext>(this._uiContext)
     public UIContext$ = this.UIContextSubject$.asObservable();
 
+    Set(value: ((context: UIContext) => void)) {
 
-    get HeaderTitle() {
-        return this._uiContext.HeaderTitle;
-    }
-    set HeaderTitle(value: string) {
-        this._uiContext.HeaderTitle = value;
-        this.propagateChanges();
-    }
-
-    get HeaderSubTitle() {
-        return this._uiContext.HeaderSubTitle;
-    }
-    set HeaderSubTitle(value: string) {
-        this._uiContext.HeaderSubTitle = value;
-        this.propagateChanges();
-    }
-
-    get HeaderIcon() {
-        return this._uiContext.HeaderIcon;
-    }
-    set HeaderIcon(value: string) {
-        this._uiContext.HeaderIcon = value;
+        value(this._uiContext);
         this.propagateChanges();
     }
 

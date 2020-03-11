@@ -13,6 +13,7 @@ export class ActionListItemComponent implements OnInit {
 
     @ViewChild('urlredirect', {static: true}) UrlRedirect: TemplateRef<any>;
     @ViewChild('urlrewrite', {static: true}) UrlRewrite: TemplateRef<any>;
+    @ViewChild('script', {static: true}) Script: TemplateRef<any>;
 
     template: TemplateRef<any>;
 
@@ -29,6 +30,9 @@ export class ActionListItemComponent implements OnInit {
             }
             case 'UrlRewrite': {
                 return this.UrlRewrite;
+            }
+            case 'Script': {
+                return this.Script;
             }
         }
     }

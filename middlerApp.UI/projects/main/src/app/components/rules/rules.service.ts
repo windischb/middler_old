@@ -5,7 +5,12 @@ import { CreateMiddlerRuleDto } from './models/create-middler-rule-dto';
 import { of, BehaviorSubject } from 'rxjs';
 import { tap, shareReplay } from 'rxjs/operators';
 import { MessageService } from '../../shared/services/message.service';
-import { compare } from 'fast-json-patch';
+import { compare, observe } from 'fast-json-patch';
+
+const patchHeaders = new HttpHeaders({
+    'Content-Type': 'application/json-patch+json',
+    'Accept': 'application/json'
+})
 
 @Injectable({
     providedIn: 'root'
@@ -81,7 +86,7 @@ export class RulesService {
         })
 
         return this.http.patch<MiddlerRuleDto>(`/api/repo/litedb/${id}`, patchDocument, { headers: patchHeaders })
-            .subscribe(rule => this.UpdatedMiddlerRule(rule));
+            .pipe(tap(rule => this.UpdatedMiddlerRule(rule)));
 
     }
 
@@ -120,6 +125,9 @@ export class RulesService {
     }
 
     public GetNextLastOrder() {
+        if (!this.MiddlerRules || this.MiddlerRules.length === 0) {
+            return 10;
+        }
         return Math.trunc(Math.max(...this.MiddlerRules.map(r => r.Order)) + 10);
     }
 
@@ -134,13 +142,26 @@ export class RulesService {
 
         console.log(patchDocument);
 
-        const patchHeaders = new HttpHeaders({
-            'Content-Type': 'application/json-patch+json',
-            'Accept': 'application/json'
-        })
+        // const patchHeaders = new HttpHeaders({
+        //     'Content-Type': 'application/json-patch+json',
+        //     'Accept': 'application/json'
+        // })
 
         return this.http.patch<MiddlerRuleDto>(`/api/repo/litedb/order`, patchDocument, { headers: patchHeaders })
             .subscribe(_ => this.GetAll());
+    }
+
+    public SetRuleEnabled(rule: MiddlerRuleDto, value: boolean) {
+
+        var orig = JSON.parse(JSON.stringify(rule))
+        rule.Enabled = value;
+        var patchDocument = compare(orig, rule)
+
+        if (patchDocument.length > 0) {
+            return this.http.patch<MiddlerRuleDto>(`/api/repo/litedb/${rule.Id}`, patchDocument, { headers: patchHeaders })
+                .subscribe(rule => this.UpdatedMiddlerRule(rule));
+        }
+
     }
 
 }
