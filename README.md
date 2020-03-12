@@ -33,4 +33,5 @@ Currently following Actions are implemented:
 
 Detailed Information for each Action will be available in WIKI at some Time...
 
+## Example of a Powershell Script Action
 ![Powershell Rule](documentation/images/rule_action_powershell.png)
