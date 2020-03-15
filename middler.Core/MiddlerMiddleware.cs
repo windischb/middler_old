@@ -23,6 +23,7 @@ using middler.Core.ExtensionMethods;
 using middler.Core.Models;
 using Reflectensions.ExtensionMethods;
 using Reflectensions.HelperClasses;
+using middler.Common.StreamHelper;
 
 namespace middler.Core
 {
@@ -80,9 +81,12 @@ namespace middler.Core
                     if (interMediateStreamNeeded)
                     {
                         originalBody ??= context.Response.Body;
-                        context.Response.Body =
-                            new AutoStream(middlerOptions.AutoStreamDefaultMemoryThreshold,
-                                context.RequestAborted);
+                        context.Response.Body = new AutoStream(opts => 
+                            opts
+                                .WithMemoryThreshold(middlerOptions.AutoStreamDefaultMemoryThreshold)
+                                .WithFilePrefix("middler"), context.RequestAborted);
+                            //new AutoStream(middlerOptions.AutoStreamDefaultMemoryThreshold,
+                            //    context.RequestAborted);
                     }
 
 

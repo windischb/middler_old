@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\middler.Common.Storage\middler.Common.Storage.csproj" />
+    <ProjectReference Include="..\middler.Common.StreamHelper\middler.Common.StreamHelper.csproj" />
     <ProjectReference Include="..\middler.Common\middler.Common.csproj" />
   </ItemGroup>
 

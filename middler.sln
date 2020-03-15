@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Po
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Shared", "middler.Action.Scripting.Shared\middler.Action.Scripting.Shared.csproj", "{D86203C1-293E-45D6-850B-F38C42623029}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Action.Scripting.Typescript", "middler.Action.Scripting.Typescript\middler.Action.Scripting.Typescript.csproj", "{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Typescript", "middler.Action.Scripting.Typescript\middler.Action.Scripting.Typescript.csproj", "{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Commands", "middler.Action.Scripting.Commands\middler.Action.Scripting.Commands.csproj", "{7178F493-C237-4608-8B4D-F98E0FC4C66D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Common.StreamHelper", "middler.Common.StreamHelper\middler.Common.StreamHelper.csproj", "{9AE79FD2-9E25-4284-BACF-7E266C090E0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +91,14 @@ Global
 		{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7178F493-C237-4608-8B4D-F98E0FC4C66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7178F493-C237-4608-8B4D-F98E0FC4C66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7178F493-C237-4608-8B4D-F98E0FC4C66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7178F493-C237-4608-8B4D-F98E0FC4C66D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE79FD2-9E25-4284-BACF-7E266C090E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE79FD2-9E25-4284-BACF-7E266C090E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE79FD2-9E25-4284-BACF-7E266C090E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE79FD2-9E25-4284-BACF-7E266C090E0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading;
 
-namespace middler.Common {
+namespace middler.Common.StreamHelper {
 
     public class AutoStream : Stream {
 
@@ -15,27 +15,27 @@ namespace middler.Common {
             set => InnerStream.Position = value;
         }
 
-        private const int DefaultMemoryThreshold = 32 * 1024; // 32k
-        private readonly int _memoryThreshold;
-        public CancellationToken CancellationToken { get; }
-        private string TempDirectory { get; }
+        public AutoStreamOptions Options { get; private set; }
+
+        public CancellationToken CancellationToken { get; private set; }
 
         private Stream InnerStream { get; set; } = new MemoryStream();
         private bool IsFileStream { get; set; }
 
 
-
-        public AutoStream(int memoryThreshold = DefaultMemoryThreshold, CancellationToken cancellationToken = default) : this(memoryThreshold, null, cancellationToken) {
+        public AutoStream(Action<AutoStreamOptionsBuilder> options, CancellationToken cancellationToken = default): this((AutoStreamOptionsBuilder)options, cancellationToken)
+        {
 
         }
 
-        public AutoStream(int memoryThreshold, string tempDirectory, CancellationToken cancellationToken = default) {
-            _memoryThreshold = memoryThreshold;
+        public AutoStream(AutoStreamOptions options, CancellationToken cancellationToken = default)
+        {
+            Options = options;
             CancellationToken = cancellationToken;
-            TempDirectory = tempDirectory ?? Directory.GetCurrentDirectory();
+            Options.TempDirectory ??= Directory.GetCurrentDirectory();
+            Options.MemoryThreshold ??= 32 * 1024; // 32k
         }
-
-
+        
 
         public override void Flush() {
             InnerStream.Flush();
@@ -56,7 +56,7 @@ namespace middler.Common {
         public override void Write(byte[] buffer, int offset, int count) {
 
             if (!IsFileStream) {
-                var allowMemoryBuffer = (_memoryThreshold - count) >= InnerStream.Length;
+                var allowMemoryBuffer = (Options.MemoryThreshold - count) >= InnerStream.Length;
                 if (!allowMemoryBuffer) {
                     IsFileStream = true;
                     var tempStream = InnerStream;
@@ -96,10 +96,9 @@ namespace middler.Common {
         }
 
 
-
         private void EnsureFileStream() {
 
-            var tempFileName = Path.Combine(TempDirectory, "middler_" + Guid.NewGuid() + ".tmp");
+            var tempFileName = Path.Combine(Options.TempDirectory, $"{Options.FilePrefix}_{Guid.NewGuid():n}.tmp");
             InnerStream = new FileStream(
                 tempFileName,
                 FileMode.Create,
@@ -109,11 +108,6 @@ namespace middler.Common {
                 FileOptions.Asynchronous | FileOptions.SequentialScan | FileOptions.DeleteOnClose);
 
         }
-
-
-
-
-
 
 
         protected override void Dispose(bool disposing) {

@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\middler.Action.Scripting.Commands\middler.Action.Scripting.Commands.csproj" />
     <ProjectReference Include="..\middler.Action.Scripting.Javascript\middler.Action.Scripting.Javascript.csproj" />
     <ProjectReference Include="..\middler.Action.Scripting.Powershell\middler.Action.Scripting.Powershell.csproj" />
     <ProjectReference Include="..\middler.Action.Scripting.Typescript\middler.Action.Scripting.Typescript.csproj" />
