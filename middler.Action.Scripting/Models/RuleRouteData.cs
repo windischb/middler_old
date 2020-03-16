@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 
 namespace middler.Action.Scripting.Models
 {
@@ -11,6 +12,7 @@ namespace middler.Action.Scripting.Models
 
         }
         public SimpleDictionary<object> AsSimpleDictionary() {
+            
             return new SimpleDictionary<object>(this);
         }
 

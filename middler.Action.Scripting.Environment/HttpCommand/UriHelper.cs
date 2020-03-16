@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace middler.Action.Scripting.Commands.HttpCommand
+namespace middler.Scripting.HttpCommand
 {
     public static class UriHelper
     {

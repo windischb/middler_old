@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Typescript", "middler.Action.Scripting.Typescript\middler.Action.Scripting.Typescript.csproj", "{C02862D6-30F8-4A58-BCEC-EBDF4EE62E39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Commands", "middler.Action.Scripting.Commands\middler.Action.Scripting.Commands.csproj", "{7178F493-C237-4608-8B4D-F98E0FC4C66D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.Environment", "middler.Action.Scripting.Environment\middler.Action.Scripting.Environment.csproj", "{7178F493-C237-4608-8B4D-F98E0FC4C66D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.Common.StreamHelper", "middler.Common.StreamHelper\middler.Common.StreamHelper.csproj", "{9AE79FD2-9E25-4284-BACF-7E266C090E0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Common.StreamHelper", "middler.Common.StreamHelper\middler.Common.StreamHelper.csproj", "{9AE79FD2-9E25-4284-BACF-7E266C090E0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

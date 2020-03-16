@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using middler.Common.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -41,16 +42,20 @@ namespace middler.Core
 
         public async Task InvokeAsync(HttpContext context, IMiddlerOptions middlerOptions, InternalHelper intHelper)
         {
-
+            var sw = new Stopwatch();
+            
+            sw.Start();
             EnsureLoggers(context);
             Stream originalBody = null;
 
             var middlerMap = context.RequestServices.GetRequiredService<IMiddlerMap>();
+
+
             var endpoints = middlerMap.GetFlatList(context.RequestServices);
 
-            //var intHelper = new InternalHelper(context.RequestServices);
-
             var executedActions = new Stack<IMiddlerAction>();
+
+
 
             try
             {
@@ -59,7 +64,6 @@ namespace middler.Core
                 {
 
                     var matchingEndpoint = FindMatchingEndpoint(middlerOptions, endpoints, context);
-
 
                     if (matchingEndpoint == null)
                     {
@@ -91,13 +95,10 @@ namespace middler.Core
 
 
                     @continue = false;
-
                     foreach (var endpointAction in matchingEndpoint.MiddlerRule.Actions)
                     {
 
-
                         var action = intHelper.BuildConcreteActionInstance(endpointAction);
-
                         if (action != null)
                         {
                             await ExecuteRequestAction(action, context);
@@ -119,8 +120,8 @@ namespace middler.Core
 
                 context.Features.Set<MiddlerRuleMatch>(null);
 
-
                 await WriteToAspNetCoreResponseBodyAsync(context, originalBody).ConfigureAwait(false);
+
 
             }
             catch (Exception ex)

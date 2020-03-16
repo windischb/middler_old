@@ -59,7 +59,6 @@ namespace middler.Action.Scripting.Javascript
 
         private StepMode EngineOnStep(object sender, DebugInformation e)
         {
-            Console.WriteLine(e.CurrentStatement);
             if (managedExit)
             {
                 throw new OperationCanceledException();

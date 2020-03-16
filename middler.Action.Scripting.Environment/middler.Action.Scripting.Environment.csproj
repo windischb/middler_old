@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>middler.Action.Scripting.Environment</AssemblyName>
+    <RootNamespace>middler.Scripting</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.0.0" />
+    <PackageReference Include="Reflectensions" Version="4.0.2" />
+    <PackageReference Include="Reflectensions.Json" Version="4.1.0" />
+    <PackageReference Include="Utf8Json" Version="1.3.7" />
+  </ItemGroup>
+
+</Project>

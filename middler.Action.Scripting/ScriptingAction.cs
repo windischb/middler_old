@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using middler.Action.Scripting.Commands.HttpCommand;
 using middler.Action.Scripting.ExtensionMethods;
 using middler.Action.Scripting.Javascript;
 using middler.Action.Scripting.Models;
@@ -9,6 +8,7 @@ using middler.Action.Scripting.Powershell;
 using middler.Action.Scripting.Shared;
 using middler.Action.Scripting.Typescript;
 using middler.Common.SharedModels.Models;
+using Environment = middler.Scripting.Environment;
 
 namespace middler.Action.Scripting
 {
@@ -38,7 +38,8 @@ namespace middler.Action.Scripting
             scriptEngine.Initialize();
             scriptEngine.SetValue("Context", scriptContext);
 
-            scriptEngine.SetValue("HTTP", new Http());
+            scriptEngine.SetValue("middler", new Environment());
+            //scriptEngine.SetValue("Task", new AsyncTaskHelper());
 
             try
             {
