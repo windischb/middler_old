@@ -5,6 +5,6 @@ namespace middler.Scripting
     public class Environment
     {
         public Http Http => new Http();
-        public AsyncTaskHelper Async => new AsyncTaskHelper();
+        public TaskHelper Task => new TaskHelper();
     }
 }

@@ -39,7 +39,7 @@ namespace middler.Action.Scripting
             scriptEngine.SetValue("Context", scriptContext);
 
             scriptEngine.SetValue("middler", new Environment());
-            //scriptEngine.SetValue("Task", new AsyncTaskHelper());
+            //scriptEngine.SetValue("Task", new TaskHelper());
 
             try
             {

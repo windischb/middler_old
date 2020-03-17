@@ -17,10 +17,18 @@ namespace middler.Scripting.HttpCommand
 
         private GenericHttpContent _content;
         public GenericHttpContent Content => _content ??= new GenericHttpContent(_httpResponseMessage.Content);
+
+        private ExpandoObject _contentHeaders;
+        public ExpandoObject ContentHeaders => _contentHeaders ??= _httpResponseMessage.Content?.Headers?.ToExpandoObject();
+
         public HttpStatusCode StatusCode => _httpResponseMessage.StatusCode;
         public string ReasonPhrase => _httpResponseMessage.ReasonPhrase;
-        public ExpandoObject Headers => _httpResponseMessage.Headers.ToExpandoObject();
-        public ExpandoObject TrailingHeaders => _httpResponseMessage.TrailingHeaders.ToExpandoObject();
+
+        private ExpandoObject _headers;
+        public ExpandoObject Headers => _headers ??= _httpResponseMessage.Headers.ToExpandoObject();
+
+        private ExpandoObject _trailingheaders;
+        public ExpandoObject TrailingHeaders => _trailingheaders ??= _httpResponseMessage.TrailingHeaders.ToExpandoObject();
 
         public bool IsSuccessStatusCode => _httpResponseMessage.IsSuccessStatusCode;
         public HttpResponse EnsureSuccessStatusCode()

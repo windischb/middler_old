@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
+using middler.Scripting.HttpCommand.Converters;
+using Newtonsoft.Json;
 using Nito.AsyncEx.Synchronous;
 using Reflectensions.Helper;
 
@@ -19,6 +24,7 @@ namespace middler.Scripting.HttpCommand
 
         private readonly ConcurrentDictionary<string, StringValues> _queryParameters = new ConcurrentDictionary<string, StringValues>();
 
+        private string ContentType { get; set; }
 
         public HttpRequestBuilder() { }
 
@@ -28,13 +34,13 @@ namespace middler.Scripting.HttpCommand
         }
 
 
-        public HttpRequestBuilder UseUrl(Uri uri)
+        public HttpRequestBuilder UsePath(Uri uri)
         {
             _httpRequestMessage.RequestUri = uri;
             return this;
         }
 
-        public HttpRequestBuilder UseUrl(string url)
+        public HttpRequestBuilder UsePath(string url)
         {
             if (_httpHandlerOptions?.RequestUri != null)
             {
@@ -75,7 +81,8 @@ namespace middler.Scripting.HttpCommand
 
         public HttpRequestBuilder SetContentType(string contentType)
         {
-            _httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            ContentType = contentType;
+            //_httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             return this;
         }
 
@@ -148,10 +155,24 @@ namespace middler.Scripting.HttpCommand
             return new HttpResponse(respMsg);
         }
 
-        public Task<HttpResponse> SendAsync(HttpMethod httpMethod)
+        public Task<HttpResponse> SendAsync(string httpMethod, object content = null)
+        {
+            return SendAsync(new HttpMethod(httpMethod), content);
+        }
+
+        public async Task<HttpResponse> SendAsync(HttpMethod httpMethod, object content = null)
         {
             _httpRequestMessage.Method = httpMethod;
-            return SendRequestMessageAsync(_httpRequestMessage);
+            if (content != null)
+            {
+                _httpRequestMessage.Content = await CreateHttpContent(content);
+            }
+
+            if (!String.IsNullOrWhiteSpace(ContentType))
+            {
+                _httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(ContentType);
+            }
+            return await SendRequestMessageAsync(_httpRequestMessage);
         }
 
         public Task<HttpResponse> GetAsync()
@@ -159,37 +180,105 @@ namespace middler.Scripting.HttpCommand
             return SendAsync(HttpMethod.Get);
         }
 
-        public Task<HttpResponse> PostAsync()
+        public Task<HttpResponse> PostAsync(object content)
         {
-            return SendAsync(HttpMethod.Post);
+            return SendAsync(HttpMethod.Post, content);
         }
 
-        public Task<HttpResponse> PutAsync()
+        public Task<HttpResponse> PutAsync(object content)
         {
-            return SendAsync(HttpMethod.Put);
+            return SendAsync(HttpMethod.Put, content);
+        }
+
+        public Task<HttpResponse> PatchAsync(object content)
+        {
+            return SendAsync(HttpMethod.Patch, content);
+        }
+
+        
+        public Task<HttpResponse> DeleteAsync(object content)
+        {
+            return SendAsync(HttpMethod.Delete, content);
         }
 
         public Task<HttpResponse> DeleteAsync()
         {
-            return SendAsync(HttpMethod.Delete);
+            return DeleteAsync(null);
         }
 
+        public HttpResponse Send(string httpMethod, object content = null)
+        {
+            return SendAsync(httpMethod, content).WaitAndUnwrapException();
+        }
 
+        public HttpResponse Send(HttpMethod httpMethod, object content = null)
+        {
+            return SendAsync(httpMethod, content).WaitAndUnwrapException();
+        }
 
         public HttpResponse SendRequestMessage(HttpRequestMessage httpRequestMessage)
         {
             return SendRequestMessageAsync(httpRequestMessage).WaitAndUnwrapException();
         }
 
-        public HttpResponse Send(HttpMethod httpMethod)
-        {
-            return SendAsync(httpMethod).WaitAndUnwrapException();
-        }
-
-
         public HttpResponse Get()
         {
             return GetAsync().WaitAndUnwrapException();
         }
+
+        public HttpResponse Post(object content)
+        {
+            return PostAsync(content).WaitAndUnwrapException();
+        }
+
+        public HttpResponse Put(object content)
+        {
+            return PutAsync(content).WaitAndUnwrapException();
+        }
+
+        public HttpResponse Patch(object content)
+        {
+            return PatchAsync(content).WaitAndUnwrapException();
+        }
+
+        public HttpResponse Delete(object content)
+        {
+            return DeleteAsync(content).WaitAndUnwrapException();
+        }
+        public HttpResponse Delete()
+        {
+            return Delete(null);
+        }
+
+
+        private async Task<HttpContent> CreateHttpContent(object content)
+        {
+            HttpContent httpContent = null;
+
+            if (content == null)
+                return null;
+
+            var ms = new MemoryStream();
+
+            if (content is string str)
+            {
+                httpContent = new StringContent(str, Encoding.UTF8);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return httpContent;
+            }
+
+            await CreateJsonHttpContent(content, ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            httpContent = new StreamContent(ms);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            return httpContent;
+        }
+
+        private async Task CreateJsonHttpContent(object content, Stream stream)
+        {
+            await new JsonContentConverter().ConvertToStream(content, stream);
+        }
+       
     }
 }

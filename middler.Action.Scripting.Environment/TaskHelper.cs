@@ -6,24 +6,26 @@ using Reflectensions.Helper;
 
 namespace middler.Scripting
 {
-    public class AsyncTaskHelper
+    public class TaskHelper
     {
-        public object RunSync(Task task)
+       
+        public object Await(Task task)
         {
             var type = task.GetType();
             if (type.GenericTypeArguments.Any())
             {
                 return task.ConvertToTaskOf<object>().WaitAndUnwrapException();
-                //return AsyncHelper.RunSync(() => (task).ConvertToTaskOf<object>());
             }
 
             task.WaitAndUnwrapException();
-            //AsyncHelper.RunSync(() => task);
             return null;
+        }
 
+
+        public void AwaitVoid(Task task)
+        {
+            Await(task);
         }
 
     }
-
-   
 }

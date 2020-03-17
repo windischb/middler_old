@@ -35,3 +35,7 @@ Detailed Information for each Action will be available in WIKI at some Time...
 
 ## Example of a Powershell Script Action
 ![Powershell Rule](documentation/images/rule_action_powershell.png)
+
+
+## Example of a Javascript Script Action
+![Javascript Rule](documentation/images/rule_action_javascript.png)

@@ -16,77 +16,107 @@ using Utf8Json;
 
 namespace middler.Scripting.HttpCommand
 {
-    public class GenericHttpContent: IDisposable
+    public class GenericHttpContent : IDisposable
     {
 
         private readonly HttpContent _httpContent;
 
-        public ExpandoObject Headers => _httpContent.Headers.ToExpandoObject();
-        public Task<string> ReadAsStringAsync() => _httpContent.ReadAsStringAsync();
+        private readonly string _text;
 
-        public Task<byte[]> ReadAsByteArrayAsync() => _httpContent.ReadAsByteArrayAsync();
+        private JToken _jToken;
 
-        public Task<Stream> ReadAsStreamAsync() => _httpContent.ReadAsStreamAsync();
+        public string Type { get; set; }
 
-        public Task CopyToAsync(Stream stream, TransportContext context) => _httpContent.CopyToAsync(stream, context);
+        public bool IsArray
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case "json":
+                    {
+                        return _jToken.Type == JTokenType.Array;
+                    }
+                }
 
-        public Task CopyToAsync(Stream stream) => _httpContent.CopyToAsync(stream);
-
-        public Task LoadIntoBufferAsync() => _httpContent.LoadIntoBufferAsync();
-
-        public Task LoadIntoBufferAsync(long maxBufferSize) => _httpContent.LoadIntoBufferAsync(maxBufferSize);
-
+                return false;
+            }
+        }
 
         public GenericHttpContent(HttpContent httpContent)
         {
             _httpContent = httpContent;
+            _text ??= _httpContent.ReadAsStringAsync().WaitAndUnwrapException();
+
+            ProcessContent();
+
         }
+
+
+        private void ProcessContent()
+        {
+            switch (_httpContent.Headers.ContentType.MediaType)
+            {
+                case "application/json":
+                {
+                    Type = "json";
+                    _jToken = Converter.Json.ToJToken(_text);
+                    break;
+                }
+
+                case "application/xml":
+                {
+                    Type = "xml";
+                    break;
+                }
+
+            }
+        }
+
+        public string AsText()
+        {
+            return _text;
+        }
+
+        public object AsObject()
+        {
+            return AsObject<ExpandoObject>();
+        }
+
+        public object AsArray()
+        {
+            switch (Type)
+            {
+                case "json":
+                {
+                    return JsonHelpers.ToBasicDotNetObjectEnumerable(_jToken as JArray);
+                }
+
+            }
+            throw new NotImplementedException();
+        }
+
+
+        public object AsObject<T>()
+        {
+
+            switch (Type)
+            {
+                case "json":
+                {
+                    return Converter.Json.ToObject<T>(_jToken);
+                }
+
+            }
+
+            throw new NotImplementedException();
+
+        }
+
 
         public void Dispose()
         {
             _httpContent?.Dispose();
         }
-        
-        
-        public object ToObject()
-        {
-            return ToObject<ExpandoObject>();
-        }
-
-        public object ToArray()
-        {
-            return ToObject<ExpandoObject[]>();
-        }
-
-
-        public object ToObject<T>()
-        {
-            switch (_httpContent.Headers?.ContentType?.MediaType)
-            {
-                case "application/json":
-                {
-                    return new JsonContentConverter().ConvertToObject<T>(ReadAsStreamAsync().WaitAndUnwrapException());
-                }
-            }    
-
-            throw new NotImplementedException();
-        }
-
-      
-        //public object AsJsonToObject()
-        //{
-        //    return AsJsonToObject<ExpandoObject>();
-        //}
-
-        //public object AsJsonToArray()
-        //{
-        //    return AsJsonToObject<ExpandoObject[]>();
-        //}
-
-        //public T AsJsonToObject<T>()
-        //{
-        //    return JsonSerializer.Deserialize<T>(ReadAsStreamAsync().WaitAndUnwrapException());
-        //}
-
     }
 }

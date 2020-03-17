@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.Net.Http.Headers;
-using Utf8Json;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using JsonSerializer = Utf8Json.JsonSerializer;
 
 namespace middler.Scripting.HttpCommand.Converters
 {
@@ -13,7 +16,16 @@ namespace middler.Scripting.HttpCommand.Converters
 
         public override T ConvertToObject<T>(Stream stream)
         {
+            
             return JsonSerializer.Deserialize<T>(stream);
+        }
+
+        public async Task ConvertToStream(object value, Stream stream)
+        {
+            await using var sw = new StreamWriter(stream, new UTF8Encoding(false), 1024, true);
+
+            await JsonSerializer.SerializeAsync(stream, value);
+            
         }
     }
 }
