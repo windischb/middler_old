@@ -13,6 +13,7 @@ using middler.Action.Scripting.Powershell;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Core;
+using middler.DataStore;
 using middler.Storage.LiteDB;
 using middlerApp.API.Attributes;
 using middlerApp.API.ExtensionMethods;
@@ -72,6 +73,11 @@ namespace middlerApp.API
             );
             services.AddNamedMiddlerRepo("litedb", sp => new LiteDBRuleRepository("Filename=rules.db"));
 
+            services.AddSingleton<IDataStore>(sp =>
+            {
+                DataStoreConfig b = new DataStoreConfigBuilder().UseRootPath(PathHelper.GetFullPath("/temp/middler/variables"));
+                return new DataStore(b);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

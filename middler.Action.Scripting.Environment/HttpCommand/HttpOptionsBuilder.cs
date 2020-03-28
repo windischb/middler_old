@@ -5,24 +5,13 @@ namespace middler.Scripting.HttpCommand
 {
     public class HttpOptionsBuilder
     {
-        private readonly HttpHandlerOptions _httpHandlerOptions = new HttpHandlerOptions();
+        private readonly HttpHandlerOptions _httpHandlerOptions;
 
-        public HttpOptionsBuilder()
+        public HttpOptionsBuilder(string url)
         {
-
+            _httpHandlerOptions = new HttpHandlerOptions(UriHelper.BuildUri(url));
         }
-
-        public HttpOptionsBuilder UseBaseUrl(Uri uri)
-        {
-            _httpHandlerOptions.RequestUri = uri;
-            return this;
-        }
-
-        public HttpOptionsBuilder UseBaseUrl(string url)
-        {
-            return UseBaseUrl(UriHelper.BuildUri(url));
-        }
-
+        
 
         public HttpOptionsBuilder UseProxy(WebProxy proxy)
         {

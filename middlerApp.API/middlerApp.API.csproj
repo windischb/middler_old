@@ -25,6 +25,7 @@
     <ProjectReference Include="..\middler.Common.Actions\middler.Common.Actions.csproj" />
     <ProjectReference Include="..\middler.Common\middler.Common.csproj" />
     <ProjectReference Include="..\middler.Core\middler.Core.csproj" />
+    <ProjectReference Include="..\middler.DataStore\middler.DataStore.csproj" />
     <ProjectReference Include="..\middler.Storage.LiteDB\middler.Storage.LiteDB.csproj" />
     <ProjectReference Include="..\middlerApp.SharedModels\middlerApp.SharedModels.csproj" />
   </ItemGroup>

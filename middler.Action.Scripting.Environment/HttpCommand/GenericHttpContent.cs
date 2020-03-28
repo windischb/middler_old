@@ -7,8 +7,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using middler.Scripting.ExtensionMethods;
-using middler.Scripting.HttpCommand.Converters;
 using Newtonsoft.Json.Linq;
 using Nito.AsyncEx;
 using Nito.AsyncEx.Synchronous;
@@ -80,7 +78,16 @@ namespace middler.Scripting.HttpCommand
 
         public object AsObject()
         {
-            return AsObject<ExpandoObject>();
+            switch (Type)
+            {
+                case "json":
+                {
+                    return Converter.Json.ToObject<ExpandoObject>(_jToken);
+                }
+
+            }
+
+            throw new NotImplementedException();
         }
 
         public object AsArray()
@@ -95,24 +102,8 @@ namespace middler.Scripting.HttpCommand
             }
             throw new NotImplementedException();
         }
-
-
-        public object AsObject<T>()
-        {
-
-            switch (Type)
-            {
-                case "json":
-                {
-                    return Converter.Json.ToObject<T>(_jToken);
-                }
-
-            }
-
-            throw new NotImplementedException();
-
-        }
-
+        
+        
 
         public void Dispose()
         {
