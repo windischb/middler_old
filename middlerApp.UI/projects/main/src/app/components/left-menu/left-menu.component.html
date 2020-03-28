@@ -15,6 +15,9 @@
         <a class="item" routerLink="/rules" routerLinkActive="active">
             <i class="stream icon"></i>Endpoints Rules
         </a>
+        <a class="item" routerLink="/variables" routerLinkActive="active" #variables="routerLinkActive">
+            <i class="folder outline icon" [class.open]="variables.isActive"></i>Global Variables
+        </a>
     </div>
 
     <div class="whitespace">

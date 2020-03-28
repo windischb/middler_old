@@ -38,7 +38,7 @@
 </div>
 
 <!-- <div class="ui bottom attached segment pushable">
-    <div class="ui right vertical sidebar menu" style="" (fuiOnInit)="initSidebar($event)" [cdkDropListData]="newActions" cdkDropList [cdkDropListConnectedTo]="[actionsList]">
+    <div class="ui right vertical sidebar menu" style="" (doobOnInit)="initSidebar($event)" [cdkDropListData]="newActions" cdkDropList [cdkDropListConnectedTo]="[actionsList]">
         <div *ngFor="let newAction of newActions" class="item" cdkDrag>
             {{newAction.ActionType}}
         </div>
@@ -83,7 +83,7 @@
         <a class="item" (click)="RemoveActions(context.Selected)" *ngIf="context.Selected?.length > 0">
             <i class="trash alternate outline icon"></i> Remove
         </a>
-        <div class="ui dropdown item" (fuiOnInit)="initContextMenu($event)">
+        <div class="ui dropdown item" (doobOnInit)="initContextMenu($event)">
             More
             <i class="dropdown icon"></i>
             <div class="menu">
@@ -100,7 +100,7 @@
 
 <ng-template #addActionTemplate>
     <div class="ui labeled icon top left floating dropdown primary button" style="width: 200px; margin-right:0px"
-        (fuiOnInit)="initAddActionTemplate($event)">
+        (doobOnInit)="initAddActionTemplate($event)">
         <i class="plus icon"></i>
         Add new Action
 

@@ -15,15 +15,15 @@
 
         <div style="display: flex; flex-direction: row; flex-grow: 1;">
             <div style="flex-grow: 1;">
-                <fui-editor formControlName="SourceCode" [language]="form.value.Language" [tsOptions]="{noLib: false}"></fui-editor>
+                <doob-editor formControlName="SourceCode" [language]="form.value.Language" [tsOptions]="{noLib: false}"></doob-editor>
             </div>
             <div style="width: 240px;margin-left:8px">
                 <div class="field">
-                    <fui-dropdown formControlName="Language" class="selection">
-                        <fui-dropdown-item value="Powershell">Powershell</fui-dropdown-item>
-                        <fui-dropdown-item value="Javascript">Javascript</fui-dropdown-item>
-                        <fui-dropdown-item value="Typescript">Typescript</fui-dropdown-item>
-                    </fui-dropdown>
+                    <doob-dropdown formControlName="Language" class="selection">
+                        <doob-dropdown-item value="Powershell">Powershell</doob-dropdown-item>
+                        <doob-dropdown-item value="Javascript">Javascript</doob-dropdown-item>
+                        <doob-dropdown-item value="Typescript">Typescript</doob-dropdown-item>
+                    </doob-dropdown>
                 </div>
             </div>
         </div>

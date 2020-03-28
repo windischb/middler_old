@@ -1,6 +1,6 @@
 
 
-<div class="outer" style="flex-grow: 1;" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
+<div class="outer ui container" style="flex-grow: 1;" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
     <div class="" style="padding-bottom: 50px" cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
         <div class="rule-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected" [class.disabled]="!rule.Item.Enabled"
             (click)="clickAction($event, rule)" (contextmenu)="contextAction($event, rule)" cdkDrag cdkDragLockAxis="y" (dblclick)="editRule(rule.Item.Id)">
@@ -9,7 +9,7 @@
                     <i class="ellipsis vertical icon"></i>
                 </div>
                 <div style="padding: 5px; min-width: 50%; max-width: 50%;">
-                    <div (dblclick)="$event.preventDefault(); $event.stopPropagation()">
+                    <div>
                         <h2>{{rule.Item.Name}}</h2>
                     </div>
                     <div>{{rule.Item.Path}}</div>
@@ -52,9 +52,9 @@
 <ng-template #contextMenu let-context>
 
 
-    <div class="ui vertical secondary menu"
-        style="box-shadow: 2px 2px 4px 1px rgba(34, 36, 38, 0.26); background-color: whitesmoke;">
-        <div class="item" *ngIf="context.Single" style="font-weight: bold;">
+    <div class="ui vertical secondary menu context-menu"
+        style="box-shadow: 2px 2px 4px 1px rgba(82, 94, 118, 0.7); background-color: whitesmoke;">
+        <div class="item" *ngIf="context.Single" style="font-weight: bold; background-color: #292f3b; color: whitesmoke; border:1px solid whitesmoke">
             {{context.Single?.Name}}
         </div>
         <a class="item" *ngIf="context.Single?.Enabled === false" (click)="SetRuleEnabled(context.Single, true)">
@@ -72,7 +72,7 @@
         <a class="item" (click)="RemoveRules(context.Selected)" *ngIf="context.Selected?.length > 0">
             <i class="trash alternate outline icon"></i> Remove
         </a>
-        <!-- <div class="ui dropdown item" (fuiOnInit)="initContextMenu($event)">
+        <!-- <div class="ui dropdown item" (doobOnInit)="initContextMenu($event)">
             More
             <i class="dropdown icon"></i>
             <div class="menu">

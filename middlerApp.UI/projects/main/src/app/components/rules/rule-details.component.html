@@ -5,15 +5,15 @@
 
     <form [formGroup]="form" class="ui form" style="padding:10px; flex-grow: 1; display: flex; flex-direction: column;">
 
-        <fui-tabs>
+        <doob-tabs>
 
-            <fui-tab title="Basic" icon="file alternate outline" [content]="basic"></fui-tab>
-            <fui-tab title="Actions" icon="list ol" [content]="actions" mode="remove"> Actions </fui-tab>
-            <fui-tab title="Permissions" icon="shield alternate"> Permissions </fui-tab>
-            <fui-tab title="Debug" icon="bug">
+            <doob-tab title="Basic" icon="file alternate outline" [content]="basic"></doob-tab>
+            <doob-tab title="Actions" icon="list ol" [content]="actions" mode="remove"> Actions </doob-tab>
+            <doob-tab title="Permissions" icon="shield alternate"> Permissions </doob-tab>
+            <doob-tab title="Debug" icon="bug">
                 <pre>{{form.value | json}}</pre>
-            </fui-tab>
-        </fui-tabs>
+            </doob-tab>
+        </doob-tabs>
 
         <ng-template #basic>
 
@@ -41,17 +41,17 @@
                     <div class="five wide column" style="padding-top:23px;padding-right: 1.1rem;">
 
 
-                        <div class="ui styled fluid accordion" (fuiOnInit)="initRestrictionsAccordion($event)">
+                        <div class="ui styled fluid accordion" (doobOnInit)="initRestrictionsAccordion($event)">
                             <div class="active title">
                                 <i class="dropdown icon"></i>
                                 Options
                             </div>
                             <div class="active content">
                                 <div class="field">
-                                    <fui-checkbox mode="toggle" formControlName="Enabled" #en>
+                                    <doob-checkbox mode="toggle" formControlName="Enabled" #en>
                                         <span *ngIf="en.checked">Enabled</span>
                                         <span  *ngIf="!en.checked">Disabled</span>
-                                    </fui-checkbox>
+                                    </doob-checkbox>
                                 </div>
 
                             </div>
@@ -62,11 +62,11 @@
                             <div class="content">
                                 <div class="field">
                                     <label>Scheme</label>
-                                    <fui-dropdown placeholder="Scheme" formControlName="Scheme" class="selection"
+                                    <doob-dropdown placeholder="Scheme" formControlName="Scheme" class="selection"
                                         multiple>
-                                        <fui-dropdown-item value="http">http</fui-dropdown-item>
-                                        <fui-dropdown-item value="https">https</fui-dropdown-item>
-                                    </fui-dropdown>
+                                        <doob-dropdown-item value="http">http</doob-dropdown-item>
+                                        <doob-dropdown-item value="https">https</doob-dropdown-item>
+                                    </doob-dropdown>
                                 </div>
                                 <div class="field">
                                     <label>Hostname</label>
