@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { VariablesComponent } from './components/variables/varibales.component';
 
 
 const routes: Routes = [
@@ -15,13 +14,12 @@ const routes: Routes = [
   },
   {
     path: 'variables',
-    component: VariablesComponent
+    loadChildren: () => import('./components/variables/variables.module').then(m => m.VariablesModule)
   }
 ];
 
 export const RoutingComponents = [
-    HomeComponent,
-    VariablesComponent
+    HomeComponent
 ]
 
 @NgModule({

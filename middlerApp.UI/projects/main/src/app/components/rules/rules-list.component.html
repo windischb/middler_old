@@ -51,38 +51,21 @@
 
 <ng-template #contextMenu let-context>
 
-
-    <div class="ui vertical secondary menu context-menu"
-        style="box-shadow: 2px 2px 4px 1px rgba(82, 94, 118, 0.7); background-color: whitesmoke;">
-        <div class="item" *ngIf="context.Single" style="font-weight: bold; background-color: #292f3b; color: whitesmoke; border:1px solid whitesmoke">
-            {{context.Single?.Name}}
-        </div>
-        <a class="item" *ngIf="context.Single?.Enabled === false" (click)="SetRuleEnabled(context.Single, true)">
-            <i class="toggle on icon"></i> Enable
+    <db-menu class="secondary context-menu">
+        <db-header *ngIf="context.Single">{{context.Single?.Name}}</db-header>
+        <a db-item icon="toggle on" *ngIf="context.Single?.Enabled === false" (click)="SetRuleEnabled(context.Single, true)">
+            Enable
         </a>
-        <a class="item" *ngIf="context.Single?.Enabled" (click)="SetRuleEnabled(context.Single, false)">
-            <i class="toggle off icon"></i> Disable
+        <a db-item icon="toggle off" *ngIf="context.Single?.Enabled === true" (click)="SetRuleEnabled(context.Single, false)">
+            Disable
         </a>
-        <a class="item" *ngIf="context.Single" (click)="editRule(context.Single.Id)">
-            <i class="edit icon"></i> Edit
+        <a db-item icon="edit" (click)="editRule(context.Single.Id)">
+            Edit
         </a>
-        <!-- <a class="item" *ngIf="!context.Single" (click)="createRule()">
-            <i class="add icon"></i> Add Rule
-        </a> -->
-        <a class="item" (click)="RemoveRules(context.Selected)" *ngIf="context.Selected?.length > 0">
-            <i class="trash alternate outline icon"></i> Remove
+        <db-divider></db-divider>
+        <a db-item icon="trash alternate outline" (click)="RemoveRules(context.Selected)" *ngIf="context.Selected?.length > 0">
+            Remove
         </a>
-        <!-- <div class="ui dropdown item" (doobOnInit)="initContextMenu($event)">
-            More
-            <i class="dropdown icon"></i>
-            <div class="menu">
-                <a class="item"><i class="edit icon"></i> Edit Profile</a>
-                <a class="item"><i class="globe icon"></i> Choose Language</a>
-                <a class="item"><i class="settings icon"></i> Account Settings</a>
-            </div>
-        </div> -->
-    </div>
-
-
+    </db-menu>
 
 </ng-template>

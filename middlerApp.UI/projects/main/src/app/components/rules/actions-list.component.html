@@ -69,38 +69,22 @@
 
 <ng-template #userMenu let-context>
 
-
-    <div class="ui vertical secondary menu" style="box-shadow: 2px 2px 4px 1px rgba(34, 36, 38, 0.26); background-color: whitesmoke;">
-        <div class="item" *ngIf="context.Single">
-            {{context.Single?.ActionType}}
-        </div>
-        <a class="item" (click)="openModal(context.Single)" *ngIf="context.Single">
-            <i class="edit icon"></i> Edit
+    <db-menu class="secondary context-menu">
+        <db-header *ngIf="context.Single">{{context.Single?.ActionType}}</db-header>
+        <a db-item icon="edit" (click)="openModal(context.Single)" *ngIf="context.Single">
+            Edit Action
         </a>
-        <a class="item" (click)="openAddSidebar()">
-            <i class="add icon"></i> Add Action
+        <db-divider></db-divider>
+        <a db-item icon="trash alternate outline" (click)="RemoveActions(context.Selected)" *ngIf="context.Selected?.length > 0">
+            Remove
         </a>
-        <a class="item" (click)="RemoveActions(context.Selected)" *ngIf="context.Selected?.length > 0">
-            <i class="trash alternate outline icon"></i> Remove
-        </a>
-        <div class="ui dropdown item" (doobOnInit)="initContextMenu($event)">
-            More
-            <i class="dropdown icon"></i>
-            <div class="menu">
-                <a class="item"><i class="edit icon"></i> Edit Profile</a>
-                <a class="item"><i class="globe icon"></i> Choose Language</a>
-                <a class="item"><i class="settings icon"></i> Account Settings</a>
-            </div>
-        </div>
-    </div>
-
-
+    </db-menu>
 
 </ng-template>
 
 <ng-template #addActionTemplate>
     <div class="ui labeled icon top left floating dropdown primary button" style="width: 200px; margin-right:0px"
-        (doobOnInit)="initAddActionTemplate($event)">
+        (dbOnInit)="initAddActionTemplate($event)">
         <i class="plus icon"></i>
         Add new Action
 

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { RulesComponent } from './rules.component';
 import { RuleDetailsComponent } from './rule-details.component';
 import { RulesListComponent } from './rules-list.component';
 
@@ -11,7 +10,7 @@ const routes: Routes = [
 ];
 
 export const RoutingComponents = [
-    RulesComponent,
+    RulesListComponent,
     RuleDetailsComponent
 ]
 

@@ -1,0 +1,14 @@
+<div class="ui top attached segment modal-header" style="padding: 10px !important; display:flex">
+    <div class="ui huge header" style="flex-grow: 1;margin: 0px!important;">
+        <div style="min-height: 36px;">{{form.value.Name}}</div>
+        <div style="font-size: 0.4em;font-weight: 100;line-height: initial; color: #bbbbbb">{{variable.Parent}}</div>
+    </div>
+
+</div>
+<div class="ui attached segment modal-content">
+    <ng-content></ng-content>
+</div>
+<div class="ui bottom attached segment modal-footer" style="margin-bottom: 0px;">
+    <button class="ui primary button" style="flex-grow: 1;" (click)="ok.next()" [disabled]="!form.valid">Save</button>
+    <button class="ui grey button" style="flex-grow: 1;margin-right: 0px;" (click)="cancel.next()">Cancel</button>
+</div>

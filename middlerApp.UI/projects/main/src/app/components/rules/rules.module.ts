@@ -28,7 +28,8 @@ import { DoobEditorModule } from "@doob-ng/editor";
         OverlayModule,
         DragDropModule,
         DoobUIModule,
-        DoobEditorModule
+        DoobEditorModule,
+        DoobCoreModule
     ],
     declarations: [
         ...RoutingComponents,
@@ -37,7 +38,6 @@ import { DoobEditorModule } from "@doob-ng/editor";
         ActionEditModalComponent,
         UrlRedirectModalComponent,
         UrlRewriteModalComponent,
-        RulesListComponent,
         PRoxyModalComponent,
         ScriptModalComponent
     ],

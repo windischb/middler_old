@@ -4,13 +4,13 @@ import { BehaviorSubject, Observable, Subscription, fromEvent } from 'rxjs';
 import { filter, take, map, tap } from 'rxjs/operators';
 import { OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MiddlerRuleDto } from './models/middler-rule-dto';
 import { RulesService } from './rules.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MiddlerAction } from './models/middler-action';
 import { ActionHelper } from './actions/action-helper';
-import { UIService } from '../main/ui.service';
+import { AppUIService } from '../../shared/services/app-ui.service';
 
 
 declare var $: any;
@@ -63,11 +63,12 @@ export class RulesListComponent implements ControlValueAccessor, AfterViewInit {
 
     selected: Array<string> = []
 
-    constructor(private ui: UIService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef, private rulesService: RulesService, private router: Router, private route: ActivatedRoute) {
+    constructor(private ui: AppUIService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef, private rulesService: RulesService, private router: Router, private route: ActivatedRoute) {
 
         ui.Set(value => {
             value.Header.Title = "Endpoint Rules"
             value.Header.Icon = 'stream';
+            value.Content.Container = false;
         })
 
 
@@ -120,6 +121,7 @@ export class RulesListComponent implements ControlValueAccessor, AfterViewInit {
                 return act;
             })
         }
+        this.open($event)
 
         // if ($event.ctrlKey) {
         //     action.Selected = !action.Selected
@@ -190,7 +192,7 @@ export class RulesListComponent implements ControlValueAccessor, AfterViewInit {
         }
 
         $event.preventDefault();
-        
+
 
         const clickTarget = event.target as HTMLElement;
         const isList = clickTarget.classList.contains('cdk-drop-list');

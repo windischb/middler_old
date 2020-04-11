@@ -3,23 +3,20 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormBuilder, FormArray, FormGr
 import { MiddlerAction } from './models/middler-action';
 import { BehaviorSubject, Observable, Subscription, fromEvent } from 'rxjs';
 import { map, filter, take } from 'rxjs/operators';
-import { OverlayRef, Overlay, OverlayConfig } from '@angular/cdk/overlay';
-import { TemplatePortal, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { OverlayRef, Overlay } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
 import { UrlRedirectParameters, UrlRedirectAction } from './actions/url-redirect/url-redirect-action';
 import { ActionEditModalService } from './modal/action-modal.service';
-import { ActionEditModalOverlayRef } from './modal/action-edit-modal-overlay-ref';
-import { ActionEditModalComponent } from './modal/action-edit-modal.component';
-import { ACTION_DIALOG_DATA } from './modal/action-edit-modal.tokens';
 import { UrlRedirectModalComponent } from './actions/url-redirect/url-redirect-modal.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem, copyArrayItem } from '@angular/cdk/drag-drop';
 import { UrlRewriteAction, UrlRewriteParameters } from './actions/url-rewrite/url-rewrite-action';
 import { ActionHelper } from './actions/action-helper';
-import { UIService } from '../main/ui.service';
 import { UrlRewriteModalComponent } from './actions/url-rewrite/url-rewrite-modal.component';
 import { ProxyParameters, ProxyAction } from './actions/proxy/proxy-action';
 import { PRoxyModalComponent } from './actions/proxy/proxy-modal.component';
 import { ScriptAction, ScriptParameters } from './actions/script/script-action';
 import { ScriptModalComponent } from './actions/script/script-modal.component';
+import { AppUIService } from '../../shared/services/app-ui.service';
 
 declare var $: any;
 
@@ -67,7 +64,7 @@ export class ActionsListComponent implements ControlValueAccessor {
 
     selected: Array<string> = []
 
-    constructor(private uiService: UIService, private modal: ActionEditModalService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef) {
+    constructor(private uiService: AppUIService, private modal: ActionEditModalService, public overlay: Overlay, public viewContainerRef: ViewContainerRef, private cref: ChangeDetectorRef) {
 
         console.log("Constructor")
         // this.formGroup = this.fb.group({

@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Overlay } from '@angular/cdk/overlay';
 import { compare } from 'fast-json-patch';
 import { ActionsListComponent } from './actions-list.component';
-import { UIService } from '../main/ui.service';
+import { AppUIService } from '../../shared/services/app-ui.service';
 
 
 declare var $: any;
@@ -24,13 +24,12 @@ export class RuleDetailsComponent implements OnInit {
 
 
     private Id: string;
-    private Index: string;
-    private Order: number;
+    //private Index: string;
+    //private Order: number;
 
-    public rule$ = combineLatest(this.route.queryParamMap, this.route.paramMap, this.route.fragment).pipe(
-        map(([queryParamMap, paramMap, fragment]) => {
+    public rule$ = combineLatest(this.route.paramMap, this.route.queryParamMap, this.route.fragment).pipe(
+        map(([paramMap, queryParamMap, fragment]) => {
             this.Id = paramMap.get('id')
-            this.Index = queryParamMap.get('index')
             return this.rulesService.Get(this.Id);
         }),
         mergeAll(),
@@ -57,7 +56,7 @@ export class RuleDetailsComponent implements OnInit {
     @ViewChild(ActionsListComponent) actionsList: ActionsListComponent;
     @ViewChildren('addActionTemplate') addActionTemplate: QueryList<TemplateRef<any>>;
 
-    constructor(private uiService: UIService, private route: ActivatedRoute, private rulesService: RulesService, private fb: FormBuilder, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
+    constructor(private uiService: AppUIService, private route: ActivatedRoute, private rulesService: RulesService, private fb: FormBuilder, public overlay: Overlay, public viewContainerRef: ViewContainerRef) {
 
         this.uiService.Set(ui => {
 
@@ -108,7 +107,6 @@ export class RuleDetailsComponent implements OnInit {
 
     onrightClick($event: MouseEvent) {
         $event.preventDefault();
-        console.log($event)
     }
 
     initRestrictionsAccordion($event: ElementRef) {

@@ -3,9 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MiddlerRuleDto } from './models/middler-rule-dto';
 import { CreateMiddlerRuleDto } from './models/create-middler-rule-dto';
 import { of, BehaviorSubject } from 'rxjs';
-import { tap, shareReplay } from 'rxjs/operators';
+import { tap, shareReplay, take } from 'rxjs/operators';
 import { MessageService } from '../../shared/services/message.service';
 import { compare, observe } from 'fast-json-patch';
+import { DoobEditorFile } from '@doob-ng/editor';
 
 const patchHeaders = new HttpHeaders({
     'Content-Type': 'application/json-patch+json',
@@ -37,12 +38,11 @@ export class RulesService {
     constructor(private http: HttpClient, private message: MessageService) {
 
         this.message.RunOnEveryReconnect(() => this.GetAll().subscribe());
-
+        this.message.RunOnEveryReconnect(() => this.GetTypings());
 
         this.message.Stream<any>("MiddlerRule.Subscribe").pipe(
             tap(item => console.log(item))
         ).subscribe()
-
     }
 
     public GetAll() {
@@ -140,13 +140,6 @@ export class RulesService {
 
         var patchDocument = compare(this.RulesOrder, _RulesOrder);
 
-        console.log(patchDocument);
-
-        // const patchHeaders = new HttpHeaders({
-        //     'Content-Type': 'application/json-patch+json',
-        //     'Accept': 'application/json'
-        // })
-
         return this.http.patch<MiddlerRuleDto>(`/api/repo/litedb/order`, patchDocument, { headers: patchHeaders })
             .subscribe(_ => this.GetAll());
     }
@@ -162,6 +155,20 @@ export class RulesService {
                 .subscribe(rule => this.UpdatedMiddlerRule(rule));
         }
 
+    }
+
+
+    typings$: BehaviorSubject<DoobEditorFile[]> = new BehaviorSubject<DoobEditorFile[]>([]);
+
+    public GetTypings() {
+        this.message.Invoke<Array<{Key: string, Value: string}>>("MiddlerRule.GetTypings")
+            .pipe(
+                take(1),
+                tap(typings => {
+                    var ts = typings.map(t => new DoobEditorFile(t.Key, t.Value, false))
+                    this.typings$.next(ts);
+                })
+            ).subscribe();
     }
 
 }

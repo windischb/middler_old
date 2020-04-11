@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HARRRConnection } from 'signalarrr';
 import { HubConnectionState } from '@microsoft/signalr';
-import { mergeAll} from 'rxjs/operators';
+import { mergeAll } from 'rxjs/operators';
 import { from, Subject } from 'rxjs';
 
 
@@ -44,7 +44,15 @@ export class MessageService {
     }
 
     public Invoke<T>(methodName: string, ...args: any[]) {
-        return from(this.initializer.isInitialized.then(() => from(this.harrrConnection.invoke<T>(methodName, ...args)))).pipe(mergeAll());
+
+
+        return from(
+            this.initializer.isInitialized.then(
+                () => from(
+                    this.harrrConnection.invoke<T>(methodName, ...args)
+                )
+            )
+        ).pipe(mergeAll());
         //return from(this.harrrConnection.invoke<T>(methodName, args));
     }
 

@@ -15,15 +15,15 @@
 
         <div style="display: flex; flex-direction: row; flex-grow: 1;">
             <div style="flex-grow: 1;">
-                <doob-editor formControlName="SourceCode" [language]="form.value.Language" [tsOptions]="{noLib: false}"></doob-editor>
+                <db-editor formControlName="SourceCode" [language]="form.value.Language" [typings]="(typings$ | async)" [tsOptions]="{noLib: true}"></db-editor>
             </div>
             <div style="width: 240px;margin-left:8px">
                 <div class="field">
-                    <doob-dropdown formControlName="Language" class="selection">
-                        <doob-dropdown-item value="Powershell">Powershell</doob-dropdown-item>
-                        <doob-dropdown-item value="Javascript">Javascript</doob-dropdown-item>
-                        <doob-dropdown-item value="Typescript">Typescript</doob-dropdown-item>
-                    </doob-dropdown>
+                    <db-dropdown formControlName="Language" class="selection">
+                        <db-item value="Powershell">Powershell</db-item>
+                        <db-item value="Javascript">Javascript</db-item>
+                        <db-item value="Typescript">Typescript</db-item>
+                    </db-dropdown>
                 </div>
             </div>
         </div>
