@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
     selector: 'basic-modal',
     templateUrl: './basic-modal.component.html',
-    styleUrls: ['./style.scss'],
+    styleUrls: ['../style.scss'],
     host: {
         class: 'flex-grow-column'
     }

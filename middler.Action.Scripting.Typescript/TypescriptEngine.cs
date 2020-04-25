@@ -11,7 +11,7 @@ namespace middler.Action.Scripting.Typescript
 {
     public class TypescriptEngine: IScriptEngine
     {
-        public System.Action<IScriptingOptions> CompileScript => CompileScriptInternal;
+        public Func<string, string> CompileScript => CompileScriptInternal;
 
 
         private JavascriptEngine _javascriptEngine;
@@ -66,10 +66,10 @@ namespace middler.Action.Scripting.Typescript
 
 
         private static Esprima.Ast.Program TypeScriptProgram;
-        private void CompileScriptInternal(IScriptingOptions options)
+        private string CompileScriptInternal(string sourceCode)
         {
-            if (String.IsNullOrWhiteSpace(options.SourceCode))
-                return;
+            if (String.IsNullOrWhiteSpace(sourceCode))
+                return null;
 
             if (TypeScriptProgram == null) {
                 var tsLib = GetFromResources("typescript.min.js");
@@ -86,17 +86,13 @@ namespace middler.Action.Scripting.Typescript
 
 
            
-            _engine.SetValue("src", options.SourceCode);
+            _engine.SetValue("src", sourceCode);
 
 
             var transpileOtions = "{\"compilerOptions\": {\"target\":\"ES5\"}}";
 
             var output = _engine.Execute($"ts.transpileModule(src, {transpileOtions})", EsprimaOptions).GetCompletionValue().AsObject();
-            var result = output.Get("outputText").AsString();
-
-
-            options.CompiledCode = result;
-
+            return output.Get("outputText").AsString();
 
         }
 

@@ -7,7 +7,7 @@ namespace middler.Hosting.Models {
     public class MiddlerActionDto {
 
         public string ActionType { get; set; }
-        public object Parameters { get; set; }
+        public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
 
     }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { VariablesRoutingModule, RoutingComponents } from './variables-routing.module';
-import { VariablesFolderContentComponent } from './components/folder-content/';
+import { VariablesFolderContentComponent } from './folder-content/';
 import { DoobCoreModule } from '@doob-ng/core';
 import { DoobUIModule } from '@doob-ng/ui';
 import { TreeModule } from 'angular-tree-component';

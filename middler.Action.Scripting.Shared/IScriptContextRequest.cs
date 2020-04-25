@@ -1,4 +1,5 @@
-﻿using System;
+﻿using middler.Common.SharedModels.Models;
+using System;
 using System.Collections.Generic;
 
 namespace middler.Action.Scripting.Shared
@@ -9,13 +10,13 @@ namespace middler.Action.Scripting.Shared
 
         Uri Uri { get; }
 
-        Dictionary<string, object> RouteData { get; set; }
-        Dictionary<string, object> Headers { get; set; }
-        Dictionary<string, string> QueryParameters { get; set; }
+        MiddlerRouteData RouteData { get; }
+        SimpleDictionary<string> Headers { get; }
+        MiddlerRouteQueryParameters QueryParameters { get; }
 
-        string UserAgent { get;  }
         string ClientIp { get; }
         string[] ProxyServers { get; }
 
+        string GetBodyAsString();
     }
 }

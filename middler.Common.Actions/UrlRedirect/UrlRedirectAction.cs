@@ -9,10 +9,20 @@ namespace middler.Common.Actions.UrlRedirect
     public class UrlRedirectAction: MiddlerAction<UrlRedirectOptions>
     {
         internal static string DefaultActionType => "UrlRedirect";
-        public void ExecuteRequest(HttpContext httpContext, IActionHelper actionHelper)
+        public void ExecuteRequest(IMiddlerContext middlerContext, IActionHelper actionHelper)
         {
             var uri = new Uri(actionHelper.BuildPathFromRoutData(Parameters.RedirectTo));
-            httpContext.Response.Redirect(uri.AbsoluteUri, Parameters.Permanent, Parameters.PreserveMethod);
+            if (Parameters.PreserveMethod)
+            {
+                middlerContext.Response.StatusCode = Parameters.Permanent ? StatusCodes.Status308PermanentRedirect : StatusCodes.Status307TemporaryRedirect;
+            }
+            else
+            {
+                middlerContext.Response.StatusCode =  Parameters.Permanent ? StatusCodes.Status301MovedPermanently : StatusCodes.Status302Found;
+            }
+
+            middlerContext.Response.Headers["Location"] = uri.AbsoluteUri;
+           
         }
 
         public override string ActionType => DefaultActionType;

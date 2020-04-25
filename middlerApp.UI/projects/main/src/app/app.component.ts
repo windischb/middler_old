@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppInitializeService } from './app-initialize.service';
-import { AppUIService } from './shared/services/app-ui.service';
+import { AppUIService } from '@services';
 
 @Component({
     selector: 'app-root',

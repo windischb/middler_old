@@ -10,24 +10,40 @@ namespace middler.Common.Actions.UrlRewrite
     {
         internal static string DefaultActionType => "UrlRewrite";
 
-        public override bool ContinueAfterwards => true;
+        public override bool Terminating => false;
 
         public override bool WriteStreamDirect => false;
         public override string ActionType => DefaultActionType;
 
 
-        public void ExecuteRequest(HttpContext httpContext)
+        public void ExecuteRequest(IMiddlerContext middlerContext)
         {
 
-            var builder = new UriBuilder(httpContext.Request.GetDisplayUrl());
-            builder.Path = Parameters.RewriteTo;
-            httpContext.Request.Path = builder.Uri.LocalPath;
+            var isAbsolute = Uri.IsWellFormedUriString(Parameters.RewriteTo, UriKind.Absolute);
+            if (isAbsolute)
+            {
+                middlerContext.Request.Uri = new Uri(Parameters.RewriteTo);
+            }
+            else
+            {
+                var builder = new UriBuilder(middlerContext.Request.Uri);
+                builder.Path = Parameters.RewriteTo;
+                middlerContext.Request.Uri = builder.Uri;
+            }
+
+
+
+            middlerContext.ForwardBody();
+
+            //var nUrl = new UriBuilder(Parameters.RewriteTo);
+            //builder.Path = Parameters.RewriteTo;
+
         }
 
-        public void ExecuteResponse(HttpContext httpContext)
+        public void ExecuteResponse(IMiddlerContext middlerContext)
         {
-            httpContext.Response.Headers["TestHeader"] = "irgendwas";
-            httpContext.Response.WriteAsync($" - {GetType().Name}");
+            middlerContext.Response.Headers["TestHeader"] = "irgendwas";
+           
         }
     }
 }

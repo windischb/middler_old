@@ -8,7 +8,7 @@ namespace middler.Core.Models
     {
         internal AccessMode AccessMode { get; set; }
         internal MiddlerRule MiddlerRule { get; set; }
-        internal Dictionary<string, object> RouteData { get; set; }
+        //internal Dictionary<string, object> RouteData { get; set; }
         internal List<MiddlerRule> RemainingEndpointInfos { get; set; }
 
     }

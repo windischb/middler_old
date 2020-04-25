@@ -24,19 +24,28 @@ namespace middler.Storage.LiteDB
 
         public LiteDBRuleRepository(string connectionString)
         {
-            Repository = new LiteRepository(connectionString);
+
+            var con = new ConnectionString(connectionString);
+
+            var fi = new FileInfo(con.Filename);
+            if (!fi.Directory.Exists)
+            {
+                fi.Directory.Create();
+            }
+
+            Repository = new LiteRepository(con);
             Repository.Database.Mapper.Entity<MiddlerRuleDbModel>().Id(emp => emp.Id, true);
         }
 
 
         public List<MiddlerRule> ProvideRules()
         {
-            return Repository.Fetch<MiddlerRuleDbModel>().Where(r => r.Enabled).OrderBy(r => r.Order).Select(r => r.ToMiddlerRule()).ToList();
+            return Repository.Fetch<MiddlerRuleDbModel>(model => model.Enabled).OrderBy(r => r.Order).Select(r => r.ToMiddlerRule()).ToList();
         }
 
         public async Task<List<MiddlerRuleDbModel>> GetAllAsync()
         {
-            return Repository.Fetch<MiddlerRuleDbModel>().OrderBy(r => r.Order).ToList();
+            return Repository.Fetch<MiddlerRuleDbModel>(m => m != null).OrderBy(r => r.Order).ToList();
         }
 
         public async Task<MiddlerRuleDbModel> GetByIdAsync(Guid id)
@@ -57,7 +66,7 @@ namespace middler.Storage.LiteDB
 
         public async Task RemoveAsync(Guid id)
         {
-            Repository.Delete<MiddlerRuleDbModel>(emp => emp.Id == id);
+            Repository.Delete<MiddlerRuleDbModel>(id);
             EventSubject.OnNext(new MiddlerStorageEvent(MiddlerStorageAction.Insert, new MiddlerRuleDbModel() { Id = id }));
         }
 

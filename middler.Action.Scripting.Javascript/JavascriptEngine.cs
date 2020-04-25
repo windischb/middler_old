@@ -8,13 +8,14 @@ using Jint.Native.Json;
 using Jint.Native.Object;
 using Jint.Runtime;
 using Jint.Runtime.Debugger;
+using Jint.Runtime.Interop;
 using middler.Action.Scripting.Shared;
 
 namespace middler.Action.Scripting.Javascript
 {
     public class JavascriptEngine: IScriptEngine
     {
-        public Action<IScriptingOptions> CompileScript => null;
+        public Func<string, string> CompileScript => null;
 
         private Engine _engine;
         public const string StopExecutionIdentifier = "e06e73c8-67ec-411c-9761-c2f3b063f436";
@@ -49,7 +50,8 @@ namespace middler.Action.Scripting.Javascript
             _engine.SetValue("setManagedExit", new Action<bool>(SetManagedExit));
             managedExit = false;
             _engine.SetValue("managedExit", managedExit);
-
+            _engine.Global.FastAddProperty("middler", new NamespaceReference(_engine, "middler"), false, false, false );
+            //_engine.Execute("var middler = importNamespace('middler')");
             _engine.Step += EngineOnStep;
 
 
@@ -70,6 +72,7 @@ namespace middler.Action.Scripting.Javascript
 
             options.CatchClrExceptions();
             options.DebugMode();
+            options.AllowClr(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         public void Stop()

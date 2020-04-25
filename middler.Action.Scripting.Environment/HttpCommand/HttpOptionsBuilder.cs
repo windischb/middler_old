@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using middler.Variables.HelperClasses;
 
 namespace middler.Scripting.HttpCommand
 {
@@ -34,6 +35,12 @@ namespace middler.Scripting.HttpCommand
             return UseProxy(webProxy);
         }
 
+        public HttpOptionsBuilder UseProxy(Uri proxy, SimpleCredentials credentials)
+        {
+            return UseProxy(proxy, (NetworkCredential)credentials);
+        }
+
+
         public HttpOptionsBuilder UseProxy(string proxy)
         {
             var uri = UriHelper.BuildUri(proxy);
@@ -46,9 +53,20 @@ namespace middler.Scripting.HttpCommand
             return UseProxy(uri, credentials);
         }
 
+        public HttpOptionsBuilder UseProxy(string proxy, SimpleCredentials credentials)
+        {
+            var uri = UriHelper.BuildUri(proxy);
+            return UseProxy(uri, (NetworkCredential)credentials);
+        }
+
+        public HttpOptionsBuilder IgnoreProxy()
+        {
+            return IgnoreProxy(true);
+        }
+
         public HttpOptionsBuilder IgnoreProxy(bool value)
         {
-            _httpHandlerOptions.IgnoreProxy = true;
+            _httpHandlerOptions.IgnoreProxy = value;
             return this;
         }
 

@@ -1,10 +1,9 @@
-import { Component, OnInit, Inject, ElementRef } from "@angular/core";
+import { Component, OnInit, ElementRef } from "@angular/core";
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActionEditModalOverlayRef } from '../../modal/action-edit-modal-overlay-ref';
-import { ACTION_DIALOG_DATA } from '../../modal/action-edit-modal.tokens';
 import { MiddlerAction } from '../../models/middler-action';
 import { RulesService } from '../../rules.service';
 import { tap } from 'rxjs/operators';
+import { OverlayContext } from '@doob-ng/cdk-helper';
 
 declare const $: any;
 
@@ -22,10 +21,8 @@ export class ScriptModalComponent implements OnInit {
     );
 
     constructor(private fb: FormBuilder,
-        private rulesService: RulesService,
-        public dialogRef: ActionEditModalOverlayRef,
-
-        @Inject(ACTION_DIALOG_DATA) public actionContext: MiddlerAction) {
+        private context: OverlayContext<MiddlerAction>,
+        private rulesService: RulesService) {
 
     }
 
@@ -36,7 +33,7 @@ export class ScriptModalComponent implements OnInit {
             SourceCode: []
         });
 
-        this.form.patchValue(this.actionContext.Parameters)
+        this.form.patchValue(this.context.data.Parameters)
 
     }
 
@@ -45,11 +42,11 @@ export class ScriptModalComponent implements OnInit {
     }
 
     ok() {
-        this.dialogRef.ok(this.form.value);
-        this.dialogRef.close();
+        this.context.invoke("OK", this.form.value);
+        this.context.handle.Close();
     }
 
     cancel() {
-        this.dialogRef.close();
+        this.context.handle.Close();
     }
 }

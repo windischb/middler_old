@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
@@ -8,16 +9,18 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using middler.Action.Scripting;
 using middler.Action.Scripting.Powershell;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Core;
-using middler.DataStore;
 using middler.Storage.LiteDB;
+using middler.Variables;
 using middlerApp.API.Attributes;
 using middlerApp.API.ExtensionMethods;
 using middlerApp.API.Helper;
+using middlerApp.API.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -40,18 +43,24 @@ namespace middlerApp.API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            var sConfig = Configuration.Get<StartUpConfiguration>();
+            sConfig.SetDefaultSettings();
+
             services.AddControllers(options =>
             {
 
+
             }).AddNewtonsoftJson(options =>
             {
+
                 options.SerializerSettings.Formatting = Formatting.Indented;
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 options.SerializerSettings.Converters.Add(new PSObjectJsonConverter());
+                options.SerializerSettings.Converters.Add(new DecimalJsonConverter());
             });
 
             services.AddResponseCompression();
-
+            services.AddSpaStaticFiles(conf => conf.RootPath = PathHelper.GetFullPath(sConfig.WebRoot));
 
 
 
@@ -71,18 +80,25 @@ namespace middlerApp.API
                     .AddScriptingAction()
 
             );
-            services.AddNamedMiddlerRepo("litedb", sp => new LiteDBRuleRepository("Filename=rules.db"));
 
-            services.AddSingleton<IDataStore>(sp =>
+            
+            services.AddNamedMiddlerRepo("litedb", sp =>
             {
-                DataStoreConfig b = new DataStoreConfigBuilder().UseRootPath(PathHelper.GetFullPath("/temp/middler/variables"));
-                return new DataStore(b);
+                var path = PathHelper.GetFullPath(sConfig.EndpointRulesSettings.DbFilePath);
+                return new LiteDBRuleRepository($"Filename={path}");
+            });
+
+            services.AddSingleton<IVariablesStore>(sp =>
+            {
+                StoreConfig b = new StoreConfigBuilder().UseRootPath(PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.RootPath));
+                return new VariablesStore(b);
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
 
             app.UseResponseCompression();
 
@@ -111,8 +127,8 @@ namespace middlerApp.API
             app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
             {
                
-
-                builder.UseStaticFiles();
+                
+                
                 builder.UseRouting();
 
                 builder.UseEndpoints(endpoints =>
@@ -122,6 +138,30 @@ namespace middlerApp.API
                     endpoints.MapHub<UIHub>("/signalr/ui");
 
                 });
+
+
+                //builder.UseDefaultFiles();
+                builder.UseStaticFiles(new StaticFileOptions()
+                {
+                    OnPrepareResponse = ctx =>
+                    {
+                        if (ctx.Context.Request.Path.ToString() == "/index.html")
+                        {
+                            var headers = ctx.Context.Response.GetTypedHeaders();
+                            headers.CacheControl = new CacheControlHeaderValue
+                            {
+                                Public = true,
+                                MaxAge = TimeSpan.FromDays(0)
+                            };
+                        }
+                    }
+                });
+
+                builder.UseSpa(spa =>
+                {
+
+                });
+
             });
 
 

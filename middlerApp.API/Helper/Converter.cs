@@ -15,6 +15,12 @@ namespace middlerApp.API.Helper
         public static Reflectensions.Json Json => lazyJson.Value;
 
 
+        public static T CopyTo<T>(object @object)
+        {
+            var json = Json.ToJson(@object);
+            return Json.ToObject<T>(json);
+        }
+
     }
 
 }

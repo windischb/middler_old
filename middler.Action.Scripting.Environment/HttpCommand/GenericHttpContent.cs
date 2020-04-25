@@ -90,13 +90,13 @@ namespace middler.Scripting.HttpCommand
             throw new NotImplementedException();
         }
 
-        public object AsArray()
+        public object[] AsArray()
         {
             switch (Type)
             {
                 case "json":
                 {
-                    return JsonHelpers.ToBasicDotNetObjectEnumerable(_jToken as JArray);
+                    return JsonHelpers.ToBasicDotNetObjectEnumerable(_jToken as JArray).ToArray();
                 }
 
             }

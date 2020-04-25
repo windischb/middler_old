@@ -1,9 +1,12 @@
-﻿namespace middler.Action.Scripting.Shared
+﻿using middler.Common.SharedModels.Models;
+
+namespace middler.Action.Scripting.Shared
 {
     public interface IScriptContextResponse
     {
-        int? StatusCode { get; set; }
-
-        object Body { get; set; }
+        int StatusCode { get; set; }
+        SimpleDictionary<string> Headers { get; set; } 
+        
+        void SetBody(object body);
     }
 }

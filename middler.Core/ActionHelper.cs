@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
+using middler.Common;
 using middler.Common.Interfaces;
 using middler.Common.SharedModels.Models;
 
@@ -12,9 +13,9 @@ namespace middler.Core
     {
         private MiddlerRouteData _routeData;
 
-        public ActionHelper(HttpContext httpContext)
+        public ActionHelper(IMiddlerRequestContext middlerRequestContext)
         {
-            _routeData = httpContext.Features.Get<MiddlerRouteData>();
+            _routeData = middlerRequestContext.RouteData;
         }
 
         public string BuildPathFromRoutData(string template)

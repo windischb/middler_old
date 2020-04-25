@@ -5,19 +5,19 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RulesRoutingModule, RoutingComponents } from './rules-routing.module';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { ActionsListComponent } from './actions-list.component';
-import { ActionListItemComponent } from './action-list-item.component';
-import { ActionEditModalComponent } from './modal/action-edit-modal.component';
-import { ActionEditModalService } from './modal/action-modal.service';
-import { UrlRedirectModalComponent } from './actions/url-redirect/url-redirect-modal.component';
-import { RulesListComponent } from './rules-list.component';
-import { UrlRewriteModalComponent } from './actions/url-rewrite/url-rewrite-modal.component';
-import { PRoxyModalComponent } from './actions/proxy/proxy-modal.component';
-import { ScriptModalComponent } from './actions/script/script-modal.component';
 import { DoobCoreModule } from '@doob-ng/core';
 import { DoobUIModule } from "@doob-ng/ui";
 import { DoobEditorModule } from "@doob-ng/editor";
+import { ActionsListComponent } from './rule-details/actions-list/actions-list.component';
+import { ActionListItemComponent } from './rule-details/action-list-item/action-list-item.component';
 
+import { UrlRewriteModalComponent, UrlRedirectModalComponent, ProxyModalComponent, ScriptModalComponent } from './actions';
+import { ActionBasicModalComponent } from './actions/base/action-basic-modal.component';
+
+const ActionComponents = [
+    ActionBasicModalComponent,
+    UrlRewriteModalComponent, UrlRedirectModalComponent, ProxyModalComponent, ScriptModalComponent
+]
 @NgModule({
     imports: [
         CommonModule,
@@ -33,23 +33,16 @@ import { DoobEditorModule } from "@doob-ng/editor";
     ],
     declarations: [
         ...RoutingComponents,
+        ...ActionComponents,
         ActionsListComponent,
-        ActionListItemComponent,
-        ActionEditModalComponent,
-        UrlRedirectModalComponent,
-        UrlRewriteModalComponent,
-        PRoxyModalComponent,
-        ScriptModalComponent
+        ActionListItemComponent
     ],
     entryComponents: [
-        ActionEditModalComponent,
-        UrlRedirectModalComponent,
-        UrlRewriteModalComponent,
-        PRoxyModalComponent,
-        ScriptModalComponent
+        ...ActionComponents,
+
     ],
     providers: [
-        ActionEditModalService
+
     ],
     exports: []
 })

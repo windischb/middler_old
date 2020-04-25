@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using middler.DataStore;
+using middler.Variables;
 using middlerApp.API.Attributes;
 
 namespace middlerApp.API.Controllers
@@ -14,19 +14,20 @@ namespace middlerApp.API.Controllers
     [AdminController]
     public class VariablesController: Controller
     {
-        public IDataStore DataStore { get; }
+        public IVariablesStore VariablesStore { get; }
 
-        public VariablesController(IDataStore dataStore)
+        public VariablesController(IVariablesStore variablesStore)
         {
-            DataStore = dataStore;
+            VariablesStore = variablesStore;
         }
 
 
         [HttpGet("folders")]
         public IActionResult GetFolders()
         {
-            return Ok(DataStore.GetFolderTree());
+            return Ok(VariablesStore.GetFolderTree());
         }
+
 
     }
 }

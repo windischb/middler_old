@@ -19,7 +19,7 @@
       "dom"
     ],
     "paths": {
-        "@services/": [
+        "@services": [
             "projects/main/src/app/shared/services"
         ],
         "@services/*": [

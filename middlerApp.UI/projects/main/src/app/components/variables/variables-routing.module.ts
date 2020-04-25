@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { VariablesExplorerComponent } from './components/variables-explorer';
+import { VariablesExplorerComponent } from './variables-explorer';
 
 
 

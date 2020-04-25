@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { RuleDetailsComponent } from './rule-details.component';
-import { RulesListComponent } from './rules-list.component';
+import { RuleDetailsComponent } from './rule-details/rule-details.component';
+import { RulesListComponent } from './rules-list/rules-list.component';
 
 
 const routes: Routes = [

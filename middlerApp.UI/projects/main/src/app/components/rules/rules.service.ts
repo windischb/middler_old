@@ -4,8 +4,8 @@ import { MiddlerRuleDto } from './models/middler-rule-dto';
 import { CreateMiddlerRuleDto } from './models/create-middler-rule-dto';
 import { of, BehaviorSubject } from 'rxjs';
 import { tap, shareReplay, take } from 'rxjs/operators';
-import { MessageService } from '../../shared/services/message.service';
-import { compare, observe } from 'fast-json-patch';
+import { MessageService } from '@services';
+import { compare } from 'fast-json-patch';
 import { DoobEditorFile } from '@doob-ng/editor';
 
 const patchHeaders = new HttpHeaders({

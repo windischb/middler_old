@@ -1,40 +1,28 @@
-<div class="ui top attached segment" style="background-color: #292f3b; color: white;">
 
-        <div class="ui huge header" style="color: whitesmoke;">
+<action-basic-modal (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form [formGroup]="form" class="ui form">
 
-            Script
-
+        <div class="field flex-grow-column">
+            <db-editor formControlName="SourceCode" [language]="form.value.Language" [typings]="(typings$ | async)" [tsOptions]="{noLib: true}">
+            </db-editor>
         </div>
 
+        <ng-template dbPortalTemplate="ActionModalHeader-Left">
+            Script
+        </ng-template>
 
-
-</div>
-<div class="ui attached segment" style="border:none; flex-grow: 1; display: flex;padding: 8px 8px 0px 8px">
-    <form [formGroup]="form" class="ui form" style="flex-grow: 1; display: flex; flex-direction: column;">
-
-
-        <div style="display: flex; flex-direction: row; flex-grow: 1;">
-            <div style="flex-grow: 1;">
-                <db-editor formControlName="SourceCode" [language]="form.value.Language" [typings]="(typings$ | async)" [tsOptions]="{noLib: true}"></db-editor>
-            </div>
-            <div style="width: 240px;margin-left:8px">
-                <div class="field">
-                    <db-dropdown formControlName="Language" class="selection">
-                        <db-item value="Powershell">Powershell</db-item>
-                        <db-item value="Javascript">Javascript</db-item>
+        <ng-template dbPortalTemplate="ActionModalHeader-Right">
+            <div class="fields">
+                <div class="four wide field">
+                    <db-dropdown formControlName="Language" class="selection" #lang>
                         <db-item value="Typescript">Typescript</db-item>
+                        <db-item value="Javascript">Javascript</db-item>
+                        <db-item value="Powershell">Powershell</db-item>
                     </db-dropdown>
                 </div>
             </div>
-        </div>
-
-
-
-
+        </ng-template>
 
     </form>
-</div>
-<div class="ui bottom attached segment" style="display: flex;padding: 8px;">
-    <button class="ui primary button" style="flex-grow: 1;" (click)="ok()">Save</button>
-    <button class="ui grey button" style="flex-grow: 1;margin-right: 0px;" (click)="cancel()">Cancel</button>
-</div>
+</action-basic-modal>
+

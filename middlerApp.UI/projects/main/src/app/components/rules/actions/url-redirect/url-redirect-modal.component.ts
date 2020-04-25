@@ -1,8 +1,7 @@
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActionEditModalOverlayRef } from '../../modal/action-edit-modal-overlay-ref';
-import { ACTION_DIALOG_DATA } from '../../modal/action-edit-modal.tokens';
 import { MiddlerAction } from '../../models/middler-action';
+import { OverlayContext } from '@doob-ng/cdk-helper';
 
 @Component({
     templateUrl: './url-redirect-modal.component.html',
@@ -15,8 +14,7 @@ export class UrlRedirectModalComponent implements OnInit {
     form: FormGroup;
 
     constructor(private fb: FormBuilder,
-        public dialogRef: ActionEditModalOverlayRef,
-        @Inject(ACTION_DIALOG_DATA) public actionContext: MiddlerAction) {
+        private context: OverlayContext<MiddlerAction>) {
 
     }
 
@@ -28,16 +26,16 @@ export class UrlRedirectModalComponent implements OnInit {
             PreserveMethod: []
         });
 
-        this.form.patchValue(this.actionContext.Parameters)
+        this.form.patchValue(this.context.data.Parameters)
 
     }
 
     ok() {
-        this.dialogRef.ok(this.form.value);
-        this.dialogRef.close();
+        this.context.invoke("OK", this.form.value);
+        this.context.handle.Close();
     }
 
     cancel() {
-        this.dialogRef.close();
+        this.context.handle.Close();
     }
 }

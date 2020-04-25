@@ -6,7 +6,7 @@ namespace middler.Action.Scripting.Shared
     public interface IScriptEngine: IDisposable
     {
 
-        System.Action<IScriptingOptions> CompileScript { get; }
+        Func<string, string> CompileScript { get; }
 
         bool NeedsCompiledScript => this.CompileScript != null;
 

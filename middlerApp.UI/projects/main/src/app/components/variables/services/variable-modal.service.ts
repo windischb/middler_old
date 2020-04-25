@@ -1,11 +1,7 @@
 import { ComponentFactoryResolver, Type, Injectable } from '@angular/core';
 import { OverlayConfig } from '@angular/cdk/overlay';
-import { StringModalComponent } from '../modals/string-modal.component';
-import { EditorModalComponent } from '../modals/editor-modal.component';
+import { EditorModalComponent, StringModalComponent, CredentialModalComponent, NumberModalComponent, BooleanModalComponent } from '../modals';
 import { DoobModalService } from '@doob-ng/cdk-helper';
-import { CredentialModalComponent } from '../modals/credential-modal.component';
-import { NumberModalComponent } from '../modals/number-modal.component';
-import { BooleanModalComponent } from '../modals/boolean-modal.component';
 
 @Injectable({
     providedIn: 'root'
@@ -46,7 +42,8 @@ export class VariableModalService {
         const modalConf = this.AvailabeModalTypes.find(c => c.type === modalType) || {
                 type: modalType,
                 overlayConfig: {
-                    width: '50%'
+                    width: '50%',
+                    maxWidth: '500px'
                 }
             }
 

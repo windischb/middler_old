@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Action.Scripting.En
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Common.StreamHelper", "middler.Common.StreamHelper\middler.Common.StreamHelper.csproj", "{9AE79FD2-9E25-4284-BACF-7E266C090E0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "middler.DataStore", "middler.DataStore\middler.DataStore.csproj", "{25CA1673-52AA-49C1-B614-92F671CF01C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "middler.Variables", "middler.Variables\middler.Variables.csproj", "{25CA1673-52AA-49C1-B614-92F671CF01C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

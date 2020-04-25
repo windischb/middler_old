@@ -16,6 +16,7 @@ using middler.Hosting.Models;
 using middlerApp.API.Attributes;
 using NamedServices.Microsoft.Extensions.DependencyInjection;
 using Reflectensions.ExtensionMethods;
+using Converter = middlerApp.API.Helper.Converter;
 
 namespace middlerApp.API.Controllers
 {
@@ -33,27 +34,6 @@ namespace middlerApp.API.Controllers
             _mapper = mapper;
             _internalHelper = internalHelper;
             Repo = serviceProvider.GetNamedService<IMiddlerStorage>("litedb");
-
-            //var r = new MiddlerRuleDbModel();
-            //r.Name = "Redirect All HTTP to HTTPS";
-
-            //var found = Repo.GetAllAsync().GetAwaiter().GetResult().FirstOrDefault(rule => rule.Name == r.Name);
-            //if (found == null) {
-            //    r.Scheme = new List<string> { "http" };
-            //    r.Hostname = "*";
-            //    r.Path = "{**Path}";
-            //    var act = new UrlRedirectAction();
-            //    act.Parameters.RedirectTo = "https://google.at";
-
-               
-                
-            //    r.Actions.Add(act.ToBasicMiddlerAction());
-
-            //    r.Enabled = true;
-
-            //    Repo.AddAsync(r);
-            //}
-
         }
 
 
@@ -62,7 +42,7 @@ namespace middlerApp.API.Controllers
         {
             var rules = await Repo.GetAllAsync();
 
-            return Ok(_mapper.Map<IEnumerable<MiddlerRuleDto>>(rules));
+            return Ok(rules.Select(ToDto));
         }
 
 
@@ -90,7 +70,7 @@ namespace middlerApp.API.Controllers
             UpdateActions(dbModel);
             await Repo.UpdateAsync(dbModel);
             var updated = await Repo.GetByIdAsync(id);
-            return Ok(_mapper.Map<MiddlerRuleDto>(updated));
+            return Ok(ToDto(updated));
         }
 
         [HttpPatch("{id}")]
@@ -105,7 +85,7 @@ namespace middlerApp.API.Controllers
             UpdateActions(ruleInDb);
             await Repo.UpdateAsync(ruleInDb);
             var updated = await Repo.GetByIdAsync(id);
-            return Ok(_mapper.Map<MiddlerRuleDto>(updated));
+            return Ok(ToDto(updated));
         }
 
         [HttpPatch("order")]
@@ -140,10 +120,20 @@ namespace middlerApp.API.Controllers
                 if (middlerAction.ActionType == "Script")
                 {
                     var scriptAction = _internalHelper.BuildConcreteActionInstance(middlerAction) as ScriptingAction;
-                    scriptAction?.CompileScriptIfNeeded();
-                    middlerAction.Parameters["CompiledCode"] = scriptAction.Parameters.CompiledCode;
+                    middlerAction.Parameters["CompiledCode"] = scriptAction?.CompileScriptIfNeeded();
                 }
             }
+        }
+
+        private MiddlerRuleDto ToDto(MiddlerRuleDbModel dbModel)
+        {
+            var dto = Converter.CopyTo<MiddlerRuleDto>(dbModel);
+            dto.Actions = dto.Actions.Select(action =>
+            {
+                action.Parameters.Remove("CompiledCode");
+                return action;
+            }).ToList();
+            return dto;
         }
     }
 }
