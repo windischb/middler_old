@@ -22,9 +22,10 @@ namespace middlerApp.API
 
             try
             {
+                ConfigureLogging();
                 StartUpConfiguration = BuildConfig();
                 
-                ConfigureLogging();
+                
                 Log.Information("Starting host");
                 CreateHost(args).Build().Run();
                 //CreateAdminHost(args).Build().Run();
@@ -82,7 +83,7 @@ namespace middlerApp.API
 
         private static void ConfigureKestrel(WebHostBuilderContext context, KestrelServerOptions serverOptions)
         {
-
+            Log.Debug("ConfigureKestrel");
             var config = context.Configuration.Get<StartUpConfiguration>();
             config.SetDefaultSettings();
             
@@ -117,9 +118,11 @@ namespace middlerApp.API
 
         private static StartUpConfiguration BuildConfig()
         {
+            Log.Debug("Build Configuration");
             var configFilePath = PathHelper.GetFullPath("configuration.json");
             if (!File.Exists(configFilePath))
             {
+                Log.Debug($"New Configuration written to: {configFilePath}");
                 File.WriteAllText(configFilePath ,Converter.Json.ToJson(new StartUpConfiguration().SetDefaultSettings(), true));
             }
 
