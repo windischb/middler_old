@@ -36,7 +36,7 @@ namespace middlerApp.API
 
     public class StartUpAdminConfiguration
     {
-        public string ListeningIP { get; set; } = "127.0.0.1";
+        public string ListeningIP { get; set; } = "0.0.0.0";
         public int HttpsPort { get; set; } = 4444;
         public string HttpsCertPath { get; set; }
         public string HttpsCertPassword { get; set; }
