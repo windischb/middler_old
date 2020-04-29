@@ -60,7 +60,7 @@ namespace middlerApp.API
             });
 
             services.AddResponseCompression();
-            services.AddSpaStaticFiles(conf => conf.RootPath = PathHelper.GetFullPath(sConfig.WebRoot));
+            services.AddSpaStaticFiles(conf => conf.RootPath = PathHelper.GetFullPath(sConfig.AdminSettings.WebRoot));
 
 
 

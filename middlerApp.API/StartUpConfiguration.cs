@@ -11,7 +11,7 @@ namespace middlerApp.API
         public int? HttpsPort { get; set; } = 443;
         public string HttpsCertPath { get; set; } = "localhost.pfx";
         public string HttpsCertPassword { get; set; } = "ABC12abc";
-        public string WebRoot { get; set; } = "wwwroot";
+        
         
         public StartUpAdminConfiguration AdminSettings { get; } = new StartUpAdminConfiguration();
 
@@ -40,8 +40,8 @@ namespace middlerApp.API
         public int HttpsPort { get; set; } = 4444;
         public string HttpsCertPath { get; set; }
         public string HttpsCertPassword { get; set; }
+        public string WebRoot { get; set; } = "wwwroot";
 
-        
     }
 
     public class EndpointRulesConfiguration

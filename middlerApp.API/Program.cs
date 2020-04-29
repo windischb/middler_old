@@ -15,7 +15,7 @@ namespace middlerApp.API
     public class Program
     {
 
-        internal static StartUpConfiguration StartUpConfiguration { get; set; }
+       
 
         public static int Main(string[] args)
         {
@@ -23,9 +23,7 @@ namespace middlerApp.API
             try
             {
                 ConfigureLogging();
-                StartUpConfiguration = BuildConfig();
-                
-                
+
                 Log.Information("Starting host");
                 CreateHost(args).Build().Run();
                 //CreateAdminHost(args).Build().Run();
@@ -63,7 +61,7 @@ namespace middlerApp.API
                 .ConfigureAppConfiguration(BuildHostConfiguration)
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
                         .UseContentRoot(PathHelper.ContentPath)
-                        .UseWebRoot(PathHelper.GetFullPath(StartUpConfiguration.WebRoot))
+                        .UseWebRoot(PathHelper.GetFullPath(Static.StartUpConfiguration.AdminSettings.WebRoot))
                         .UseKestrel(ConfigureKestrel)
                         .UseStartup<Startup>()
                 );
@@ -77,7 +75,7 @@ namespace middlerApp.API
             config.AddJsonFile(PathHelper.GetFullPath("configuration.json"), optional: true);
             config.AddEnvironmentVariables();
 
-            var conf = config.Build().Get<StartUpConfiguration>();
+            //var conf = config.Build().Get<StartUpConfiguration>();
             
         }
 
@@ -99,6 +97,8 @@ namespace middlerApp.API
 
             if (config.HttpsPort.HasValue && config.HttpsPort.Value != 0)
             {
+                var certPath = PathHelper.GetFullPath(config.HttpsCertPath);
+                Log.Debug(certPath);
                 serverOptions.Listen(listenIp, config.HttpsPort.Value, listenOptions =>
                 {
                     listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
@@ -116,23 +116,7 @@ namespace middlerApp.API
         }
 
 
-        private static StartUpConfiguration BuildConfig()
-        {
-            Log.Debug("Build Configuration");
-            var configFilePath = PathHelper.GetFullPath("configuration.json");
-            if (!File.Exists(configFilePath))
-            {
-                Log.Debug($"New Configuration written to: {configFilePath}");
-                File.WriteAllText(configFilePath ,Converter.Json.ToJson(new StartUpConfiguration().SetDefaultSettings(), true));
-            }
-
-            var config = new ConfigurationBuilder();
-            config.AddJsonFile(configFilePath, optional: true);
-            config.AddEnvironmentVariables();
-
-            return config.Build().Get<StartUpConfiguration>();
-            
-        }
+        
     }
 
     

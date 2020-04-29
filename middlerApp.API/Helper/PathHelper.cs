@@ -37,20 +37,6 @@ namespace middlerApp.API.Helper
             var p = Path.GetFullPath(Path.Combine(basePath, path));
             return p;
         }
-
-        public static string GetWebRoot()
-        {
-            if (IsDevelopment())
-            {
-                return GetFullPath("wwwroot", Directory.GetCurrentDirectory());
-            }
-
-            return GetFullPath("wwwroot");
-        }
-
-        private static bool IsDevelopment()
-        {
-            return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == Environments.Development;
-        }
+        
     }
 }
