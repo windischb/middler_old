@@ -5,8 +5,8 @@
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>None</DebugType>
+    <!--<DebugSymbols>false</DebugSymbols>-->
+    <!--<DebugType>None</DebugType>-->
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
@@ -41,7 +41,12 @@
     <None Update="localhost.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   
