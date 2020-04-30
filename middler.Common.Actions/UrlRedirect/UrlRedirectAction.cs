@@ -9,6 +9,8 @@ namespace middler.Common.Actions.UrlRedirect
     public class UrlRedirectAction: MiddlerAction<UrlRedirectOptions>
     {
         internal static string DefaultActionType => "UrlRedirect";
+        public override bool Terminating => true;
+
         public void ExecuteRequest(IMiddlerContext middlerContext, IActionHelper actionHelper)
         {
             var uri = new Uri(actionHelper.BuildPathFromRoutData(Parameters.RedirectTo));

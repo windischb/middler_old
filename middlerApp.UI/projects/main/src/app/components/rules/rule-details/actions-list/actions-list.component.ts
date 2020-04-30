@@ -371,11 +371,12 @@ export class ActionsListComponent implements ControlValueAccessor {
 
 
     private propagateChange(value: Array<MiddlerAction>) {
+        
         this.actionsChanged.next(value);
         this.registered.forEach(fn => {
             fn(value);
         });
-
+        this.cref.detectChanges();
     }
 
     ///ControlValueAccessor

@@ -117,9 +117,14 @@ namespace middlerApp.API.Controllers
         {
             foreach (var middlerAction in ruleDbModel.Actions)
             {
-                if (middlerAction.ActionType == "Script")
+                var action = _internalHelper.BuildConcreteActionInstance(middlerAction);
+                if (action == null)
                 {
-                    var scriptAction = _internalHelper.BuildConcreteActionInstance(middlerAction) as ScriptingAction;
+                    continue;
+                }
+
+                if(action is ScriptingAction scriptAction)
+                {
                     middlerAction.Parameters["CompiledCode"] = scriptAction?.CompileScriptIfNeeded();
                 }
             }

@@ -159,7 +159,7 @@ namespace middler.Core
             
 
             var parameters = BuildExecuteMethodParameters(method, middlerContext, man);
-
+            
             if (typeof(Task).IsAssignableFrom(method.ReturnType))
             {
                 var t = (Task)method.Invoke(middlerAction, parameters);

@@ -32,7 +32,9 @@ export class ScriptModalComponent implements OnInit {
             Language: [],
             SourceCode: []
         });
-
+        if(!this.context.data.Parameters.Language) {
+            this.context.data.Parameters.Language = "Typescript"
+        }
         this.form.patchValue(this.context.data.Parameters)
 
     }
