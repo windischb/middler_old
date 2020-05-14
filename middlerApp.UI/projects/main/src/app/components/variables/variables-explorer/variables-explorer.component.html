@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="node-content-wrapper" [class.node-content-wrapper-active]="node.isActive"
                                     [class.node-content-wrapper-focused]="node.isFocused"
-                                    (click)="node.mouseAction('click', $event)"
+                                    
                                     (dblclick)="node.mouseAction('dblClick', $event)"
                                     (contextmenu)="node.mouseAction('contextMenu', $event)"
                                     (treeDrop)="node.onDrop($event)" [treeAllowDrop]="node.allowDrop" [treeDrag]="node"

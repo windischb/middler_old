@@ -16,7 +16,6 @@ using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Core;
 using middler.Storage.LiteDB;
-using middler.Variables;
 using middlerApp.API.Attributes;
 using middlerApp.API.ExtensionMethods;
 using middlerApp.API.Helper;
@@ -26,6 +25,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using SignalARRR.Server.ExtensionMethods;
+using middler.Variables.LiteDB;
 
 namespace middlerApp.API
 {
@@ -81,24 +81,26 @@ namespace middlerApp.API
 
             );
 
-            
+
             services.AddNamedMiddlerRepo("litedb", sp =>
             {
                 var path = PathHelper.GetFullPath(sConfig.EndpointRulesSettings.DbFilePath);
                 return new LiteDBRuleRepository($"Filename={path}");
             });
 
-            services.AddSingleton<IVariablesStore>(sp =>
+            services.AddSingleton(sp =>
             {
-                StoreConfig b = new StoreConfigBuilder().UseRootPath(PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.RootPath));
-                return new VariablesStore(b);
+                var path = PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.DbFilePath);
+                return new VariableStore($"Filename={path}");
+                //StoreConfig b = new StoreConfigBuilder().UseRootPath(PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.RootPath));
+                //return new VariablesStore(b);
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+
 
             app.UseResponseCompression();
 
@@ -111,7 +113,7 @@ namespace middlerApp.API
                 app.UseExceptionHandler("/Error");
             }
 
-            
+
             app.UseSerilogRequestLogging(options =>
             {
                 options.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
@@ -126,9 +128,9 @@ namespace middlerApp.API
 
             app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
             {
-               
-                
-                
+
+
+
                 builder.UseRouting();
 
                 builder.UseEndpoints(endpoints =>

@@ -26,10 +26,10 @@
         <a db-item *ngIf="context.Single" icon="edit" (click)="OpenEditVariableModal(context.First)" >Edit</a>
         <a db-item *ngIf="context.Any" icon="trash alternate outline" (click)="RemoveVariable(context.SelectedData)">Delete</a>
         <db-subitem name="New" on='hover'>
-            <db-item (click)="createVariable('.string')">String</db-item>
-            <db-item (click)="createVariable('.number')">Number</db-item>
-            <db-item (click)="createVariable('.boolean')">Boolean</db-item>
-            <db-item (click)="createVariable('.credential')">Credential</db-item>
+            <db-item (click)="createVariable('string')">String</db-item>
+            <db-item (click)="createVariable('number')">Number</db-item>
+            <db-item (click)="createVariable('boolean')">Boolean</db-item>
+            <db-item (click)="createVariable('credential')">Credential</db-item>
             <db-item (click)="createVariable('raw')">Raw</db-item>
         </db-subitem>
         <a db-item *ngIf="context.Single" icon="edit" (click)="OpenEditVariableModal(context.First, true)" >EditRaw</a>
@@ -42,10 +42,10 @@
 
     <db-menu class="secondary context-menu">
         <db-subitem name="New Variable" on='hover'>
-            <db-item (click)="createVariable('.string')">String</db-item>
-            <db-item (click)="createVariable('.number')">Number</db-item>
-            <db-item (click)="createVariable('.boolean')">Boolean</db-item>
-            <db-item (click)="createVariable('.credential')">Credential</db-item>
+            <db-item (click)="createVariable('string')">String</db-item>
+            <db-item (click)="createVariable('number')">Number</db-item>
+            <db-item (click)="createVariable('boolean')">Boolean</db-item>
+            <db-item (click)="createVariable('credential')">Credential</db-item>
             <db-item (click)="createVariable('raw')">Raw</db-item>
         </db-subitem>
     </db-menu>

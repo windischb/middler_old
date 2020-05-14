@@ -6,9 +6,10 @@ declare namespace middler.Action.Scripting.Models {
 
         Request: IScriptContextRequest;
         Response: IScriptContextResponse;
-
-        SendResponse(): void;
-        ForwardBody(): string;
+        PropertyBag: SimpleDictionary<any>;
+        Terminating: boolean;
+        //SendResponse(): void;
+        //ForwardBody(): string;
     }
 
     export interface IScriptContextRequest {
@@ -22,13 +23,15 @@ declare namespace middler.Action.Scripting.Models {
         ProxyServers: Array<string>;
 
         GetBodyAsString(): string;
+        SetBody(content: any): void;
     }
 
     export interface IScriptContextResponse {
         StatusCode: number | null;
         Headers: SimpleDictionary<string>;
 
-        SetBody(content: any): void
+        GetBodyAsString(): string;
+        SetBody(content: any): void;
     }
 
     export class SimpleDictionary<T> {

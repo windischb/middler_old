@@ -12,7 +12,10 @@
             <db-tab title="Actions" icon="list ol" [content]="actions" mode="remove"> Actions </db-tab>
             <!-- <db-tab title="Permissions" icon="shield alternate"> Permissions </db-tab> -->
             <db-tab title="Debug" icon="bug">
-                <pre>{{form.value | json}}</pre>
+                <div style="overflow: auto; height: 100%;">
+                    <pre>{{form.value | json}}</pre>
+                </div>
+                
             </db-tab>
         </db-tabs>
 

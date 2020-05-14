@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
 using middler.Common;
+using middler.Common.Interfaces;
 using middler.Common.SharedModels.Models;
 using middler.Common.StreamHelper;
 using middler.Core.ExtensionMethods;
+using Newtonsoft.Json;
 using Reflectensions.ExtensionMethods;
 
 namespace middler.Core
@@ -39,10 +41,10 @@ namespace middler.Core
         public Stream Body { get; private set; }
 
         private HttpContext HttpContext { get; }
+        private IMiddlerOptions MiddlerOptions { get; }
 
 
-
-        public MiddlerRequestContext(HttpContext httpContext)
+        public MiddlerRequestContext(HttpContext httpContext, IMiddlerOptions middlerOptions)
         {
             HttpContext = httpContext;
             //Path = httpContext.Request.Path;
@@ -54,6 +56,7 @@ namespace middler.Core
             Uri = new Uri(httpContext.Request.GetDisplayUrl());
             HttpMethod = httpContext.Request.Method;
             ContentType = httpContext.Request.ContentType;
+            MiddlerOptions = middlerOptions;
 
             Body = httpContext.Request.Body;
         }
@@ -147,16 +150,85 @@ namespace middler.Core
             }
 
         }
-
-        internal void SetNextBody(Stream stream)
-        {
-            this.Body = stream;
-        }
-
+        
         public string GetBodyAsString()
         {
-            using var sr = new StreamReader(Body);
-            return sr.ReadToEndAsync().GetAwaiter().GetResult();
+            if (Body is AutoStream)
+            {
+                using var sr = new StreamReader(Body);
+                Body.Seek(0, SeekOrigin.Begin);
+                return sr.ReadToEnd();
+            }
+            else
+            {
+                var aStream = new AutoStream(opts =>
+                    opts
+                        .WithMemoryThreshold(MiddlerOptions.AutoStreamDefaultMemoryThreshold)
+                        .WithFilePrefix("middler"), RequestAborted);
+
+                Body.CopyToAsync(aStream, 131072, RequestAborted).GetAwaiter().GetResult();
+                Body = aStream;
+                return GetBodyAsString();
+            }
         }
+
+        public void SetBody(object body)
+        {
+
+            if (Body is AutoStream)
+            {
+                Body.Seek(0, SeekOrigin.Begin);
+                Body.SetLength(0);
+                switch (body)
+                {
+                    case string str:
+                    {
+                        SetStringBody(str);
+                        return;
+                    }
+                    case Stream stream:
+                    {
+                        SetStreamBody(stream);
+                        return;
+                    }
+                    default:
+                    {
+                        SetObjectBody(body);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Body = new AutoStream(opts =>
+                    opts
+                        .WithMemoryThreshold(MiddlerOptions.AutoStreamDefaultMemoryThreshold)
+                        .WithFilePrefix("middler"), RequestAborted);
+                SetBody(body);
+            }
+            
+
+
+        }
+
+        private void SetObjectBody(object @object)
+        {
+            using var sw = new StreamWriter(Body, Encoding.UTF8, 8192, true);
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Serialize(sw, @object);
+
+        }
+
+        private void SetStringBody(string content)
+        {
+            using var sw = new StreamWriter(Body, Encoding.UTF8, 8192, true);
+            sw.Write(content);
+        }
+
+        private void SetStreamBody(Stream stream)
+        {
+            Body = stream;
+        }
+
     }
 }

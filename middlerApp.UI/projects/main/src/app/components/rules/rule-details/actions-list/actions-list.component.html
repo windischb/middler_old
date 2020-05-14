@@ -1,5 +1,5 @@
 
-<div cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList" class="outer" style="padding: 10px 10px 20px 10px; margin-top: 8px; box-shadow: inset rgb(97, 97, 97) 0px 0px 5px;max-height: calc(100% - 8px); overflow-y: auto;" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
+<div cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList" class="outer" style="padding: 10px 10px 20px 10px; margin-top: 8px; box-shadow: inset rgb(175, 175, 175) 0px 0px 3px; max-height: calc(100% - 8px); overflow-y: auto;" cdkDropList #nullList="cdkDropList" (contextmenu)="open($event)">
 
     <div *ngIf="((actions$ | async) || []).length === 0" style="text-align: center; font-size: 1.5em; font-weight: bold; color: #525e7678; line-height: 1.4em; line-height: 2em; margin: 0px 10px;">
         Drop new Action here
@@ -7,7 +7,7 @@
         <div class="action-item" *ngFor="let action of (actions$ | async); let i = index;" [class.selected]="action.Selected"
             (click)="clickAction($event, action)" (contextmenu)="contextAction($event, action)" cdkDrag cdkDragLockAxis="y" (dblclick)="openModal(action.Item)">
             <div style="display: flex;">
-                <div class="dragHandle" style="padding: 10px 0px 0px 5px;" cdkDragHandle>
+                <div class="dragHandle" style="padding: 10px 3px 0px 5px;" cdkDragHandle>
                     <i class="big middle aligned icon" [ngClass]="GetIcon(action.Item)"></i>
                 </div>
                 <div style="padding: 5px; min-width: 50%; max-width: 50%;">

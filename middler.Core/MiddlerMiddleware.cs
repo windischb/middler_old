@@ -58,7 +58,7 @@ namespace middler.Core
 
             var  middlerContext = new MiddlerContext(httpContext, middlerOptions);
 
-            var first = true;
+            //var first = true;
             try
             {
                 bool terminating;
@@ -99,10 +99,10 @@ namespace middler.Core
                     terminating = false;
                     foreach (var endpointAction in matchingEndpoint.MiddlerRule.Actions)
                     {
-                        if (!first)
-                        {
-                            middlerContext.PrepareNext();
-                        }
+                        //if (!first)
+                        //{
+                        //    middlerContext.PrepareNext();
+                        //}
                         var action = intHelper.BuildConcreteActionInstance(endpointAction);
                         if (action != null)
                         {
@@ -110,7 +110,7 @@ namespace middler.Core
                             await ExecuteRequestAction(action, middlerContext);
                             executedActions.Push(action);
                             terminating = action.Terminating;
-                            first = false;
+                            //first = false;
                         }
 
                         if (terminating)

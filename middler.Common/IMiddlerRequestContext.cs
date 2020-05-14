@@ -27,5 +27,7 @@ namespace middler.Common
         string ContentType { get; set; }
 
         string GetBodyAsString();
+
+        void SetBody(object body);
     }
 }

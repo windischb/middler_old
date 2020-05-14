@@ -12,6 +12,7 @@ using middler.Action.Scripting.Typescript;
 using middler.Common;
 using middler.Common.SharedModels.Models;
 using middler.Variables;
+using middler.Variables.LiteDB;
 using Environment = middler.Scripting.Environment;
 
 namespace middler.Action.Scripting
@@ -39,12 +40,12 @@ namespace middler.Action.Scripting
             };
 
             var scriptContext = new ScriptContext(middlerContext, scriptContextMethods);
-
+            scriptContext.Terminating = Terminating;
 
             scriptEngine.Initialize();
             scriptEngine.SetValue("Context", scriptContext);
 
-            scriptEngine.SetValue("Middler", new Environment(middlerContext.RequestServices.GetService<IVariablesStore>()));
+            scriptEngine.SetValue("Middler", new Environment(middlerContext.RequestServices.GetService<VariableStore>()));
             
 
             try
@@ -57,8 +58,8 @@ namespace middler.Action.Scripting
                 throw e;
                 //await httpContext.BadRequest(e.GetBaseException().Message);
             }
-            
-            
+
+            Terminating = scriptContext.Terminating;
         }
 
 

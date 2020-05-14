@@ -38,7 +38,7 @@ export class VariablesExplorerComponent {
         mouse: {
             click: (tree, node, $event) => {
                 this.variablesService.SetSelectedFolder(node.data);
-                this.variablesService.GetVariableInfosInSelectedFolder().subscribe()
+                this.variablesService.GetVariablesInSelectedFolder().subscribe()
             },
             dblClick: (tree, node, $event) => {
                 TREE_ACTIONS.TOGGLE_EXPANDED(tree, node, $event);
@@ -140,17 +140,19 @@ export class VariablesExplorerComponent {
         switch (node.data.edit) {
             case 'create': {
                 node.data.Name = nameinput.value;
-                this.variablesService.NewFolder(node.realParent?.data.Path || "", node.data.Name).subscribe();
+                this.variablesService.NewFolder(`${node.realParent?.data.Parent || ""}/${node.realParent?.data.Name || ""}`, node.data.Name).subscribe();
                 break;
             }
             case 'rename': {
+                console.log(node.data.Parent, node.data.Name, nameinput.value)
+                this.variablesService.RenameFolder(node.data.Parent, node.data.Name, nameinput.value).subscribe();
                 node.data.Name = nameinput.value;
-                this.variablesService.RenameFolder(node.data.Path, node.data.Name).subscribe();
                 node.data.edit = null;
                 break;
             }
         }
-
+        node.data.edit = null;
+        this.cref.detectChanges();
     }
 
     public cancelCreateOrRenameFolder(node: TreeNode, $event: KeyboardEvent) {
@@ -182,7 +184,7 @@ export class VariablesExplorerComponent {
     }
 
     public DeleteDirectory(folder: FolderTreeNode) {
-        this.variablesService.RemoveFolder(folder.Path).subscribe();
+        this.variablesService.RemoveFolder(folder.Parent, folder.Name).subscribe();
         this.CloseContextMenu();
     }
 

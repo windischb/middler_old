@@ -18,5 +18,6 @@ namespace middler.Action.Scripting.Shared
         string[] ProxyServers { get; }
 
         string GetBodyAsString();
+        void SetBody(object body);
     }
 }

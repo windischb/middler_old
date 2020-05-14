@@ -30,5 +30,10 @@ namespace middler.Action.Scripting.Models
         {
             return _middlerRequestContext.GetBodyAsString();
         }
+
+        public void SetBody(object body)
+        {
+            _middlerRequestContext.SetBody(body);
+        }
     }
 }

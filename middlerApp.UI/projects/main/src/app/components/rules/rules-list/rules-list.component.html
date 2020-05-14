@@ -1,5 +1,5 @@
 <div class="outer ui container" style="flex-grow: 1; height:100%" cdkDropList #nullList="cdkDropList">
-    <div class="" style="padding: 10px 10px 20px 10px; margin-top: 8px; box-shadow: inset rgb(97, 97, 97) 0px 0px 5px;max-height: calc(100% - 30px); overflow-y: auto;"
+    <div class="" style="padding: 10px 10px 20px 10px; margin-top: 8px; box-shadow: inset rgb(175, 175, 175) 0px 0px 3px; max-height: calc(100% - 30px); overflow-y: auto;"
         cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
         <div *ngIf="((rules$ | async) || []).length === 0" style="text-align: center; font-size: 1.5em; font-weight: bold; color: #525e7678; line-height: 1.4em; line-height: 2em; margin: 0px 10px;">
             Drop new Rule here
@@ -16,7 +16,7 @@
                         <h2>{{rule.Item.Name}}</h2>
                     </div>
                     <div>{{rule.Item.Path}}</div>
-                    <div>{{rule.Item.Order}}</div>
+                    <!-- <div>{{rule.Item.Order}}</div> -->
                 </div>
                 <div style="padding: 5px; min-width: 200px; max-width: 200px; ">
                     <div>{{rule.Item.Scheme}}</div>

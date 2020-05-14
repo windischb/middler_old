@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 
 namespace middler.Core.Context
 {
-    public class MiddlerResponseContext: IMiddlerResponseContext
+    public class MiddlerResponseContext : IMiddlerResponseContext
     {
         //private FakeHttpContext FakeHttpContext { get; set; }
 
@@ -27,42 +27,43 @@ namespace middler.Core.Context
 
         public MiddlerResponseContext()
         {
-            
+
         }
 
-        //internal void Initialize(FakeHttpContext fakeHttpContext)
-        //{
-        //    FakeHttpContext = fakeHttpContext;
-        //}
+        public string GetBodyAsString()
+        {
 
-        //public void SetBody(string body)
-        //{
-        //     FakeHttpContext.Content(body).GetAwaiter().GetResult();
-        //}
+            using var sr = new StreamReader(Body);
+            Body.Seek(0, SeekOrigin.Begin);
+            return sr.ReadToEnd();
+
+        }
 
         public void SetBody(object body)
         {
 
+            Body.Seek(0, SeekOrigin.Begin);
+
             switch (body)
             {
                 case string str:
-                {
-                    SetStringBody(str);
-                    return;
-                }
+                    {
+                        SetStringBody(str);
+                        return;
+                    }
                 case Stream stream:
-                {
-                    SetStreamBody(stream);
-                    return;
-                }
+                    {
+                        SetStreamBody(stream);
+                        return;
+                    }
                 default:
-                {
-                    SetObjectBody(body);
-                    break;
-                }
+                    {
+                        SetObjectBody(body);
+                        break;
+                    }
             }
-            
-           
+
+
         }
 
         private void SetObjectBody(object @object)
@@ -70,7 +71,7 @@ namespace middler.Core.Context
             using var sw = new StreamWriter(Body, Encoding.UTF8, 8192, true);
             JsonSerializer serializer = new JsonSerializer();
             serializer.Serialize(sw, @object);
-           
+
         }
 
         private void SetStringBody(string content)

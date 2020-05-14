@@ -11,8 +11,8 @@ WORKDIR /app
 
 COPY --from=builder ./sln/output .
 
-ENV EndpointRulesSettings__DbFilePath /middlerData/DefaultStorage/rules.db
-ENV GlobalVariablesSettings__RootPath /middlerData/DefaultStorage/Variables
+ENV EndpointRulesSettings__DbFilePath /middlerData/rules.db
+ENV GlobalVariablesSettings__DbFilePath /middlerData/variables.db
 
 EXPOSE 80
 EXPOSE 443

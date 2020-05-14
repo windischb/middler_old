@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
-using middler.Variables.HelperClasses;
+using middler.Common.Variables.HelperClasses;
+
 
 namespace middler.Scripting.HttpCommand
 {

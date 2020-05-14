@@ -2,104 +2,107 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+using middler.Common.Variables;
 using middler.Variables;
+using middler.Variables.LiteDB;
 using middlerApp.API.Helper;
 using Newtonsoft.Json.Linq;
 using SignalARRR.Attributes;
 using SignalARRR.Server;
-using Converter = middler.Variables.Converter;
+
 
 namespace middlerApp.API.HubMethods
 {
     [MessageName("Variables")]
     public class VariablesServerMethods : ServerMethods<UIHub>
     {
-        public IVariablesStore VariablesStore { get; }
+        public VariableStore VariablesStore { get; }
 
-        public VariablesServerMethods(IVariablesStore variablesStore)
+        public VariablesServerMethods(VariableStore variablesStore)
         {
             VariablesStore = variablesStore;
         }
 
-        public FolderTreeNode GetFolderTree()
+        public TreeNode GetFolderTree()
         {
             return VariablesStore.GetFolderTree();
         }
 
-        public IEnumerable<IVariableInfo> GetVariableInfosInParent(string parent)
+        public IEnumerable<TreeNode> GetVariablesInParent(string parent)
         {
-            return VariablesStore.GetVariableInfosInFolder(parent);
+            return VariablesStore.GetVariablesInParent(parent);
         }
 
         public void NewFolder(string parent, string name)
         {
             VariablesStore.NewFolder(parent, name);
         }
-        public void RenameFolder(string path, string name)
+        public void RenameFolder(string parent, string oldName, string newName)
         {
-            VariablesStore.RenameFolder(path, name);
+            VariablesStore.RenameFolder(parent, oldName, newName);
         }
 
-        public void RemoveFolder(string path)
+        public void RemoveFolder(string parent, string name)
         {
-            VariablesStore.RemoveFolder(path);
+            VariablesStore.RemoveFolder(parent, name);
         }
 
 
-        public IVariable GetVariable(string parent, string name)
+        public TreeNode GetVariable(string parent, string name)
         {
             return VariablesStore.GetVariable(parent, name);
         }
 
-        public void UpdateVariableContent(string path, object content)
-        {
-            string contentString = null;
-            switch (content)
-            {
-                case String str:
-                    {
-                        contentString = content.ToString();
-                        break;
-                    }
+        //public void UpdateVariableContent(string path, object content)
+        //{
+        //    string contentString = null;
+        //    switch (content)
+        //    {
+        //        case String str:
+        //            {
+        //                contentString = content.ToString();
+        //                break;
+        //            }
 
-                default:
-                    {
-                        contentString = Converter.Json.ToJson(content);
-                        break;
-                    }
-            }
+        //        default:
+        //            {
+        //                contentString = Converter.Json.ToJson(content);
+        //                break;
+        //            }
+        //    }
 
-            VariablesStore.UpdateVariableContent(path, contentString);
-        }
+        //    VariablesStore.UpdateVariableContent(path, contentString);
+        //}
 
 
-        public void CreateVariable(Variable variable)
+        public void CreateVariable(TreeNode variable)
         {
             VariablesStore.CreateVariable(variable);
         }
 
-        public void RemoveVariable(string path)
+        public void RemoveVariable(string parent, string name)
         {
-            VariablesStore.RemoveVariable(path);
+            VariablesStore.RemoveVariable(parent, name);
         }
 
-        public List<KeyValuePair<string, string>> GetTypings()
-        {
-            var typings =
-                Directory.GetFileSystemEntries(PathHelper.GetFullPath("TypeDefinitions"))
-                    .Select(fe =>
-                    {
-                        var f = new FileInfo(fe);
-                        return new KeyValuePair<string, string>(f.Name, System.IO.File.ReadAllText(fe));
-                    }).ToList();
+        //public List<KeyValuePair<string, string>> GetTypings()
+        //{
+        //    var typings =
+        //        Directory.GetFileSystemEntries(PathHelper.GetFullPath("TypeDefinitions"))
+        //            .Select(fe =>
+        //            {
+        //                var f = new FileInfo(fe);
+        //                return new KeyValuePair<string, string>(f.Name, System.IO.File.ReadAllText(fe));
+        //            }).ToList();
 
-            return typings;
-        }
+        //    return typings;
+        //}
 
         public IObservable<string> Subscribe()
         {
-            return ((VariablesStore)VariablesStore).FolderObserver.Changed;
+            return (VariablesStore).EventObservable.Select(ev => ev.Action.ToString());
         }
     }
 }

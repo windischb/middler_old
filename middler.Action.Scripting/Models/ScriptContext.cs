@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using middler.Action.Scripting.Shared;
 using middler.Common;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Action.Scripting.Models
 {
@@ -10,6 +11,9 @@ namespace middler.Action.Scripting.Models
 
         public IScriptContextResponse Response { get; }
         public IScriptContextRequest Request { get; }
+        public SimpleDictionary<object> PropertyBag => _middlerContext.PropertyBag;
+
+        public bool Terminating { get; set; }
 
         private IMiddlerContext _middlerContext;
         public ScriptContext(IMiddlerContext middlerContext, ScriptContextMethods scriptContextMethods)
@@ -25,9 +29,9 @@ namespace middler.Action.Scripting.Models
             _scriptContextMethods.SendResponse?.Invoke();
         }
 
-        public void ForwardBody()
-        {
-            _middlerContext.ForwardBody();
-        }
+        //public void ForwardBody()
+        //{
+        //    _middlerContext.ForwardBody();
+        //}
     }
 }

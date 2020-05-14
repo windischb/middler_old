@@ -33,7 +33,7 @@ namespace middler.Common.Actions.UrlRewrite
 
 
 
-            middlerContext.ForwardBody();
+            //middlerContext.ForwardBody();
 
             //var nUrl = new UriBuilder(Parameters.RewriteTo);
             //builder.Path = Parameters.RewriteTo;

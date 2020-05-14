@@ -25,6 +25,7 @@ export class VariablesFolderContentComponent {
 
     @Input()
     set Items(value: Array<VariableInfo>) {
+        //console.log(value)
         this.grid?.SetData(value);
     }
 
@@ -36,7 +37,7 @@ export class VariablesFolderContentComponent {
     grid = new GridBuilder()
         .SetColumns(
             c => c.Default("Name"),
-            c => c.Label("Extension").SetHeader("Type").SetValueFormatter<string>(v => v.value.slice(1)),
+            c => c.Label("Extension").SetHeader("Type").SetValueFormatter<string>(v => v.value),
             c => c.Date("CreatedAt", true),
             c => c.Date("UpdatedAt", true)
         )
@@ -153,7 +154,7 @@ export class VariablesFolderContentComponent {
 
     RemoveVariable(variables: Array<Variable>) {
         variables.forEach(variable => {
-            this.variables.RemoveVariable(variable.FullPath).subscribe();
+            this.variables.RemoveVariable(variable.Parent, variable.Name).subscribe();
         })
         this.contextMenu.Close()
     }

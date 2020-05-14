@@ -21,6 +21,7 @@ namespace middler.Core
 
         internal MiddlerResponseContext MiddlerResponseContext { get; }
         public IMiddlerResponseContext Response => MiddlerResponseContext;
+        public SimpleDictionary<object> PropertyBag { get; } = new SimpleDictionary<object>();
 
         public IFeatureCollection Features => HttpContext.Features;
         public IServiceProvider RequestServices => HttpContext.RequestServices;
@@ -38,7 +39,7 @@ namespace middler.Core
         {
             HttpContext = httpContext;
             MiddlerOptions = middlerOptions;
-            MiddlerRequestContext = new MiddlerRequestContext(httpContext);
+            MiddlerRequestContext = new MiddlerRequestContext(httpContext, middlerOptions);
             MiddlerResponseContext = new MiddlerResponseContext();
 
             MiddlerResponseContext.Body = new AutoStream(opts => 
@@ -54,22 +55,22 @@ namespace middler.Core
         }
 
 
-        public void PrepareNext()
-        {
+        //public void PrepareNext()
+        //{
 
             
-            MiddlerRequestContext.SetNextBody(MiddlerResponseContext.Body);
-            if (MiddlerRequestContext.Body.CanSeek)
-            {
-                MiddlerRequestContext.Body.Seek(0, SeekOrigin.Begin);
-            }
+        //    //MiddlerRequestContext.SetNextBody(MiddlerResponseContext.Body);
+        //    if (MiddlerRequestContext.Body.CanSeek)
+        //    {
+        //        MiddlerRequestContext.Body.Seek(0, SeekOrigin.Begin);
+        //    }
            
 
-            MiddlerResponseContext.Body = new AutoStream(opts => 
-                opts
-                    .WithMemoryThreshold(MiddlerOptions.AutoStreamDefaultMemoryThreshold)
-                    .WithFilePrefix("middler"), Request.RequestAborted);
+        //    MiddlerResponseContext.Body = new AutoStream(opts => 
+        //        opts
+        //            .WithMemoryThreshold(MiddlerOptions.AutoStreamDefaultMemoryThreshold)
+        //            .WithFilePrefix("middler"), Request.RequestAborted);
 
-        }
+        //}
     }
 }

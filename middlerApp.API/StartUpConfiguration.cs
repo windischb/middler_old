@@ -28,7 +28,7 @@ namespace middlerApp.API
 
             EndpointRulesSettings.DbFilePath = EndpointRulesSettings.DbFilePath?.Trim().ToNull() ?? "DefaultStorage/rules.db";
 
-            GlobalVariablesSettings.RootPath = GlobalVariablesSettings.RootPath?.Trim().ToNull() ?? "DefaultStorage/variables";
+            GlobalVariablesSettings.DbFilePath = GlobalVariablesSettings.DbFilePath?.Trim().ToNull() ?? "DefaultStorage/variables.db";
 
             return this;
         }
@@ -51,7 +51,7 @@ namespace middlerApp.API
 
     public class GlobalVariablesConfiguration
     {
-        public string RootPath { get; set; }
+        public string DbFilePath { get; set; }
     }
 
 

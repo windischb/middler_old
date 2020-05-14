@@ -1,6 +1,6 @@
 ﻿using middler.Scripting.HttpCommand;
 using middler.Scripting.Variables;
-using middler.Variables;
+using middler.Variables.LiteDB;
 
 namespace middler.Scripting
 {
@@ -11,7 +11,7 @@ namespace middler.Scripting
 
         public VariableCommand Variables;
 
-        public Environment(IVariablesStore variableStore)
+        public Environment(VariableStore variableStore)
         {
             Variables = new VariableCommand(variableStore);    
         }

@@ -24,11 +24,11 @@ export class VariableModalService {
         [key: string]: Type<any>
     } = {
             'raw': EditorModalComponent,
-            '.string': StringModalComponent,
-            '.number': NumberModalComponent,
-            '.boolean': BooleanModalComponent,
-            '.json': EditorModalComponent,
-            '.credential': CredentialModalComponent
+            'string': StringModalComponent,
+            'number': NumberModalComponent,
+            'boolean': BooleanModalComponent,
+            'json': EditorModalComponent,
+            'credential': CredentialModalComponent
         }
 
 

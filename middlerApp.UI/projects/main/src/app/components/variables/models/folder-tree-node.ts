@@ -1,5 +1,6 @@
 export class FolderTreeNode {
-    Path: string
+    Parent: string
     Name: string
+    Path: string
     Children: Array<FolderTreeNode>
 }

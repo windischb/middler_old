@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\middler.Variables\middler.Variables.csproj" />
+    <ProjectReference Include="..\middler.Variables.LiteDB\middler.Variables.LiteDB.csproj" />
   </ItemGroup>
 
   <ItemGroup>

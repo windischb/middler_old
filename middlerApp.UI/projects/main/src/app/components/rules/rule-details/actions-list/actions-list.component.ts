@@ -56,7 +56,7 @@ export class ActionsListComponent implements ControlValueAccessor {
     newActions: Array<MiddlerAction> = [
         new UrlRedirectAction(),
         new UrlRewriteAction(),
-        new ProxyAction(),
+        //new ProxyAction(),
         new ScriptAction()
     ]
 
@@ -299,23 +299,23 @@ export class ActionsListComponent implements ControlValueAccessor {
                     }).Open()
                 break;
             }
-            case 'Proxy': {
-                this.modal.FromComponent(ProxyModalComponent)
-                    .SetModalOptions({
-                        componentFactoryResolver: this.componentFactoryResolver,
-                        overlayConfig: {
-                            width: "50%",
-                            maxWidth: "500px"
-                        }
-                    })
-                    .CloseOnOutsideClick()
-                    .SetData(action)
-                    .AddEventHandler("OK", context => {
-                        action.Parameters = context.payload;
-                        this.propagateChange([...this.actions]);
-                    }).Open()
-                break;
-            }
+            // case 'Proxy': {
+            //     this.modal.FromComponent(ProxyModalComponent)
+            //         .SetModalOptions({
+            //             componentFactoryResolver: this.componentFactoryResolver,
+            //             overlayConfig: {
+            //                 width: "50%",
+            //                 maxWidth: "500px"
+            //             }
+            //         })
+            //         .CloseOnOutsideClick()
+            //         .SetData(action)
+            //         .AddEventHandler("OK", context => {
+            //             action.Parameters = context.payload;
+            //             this.propagateChange([...this.actions]);
+            //         }).Open()
+            //     break;
+            // }
             case 'Script': {
                 this.modal.FromComponent(ScriptModalComponent)
                     .SetModalOptions({

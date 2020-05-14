@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Common
 {
@@ -10,7 +11,9 @@ namespace middler.Common
 
         IMiddlerResponseContext Response { get; }
 
+        SimpleDictionary<object> PropertyBag { get; }
+
         IServiceProvider RequestServices { get; }
-        void ForwardBody();
+        //void ForwardBody();
     }
 }

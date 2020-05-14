@@ -1,7 +1,7 @@
 import { MiddlerAction } from '../../models/middler-action';
 
 export class ScriptParameters {
-    Language: "Javascript" | "Powershell" = null;
+    Language: "Javascript" | "Typescript" | "Powershell" = "Typescript";
     SourceCode: string;
 }
 

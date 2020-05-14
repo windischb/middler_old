@@ -38,13 +38,14 @@ export class VariablesService {
             .pipe(
                 take(1),
                 tap(node => {
+                    //console.log(node)
                     this.rootNodeSubject$.next(node);
                 })
             );
     }
 
-    public GetVariableInfosInSelectedFolder() {
-        return this.messages.Invoke<Array<VariableInfo>>("Variables.GetVariableInfosInParent", this.SelectedFolderSubject$.getValue().Path)
+    public GetVariablesInSelectedFolder() {
+        return this.messages.Invoke<Array<VariableInfo>>("Variables.GetVariablesInParent", this.SelectedFolderSubject$.getValue().Path)
             .pipe(
                 take(1),
                 tap(items => this.SelectedFolderItemsSubject$.next(items))
@@ -52,21 +53,22 @@ export class VariablesService {
     }
 
     public NewFolder(parent: string, name: string) {
+        console.log(parent, name)
         return this.messages.Invoke("Variables.NewFolder", parent, name)
             .pipe(
                 take(1)
             )
     }
 
-    public RenameFolder(path: string, name: string) {
-        return this.messages.Invoke("Variables.RenameFolder", path, name)
+    public RenameFolder(parent: string, oldName: string, newName: string) {
+        return this.messages.Invoke("Variables.RenameFolder", parent , oldName, newName)
             .pipe(
                 take(1)
             )
     }
 
-    public RemoveFolder(path: string) {
-        return this.messages.Invoke("Variables.RemoveFolder", path)
+    public RemoveFolder(parent: string, name: string) {
+        return this.messages.Invoke("Variables.RemoveFolder", parent, name)
             .pipe(
                 take(1)
             )
@@ -83,7 +85,7 @@ export class VariablesService {
         return this.messages.Invoke<Variable>("Variables.UpdateVariableContent", path, content)
             .pipe(
                 take(1),
-                switchMap(_ => this.GetVariableInfosInSelectedFolder())
+                switchMap(_ => this.GetVariablesInSelectedFolder())
             )
     }
 
@@ -91,15 +93,15 @@ export class VariablesService {
         return this.messages.Invoke<Variable>("Variables.CreateVariable", variable)
             .pipe(
                 take(1),
-                switchMap(_ => this.GetVariableInfosInSelectedFolder())
+                switchMap(_ => this.GetVariablesInSelectedFolder())
             )
     }
 
-    public RemoveVariable(path: string) {
-        return this.messages.Invoke("Variables.RemoveVariable", path)
+    public RemoveVariable(parent: string, name: string) {
+        return this.messages.Invoke("Variables.RemoveVariable", parent, name)
             .pipe(
                 take(1),
-                switchMap(_ => this.GetVariableInfosInSelectedFolder())
+                switchMap(_ => this.GetVariablesInSelectedFolder())
             )
     }
 
