@@ -1,0 +1,50 @@
+<basic-modal [variable]="variable" (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form [formGroup]="form" class="ui form">
+
+        <ng-template dbPortalTemplate="VariableModalHeader-Left">
+            {{form.value.Name}}
+        </ng-template>
+
+        <ng-template dbPortalTemplate="ModalSubHeader">
+            {{variable.Parent}}
+        </ng-template>
+
+        <ng-template dbPortalTemplate="VariableModalHeader-Right">
+            <div style="display: flex;">
+                <div style="padding-right: 10px; margin: auto;">
+                    Type:
+                </div>
+                <div style="width: 180px;">
+                    <nz-select formControlName="Language" style="width: 100%;">
+                        <nz-option nzLabel="Plaintext" nzValue="plaintext"></nz-option>
+                        <nz-option nzLabel="Json" nzValue="json"></nz-option>
+                        <nz-option nzLabel="Xml" nzValue="xml"></nz-option>
+                        <nz-option nzLabel="Html" nzValue="html"></nz-option>
+                      </nz-select>
+                    <!-- <db-dropdown formControlName="Language" class="selection">
+                        <db-item value="plaintext">Plaintext</db-item>
+                        <db-item value="json">Json</db-item>
+                        <db-item value="xml">Xml</db-item>
+                        <db-item value="html">Html</db-item>
+                        <db-item value="typescript">Typescript</db-item>
+                        <db-item value="javascript">Javascript</db-item>
+                        <db-item value="powershell">Powershell</db-item>
+                    </db-dropdown> -->
+                </div>
+            </div>
+        </ng-template>
+
+        <div class="required field" *ngIf="create">
+            <nz-form-item>
+            <input nz-input formControlName="Name" placeholder="Variable Name" [dbAllowedCharacters]="'[a-zA-Z0-9_]'"
+                [dbSetFocus] />
+            </nz-form-item>
+        </div>
+
+
+        <div class="field flex-grow-column">
+            <db-editor formControlName="Content" [language]="form.value.Language">
+            </db-editor>
+        </div>
+    </form>
+</basic-modal>
