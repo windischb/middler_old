@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -13,12 +14,16 @@ namespace middlerApp.API
     
     public class Program
     {
+
+       
+
         public static int Main(string[] args)
         {
 
             try
             {
                 ConfigureLogging();
+
                 Log.Information("Starting host");
                 CreateHost(args).Build().Run();
                 //CreateAdminHost(args).Build().Run();
@@ -50,14 +55,13 @@ namespace middlerApp.API
 
         public static IHostBuilder CreateHost(string[] args)
         {
+
             return Host.CreateDefaultBuilder(args)
                 .UseSerilog()
-                
                 .ConfigureAppConfiguration(BuildHostConfiguration)
-
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
                         .UseContentRoot(PathHelper.ContentPath)
-                        .UseWebRoot(PathHelper.GetFullPath("wwwroot"))
+                        .UseWebRoot(PathHelper.GetFullPath(Static.StartUpConfiguration.AdminSettings.WebRoot))
                         .UseKestrel(ConfigureKestrel)
                         .UseStartup<Startup>()
                 );
@@ -68,19 +72,18 @@ namespace middlerApp.API
         {
 
             var env = context.HostingEnvironment;
-
-            config.AddYamlFile(PathHelper.GetFullPath("configuration.yml"), optional: true);
             config.AddJsonFile(PathHelper.GetFullPath("configuration.json"), optional: true);
-            config.AddYamlFile(PathHelper.GetFullPath($"configuration.{env.EnvironmentName}.yml"), optional: true);
-            config.AddJsonFile(PathHelper.GetFullPath($"configuration.{env.EnvironmentName}.json"), optional: true);
+            config.AddEnvironmentVariables();
 
+            //var conf = config.Build().Get<StartUpConfiguration>();
+            
         }
 
         private static void ConfigureKestrel(WebHostBuilderContext context, KestrelServerOptions serverOptions)
         {
-
+            Log.Debug("ConfigureKestrel");
             var config = context.Configuration.Get<StartUpConfiguration>();
-            config.SetAdminSettings();
+            config.SetDefaultSettings();
             
             var listenIp = IPAddress.Parse(config.ListeningIP);
 
@@ -94,6 +97,8 @@ namespace middlerApp.API
 
             if (config.HttpsPort.HasValue && config.HttpsPort.Value != 0)
             {
+                var certPath = PathHelper.GetFullPath(config.HttpsCertPath);
+                Log.Debug(certPath);
                 serverOptions.Listen(listenIp, config.HttpsPort.Value, listenOptions =>
                 {
                     listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
@@ -110,6 +115,8 @@ namespace middlerApp.API
 
         }
 
+
+        
     }
 
     

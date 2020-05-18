@@ -5,6 +5,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
+using middler.Common;
 using middler.Common.SharedModels.Enums;
 using middler.Common.SharedModels.Models;
 using middler.Core.IPHelper;
@@ -17,25 +18,23 @@ namespace middler.Core.ExtensionMethods
     {
        
 
-        public static AccessMode? AccessAllowed(this MiddlerRule middlerMiddler, HttpContext httpContext) {
-            return AccessAllowed(middlerMiddler.Permissions, httpContext);
+        public static AccessMode? AccessAllowed(this MiddlerRule middlerMiddler,  IMiddlerRequestContext middlerRequestContext) {
+            return AccessAllowed(middlerMiddler.Permissions, middlerRequestContext);
         }
 
-        public static AccessMode? AccessAllowed(this IEnumerable<MiddlerRulePermission> permissionRules, HttpContext httpContext) {
+        public static AccessMode? AccessAllowed(this IEnumerable<MiddlerRulePermission> permissionRules, IMiddlerRequestContext middlerRequestContext) {
 
-           
-            var principal = httpContext.User;
-            var sourceIp = httpContext.Request.FindSourceIp().FirstOrDefault();
+            
 
-            var roles = principal.Claims.Where(c => c.Type.Equals("role", StringComparison.OrdinalIgnoreCase))
+            var roles = middlerRequestContext.Principal.Claims.Where(c => c.Type.Equals("role", StringComparison.OrdinalIgnoreCase))
                             .Select(c => c.Value)
                             .ToList();
 
-            var hasUser = !String.IsNullOrWhiteSpace(principal.Identity.Name);
+            var hasUser = !String.IsNullOrWhiteSpace(middlerRequestContext.Principal.Identity.Name);
 
             foreach (var permissionRule in permissionRules) {
-                var inRange = SourceIpAddressIsInRange(sourceIp, permissionRule.SourceAddress);
-                var isClient = IsCurrentClient(principal, permissionRule.Client);
+                var inRange = SourceIpAddressIsInRange(middlerRequestContext.SourceIPAddress, permissionRule.SourceAddress);
+                var isClient = IsCurrentClient(middlerRequestContext.Principal, permissionRule.Client);
 
 
                 switch (permissionRule.Type) {
@@ -55,7 +54,7 @@ namespace middler.Core.ExtensionMethods
                     }
                     case PrincipalType.User: {
 
-                        if (inRange && isClient && Wildcard.Match(principal.Identity.Name, permissionRule.PrincipalName.ToNull() ?? "")) {
+                        if (inRange && isClient && Wildcard.Match(middlerRequestContext.Principal.Identity.Name, permissionRule.PrincipalName.ToNull() ?? "")) {
                             return permissionRule.AccessMode;
                         }
 

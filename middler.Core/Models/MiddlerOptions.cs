@@ -10,9 +10,9 @@ namespace middler.Core.Models {
     public class MiddlerOptions : IMiddlerOptions {
         public AccessMode DefaultAccessMode { get; set; } = AccessMode.Allow;
 
-        public List<string> DefaultHttpMethods { get; set; } = new List<string>() { "Get", "Post", "Put", "Patch", "Delete" };
+        public List<string> DefaultHttpMethods { get; set; } = new List<string>();
 
-        public List<string> DefaultScheme { get; set; } = new List<string>() { "http", "https" };
+        public List<string> DefaultScheme { get; set; } = new List<string>();
 
         public int AutoStreamDefaultMemoryThreshold { get; set; } = 131072;
 

@@ -2,7 +2,7 @@
 
 namespace middler.Common.SharedModels.Models
 {
-    public class MiddlerRouteData : Dictionary<string, object>
+    public class MiddlerRouteData : SimpleDictionary<object>
     {
 
     }

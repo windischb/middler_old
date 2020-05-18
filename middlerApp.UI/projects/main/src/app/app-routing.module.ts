@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'rules',
     loadChildren: () => import('./components/rules/rules.module').then(m => m.RulesModule)
+  },
+  {
+    path: 'variables',
+    loadChildren: () => import('./components/variables/variables.module').then(m => m.VariablesModule)
   }
 ];
 

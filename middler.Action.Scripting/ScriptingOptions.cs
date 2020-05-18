@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using middler.Action.Scripting.Shared;
+using Newtonsoft.Json;
 
 namespace middler.Action.Scripting
 {

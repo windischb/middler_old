@@ -1,0 +1,54 @@
+<!-- Das gibts hier
+<table class="ui selectable celled table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Extension</th>
+            <th>CreatedAt</th>
+            <th>UpdatedAt</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of Items">
+            <td>{{item.Name}}</td>
+            <td>{{item.Extension}}</td>
+            <td>{{item.CreatedAt | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            <td>{{item.UpdatedAt | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+        </tr>
+    </tbody>
+</table> -->
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham"></ag-grid-angular>
+
+<ng-template #itemsContextMenu let-context>
+
+    <db-menu class="secondary context-menu">
+        <db-header *ngIf="context.Single">{{context.First.Name}}</db-header>
+        <a db-item *ngIf="context.Single" icon="edit" (click)="OpenEditVariableModal(context.First)" >Edit</a>
+        <a db-item *ngIf="context.Any" icon="trash alternate outline" (click)="RemoveVariable(context.SelectedData)">Delete</a>
+        <db-subitem name="New" on='hover'>
+            <db-item (click)="createVariable('string')">String</db-item>
+            <db-item (click)="createVariable('number')">Number</db-item>
+            <db-item (click)="createVariable('boolean')">Boolean</db-item>
+            <db-item (click)="createVariable('credential')">Credential</db-item>
+            <db-item (click)="createVariable('raw')">Raw</db-item>
+        </db-subitem>
+        <a db-item *ngIf="context.Single" icon="edit" (click)="OpenEditVariableModal(context.First, true)" >EditRaw</a>
+    </db-menu>
+
+</ng-template>
+
+
+<ng-template #viewportContextMenu let-context>
+
+    <db-menu class="secondary context-menu">
+        <db-subitem name="New Variable" on='hover'>
+            <db-item (click)="createVariable('string')">String</db-item>
+            <db-item (click)="createVariable('number')">Number</db-item>
+            <db-item (click)="createVariable('boolean')">Boolean</db-item>
+            <db-item (click)="createVariable('credential')">Credential</db-item>
+            <db-item (click)="createVariable('raw')">Raw</db-item>
+        </db-subitem>
+    </db-menu>
+
+</ng-template>
+

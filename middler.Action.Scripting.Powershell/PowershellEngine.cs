@@ -9,7 +9,7 @@ namespace middler.Action.Scripting.Powershell
 {
     public class PowershellEngine: IScriptEngine
     {
-        public Action<IScriptingOptions> CompileScript => null;
+        public Func<string, string> CompileScript => null;
 
 
         private PsRunspace _psEngine;

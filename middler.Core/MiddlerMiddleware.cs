@@ -25,6 +25,7 @@ using middler.Core.Models;
 using Reflectensions.ExtensionMethods;
 using Reflectensions.HelperClasses;
 using middler.Common.StreamHelper;
+using Type = System.Type;
 
 namespace middler.Core
 {
@@ -40,87 +41,98 @@ namespace middler.Core
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IMiddlerOptions middlerOptions, InternalHelper intHelper)
+        public async Task InvokeAsync(HttpContext httpContext, IMiddlerOptions middlerOptions, InternalHelper intHelper)
         {
             var sw = new Stopwatch();
             
             sw.Start();
-            EnsureLoggers(context);
-            Stream originalBody = null;
+            EnsureLoggers(httpContext);
+            //Stream originalBody = null;
 
-            var middlerMap = context.RequestServices.GetRequiredService<IMiddlerMap>();
+            var middlerMap = httpContext.RequestServices.GetRequiredService<IMiddlerMap>();
 
 
-            var endpoints = middlerMap.GetFlatList(context.RequestServices);
+            var endpoints = middlerMap.GetFlatList(httpContext.RequestServices);
 
             var executedActions = new Stack<IMiddlerAction>();
 
+            var  middlerContext = new MiddlerContext(httpContext, middlerOptions);
 
-
+            //var first = true;
             try
             {
-                bool @continue;
+                bool terminating;
                 do
                 {
 
-                    var matchingEndpoint = FindMatchingEndpoint(middlerOptions, endpoints, context);
+                    var matchingEndpoint = FindMatchingEndpoint(middlerOptions, endpoints, middlerContext);
 
                     if (matchingEndpoint == null)
                     {
-                        await _next(context).ConfigureAwait(false);
+                        //await _next(httpContext).ConfigureAwait(false);
                         break;
                     }
 
                     if (matchingEndpoint.AccessMode == AccessMode.Deny)
                     {
-                        await context.Forbid().ConfigureAwait(false);
+                        await httpContext.Forbid().ConfigureAwait(false);
                         return;
                     }
 
-                    context.Features.Set(matchingEndpoint);
+                    //middlerContext.Features.Set(matchingEndpoint);
 
                     endpoints = matchingEndpoint.RemainingEndpointInfos;
 
-                    var interMediateStreamNeeded = matchingEndpoint.MiddlerRule.Actions.Any(a => !a.WriteStreamDirect);
-                    if (interMediateStreamNeeded)
-                    {
-                        originalBody ??= context.Response.Body;
-                        context.Response.Body = new AutoStream(opts => 
-                            opts
-                                .WithMemoryThreshold(middlerOptions.AutoStreamDefaultMemoryThreshold)
-                                .WithFilePrefix("middler"), context.RequestAborted);
-                            //new AutoStream(middlerOptions.AutoStreamDefaultMemoryThreshold,
-                            //    context.RequestAborted);
-                    }
+                    //var interMediateStreamNeeded = matchingEndpoint.MiddlerRule.Actions.Any(a => !a.WriteStreamDirect);
+                    //if (interMediateStreamNeeded)
+                    //{
+                    //    originalBody ??= httpContext.Response.Body;
+                    //    httpContext.Response.Body = new AutoStream(opts => 
+                    //        opts
+                    //            .WithMemoryThreshold(middlerOptions.AutoStreamDefaultMemoryThreshold)
+                    //            .WithFilePrefix("middler"), middlerContext.Request.RequestAborted);
 
+                    //}
 
-                    @continue = false;
+                    
+
+                    terminating = false;
                     foreach (var endpointAction in matchingEndpoint.MiddlerRule.Actions)
                     {
-
+                        if (!endpointAction.Enabled)
+                        {
+                            continue;
+                        }
+                        //if (!first)
+                        //{
+                        //    middlerContext.PrepareNext();
+                        //}
                         var action = intHelper.BuildConcreteActionInstance(endpointAction);
                         if (action != null)
                         {
-                            await ExecuteRequestAction(action, context);
+                            
+                            await ExecuteRequestAction(action, middlerContext);
                             executedActions.Push(action);
-                            @continue = action.ContinueAfterwards;
+                            terminating = action.Terminating;
+                            //first = false;
                         }
 
-                        if (!@continue)
+                        if (terminating)
                             break;
                     }
 
 
-                } while (@continue);
+                } while (!terminating);
+
 
                 while (executedActions.TryPop(out var executedAction))
                 {
-                    await ExecuteResponseAction(executedAction, context);
+                    await ExecuteResponseAction(executedAction, middlerContext);
                 }
 
-                context.Features.Set<MiddlerRuleMatch>(null);
+                //httpContext.Response.Body = middlerContext.MiddlerResponseContext.Body;
 
-                await WriteToAspNetCoreResponseBodyAsync(context, originalBody).ConfigureAwait(false);
+                await WriteToAspNetCoreResponseBodyAsync(httpContext, middlerContext).ConfigureAwait(false);
 
 
             }
@@ -135,7 +147,7 @@ namespace middler.Core
         }
 
 
-        private async Task ExecuteRequestAction(IMiddlerAction middlerAction, HttpContext httpContext)
+        private async Task ExecuteRequestAction(IMiddlerAction middlerAction, MiddlerContext middlerContext)
         {
             var method = middlerAction.GetType().GetMethod("ExecuteRequestAsync") ?? middlerAction.GetType().GetMethod("ExecuteRequest");
             if (method == null)
@@ -143,13 +155,15 @@ namespace middler.Core
                 return;
             }
 
-            var man = new Dictionary<Type, object>
+            var man = new Dictionary<Type, object>()
             {
-                { typeof(HttpContext), httpContext }
+                
             };
 
-            var parameters = BuildExecuteMethodParameters(method, httpContext, man);
+            
 
+            var parameters = BuildExecuteMethodParameters(method, middlerContext, man);
+            
             if (typeof(Task).IsAssignableFrom(method.ReturnType))
             {
                 var t = (Task)method.Invoke(middlerAction, parameters);
@@ -162,7 +176,7 @@ namespace middler.Core
 
         }
 
-        private async Task ExecuteResponseAction(IMiddlerAction middlerAction, HttpContext httpContext)
+        private async Task ExecuteResponseAction(IMiddlerAction middlerAction, MiddlerContext middlerContext)
         {
             var method = middlerAction.GetType().GetMethod("ExecuteResponseAsync") ?? middlerAction.GetType().GetMethod("ExecuteResponse");
             if (method == null)
@@ -172,10 +186,10 @@ namespace middler.Core
 
             var man = new Dictionary<Type, object>
             {
-                { typeof(HttpContext), httpContext }
+                
             };
 
-            var parameters = BuildExecuteMethodParameters(method, httpContext, man);
+            var parameters = BuildExecuteMethodParameters(method, middlerContext, man);
 
             if (typeof(Task).IsAssignableFrom(method.ReturnType))
             {
@@ -190,7 +204,7 @@ namespace middler.Core
         }
 
 
-        private object[] BuildExecuteMethodParameters(MethodInfo methodInfo, HttpContext httpContext, Dictionary<Type, object> manualCreateParameters)
+        private object[] BuildExecuteMethodParameters(MethodInfo methodInfo, MiddlerContext middlerContext, Dictionary<Type, object> manualCreateParameters)
         {
 
             return methodInfo.GetParameters().Select(p =>
@@ -199,50 +213,64 @@ namespace middler.Core
                 if (manualCreateParameters.TryGetValue(p.ParameterType, out var manualCreated))
                     return manualCreated;
 
-                if (p.ParameterType == typeof(HttpContext))
+                if (p.ParameterType == typeof(IMiddlerContext))
                 {
-                    return httpContext;
+                    return middlerContext;
                 }
+               
 
                 if (p.ParameterType == typeof(IActionHelper))
                 {
-                    return new ActionHelper(httpContext);
+                    return new ActionHelper(middlerContext.Request);
                 }
 
-                return httpContext.RequestServices.GetRequiredService(p.ParameterType);
+                return middlerContext.RequestServices.GetRequiredService(p.ParameterType);
 
             }).ToArray();
 
         }
 
 
-        private async Task WriteToAspNetCoreResponseBodyAsync(HttpContext context, Stream originalBody)
+        private async Task WriteToAspNetCoreResponseBodyAsync(HttpContext context, MiddlerContext middlerContext)
         {
-            if (originalBody == null)
-                return;
+            //if (originalBody == null)
+            //    return;
 
            
-            var tempStream = context.Response.Body;
-            context.Response.Body = originalBody;
+            //var tempStream = context.Response.Body;
+            //context.Response.Body = originalBody;
 
+            foreach (var (key, value) in middlerContext.MiddlerResponseContext.Headers)
+            {
+                context.Response.Headers[key] = value;
+            }
+
+            if (middlerContext.Response.StatusCode != 0)
+            {
+                context.Response.StatusCode = middlerContext.Response.StatusCode;
+            }
+
+
+            context.Response.Headers["Content-Type"] = "application/json";
+            context.Response.Headers.ContentLength = null;
             if (context.Response.Body.CanWrite)
             {
-                tempStream.Seek(0, SeekOrigin.Begin);
-                await tempStream.CopyToAsync(context.Response.Body, 131072, context.RequestAborted).ConfigureAwait(false);
+                middlerContext.MiddlerResponseContext.Body.Seek(0, SeekOrigin.Begin);
+                await middlerContext.MiddlerResponseContext.Body.CopyToAsync(context.Response.Body, 131072, context.RequestAborted).ConfigureAwait(false);
                 await context.Response.Body.FlushAsync(context.RequestAborted).ConfigureAwait(false);
             }
 
 
-            await tempStream.DisposeAsync().ConfigureAwait(false);
+            await middlerContext.MiddlerResponseContext.Body.DisposeAsync().ConfigureAwait(false);
         }
 
        
-        private MiddlerRuleMatch FindMatchingEndpoint(IMiddlerOptions middlerOptions, List<MiddlerRule> rule, HttpContext context)
+        private MiddlerRuleMatch FindMatchingEndpoint(IMiddlerOptions middlerOptions, List<MiddlerRule> rule,  MiddlerContext middlerContext)
         {
 
             for (int i = 0; i < rule.Count; i++)
             {
-                var match = CheckMatch(middlerOptions, rule[i], context);
+                var match = CheckMatch(middlerOptions, rule[i], middlerContext);
                 if (match != null)
                 {
 
@@ -259,26 +287,30 @@ namespace middler.Core
         }
 
 
-        private MiddlerRuleMatch CheckMatch(IMiddlerOptions middlerOptions, MiddlerRule rule, HttpContext context)
+        private MiddlerRuleMatch CheckMatch(IMiddlerOptions middlerOptions, MiddlerRule rule, MiddlerContext middlerContext)
         {
 
-            var allowedHttpMethods = rule.HttpMethods?.IgnoreNullOrWhiteSpace().Any() == true ? rule.HttpMethods.IgnoreNullOrWhiteSpace() : middlerOptions.DefaultHttpMethods;
+            var allowedHttpMethods = (rule.HttpMethods?.IgnoreNullOrWhiteSpace().Any() == true ? rule.HttpMethods.IgnoreNullOrWhiteSpace() : middlerOptions.DefaultHttpMethods).ToList();
 
-            if (!allowedHttpMethods.Contains(context.Request.Method, StringComparer.OrdinalIgnoreCase))
+            if (allowedHttpMethods.Any() && !allowedHttpMethods.Contains(middlerContext.Request.HttpMethod, StringComparer.OrdinalIgnoreCase))
                 return null;
 
-            var uri = new Uri(context.Request.GetEncodedUrl());
+            //var uri = new Uri(context.Request.GetEncodedUrl());
 
-            var allowedSchemes = rule.Scheme?.IgnoreNullOrWhiteSpace().Any() == true ? rule.Scheme.IgnoreNullOrWhiteSpace() : middlerOptions.DefaultScheme;
+            var allowedSchemes = (rule.Scheme?.IgnoreNullOrWhiteSpace().Any() == true ? rule.Scheme.IgnoreNullOrWhiteSpace() : middlerOptions.DefaultScheme).ToList();
 
-            if (!allowedSchemes.Any(scheme => Wildcard.Match(uri.Scheme, scheme)))
+            if (allowedSchemes.Any() && !allowedSchemes.Any(scheme => Wildcard.Match(middlerContext.MiddlerRequestContext.Uri.Scheme, scheme)))
                 return null;
 
-            if (!Wildcard.Match($"{uri.Host}:{uri.Port}", rule.Hostname ?? "*"))
+            if (!Wildcard.Match($"{middlerContext.MiddlerRequestContext.Uri.Host}:{middlerContext.MiddlerRequestContext.Uri.Port}", rule.Hostname ?? "*"))
                 return null;
 
+            if (String.IsNullOrWhiteSpace(rule.Path))
+            {
+                rule.Path = "{**path}";
+            }
 
-            var parsedTemplate = TemplateParser.Parse($"{rule.Path}");
+            var parsedTemplate = TemplateParser.Parse(rule.Path);
 
             var defaults = parsedTemplate.Parameters.Where(p => p.DefaultValue != null)
                 .Aggregate(new RouteValueDictionary(), (current, next) =>
@@ -288,22 +320,21 @@ namespace middler.Core
                 });
 
             var matcher = new TemplateMatcher(parsedTemplate, defaults);
-            var router = context.GetRouteData().Routers.FirstOrDefault() ?? new RouteCollection();
+            var rd = middlerContext.MiddlerRequestContext.GetRouteData();
+            var router = rd.Routers.FirstOrDefault() ?? new RouteCollection();
 
-            var rd = context.GetRouteData();
-            if (matcher.TryMatch(context.Request.Path, rd.Values))
+            if (matcher.TryMatch(middlerContext.MiddlerRequestContext.Uri.AbsolutePath, rd.Values))
             {
-                var constraints = GetConstraints(context.RequestServices.GetRequiredService<IInlineConstraintResolver>(), parsedTemplate, null);
-                if (RouteConstraintMatcher.Match(constraints, rd.Values, context, router, RouteDirection.IncomingRequest, ConstraintLogger))
+                var constraints = GetConstraints(middlerContext.RequestServices.GetRequiredService<IInlineConstraintResolver>(), parsedTemplate, null);
+                if (MiddlerRouteConstraintMatcher.Match(constraints, rd.Values, router, RouteDirection.IncomingRequest, ConstraintLogger))
                 {
 
-                    var routeD = GetRouteData(context, constraints);
-                    context.Features.Set(routeD);
+                    middlerContext.SetRouteData(constraints);
+                    
                     return new MiddlerRuleMatch
                     {
                         MiddlerRule = rule,
-                        RouteData = GetRouteData(context, constraints),
-                        AccessMode = rule.AccessAllowed(context) ?? middlerOptions.DefaultAccessMode
+                        AccessMode = rule.AccessAllowed(middlerContext.Request) ?? middlerOptions.DefaultAccessMode
                     };
 
                 }
@@ -356,94 +387,6 @@ namespace middler.Core
 
         }
 
-        internal MiddlerRouteData GetRouteData(HttpContext context, IDictionary<string, IRouteConstraint> constraints)
-        {
-            var routeData = new MiddlerRouteData();
-
-            var uri = new Uri(context.Request.GetDisplayUrl());
-
-            routeData["@HOST"] = uri.Host;
-            routeData["@SCHEME"] = uri.Scheme;
-            routeData["@PORT"] = uri.Port;
-            routeData["@PATH"] = context.Request.Path.ToString();
-
-            var rd = context.GetRouteData();
-
-            foreach (var key in rd.Values.Keys)
-            {
-                var val = rd.Values[key]?.ToString();
-
-                if (val == null)
-                {
-                    routeData.Add(key.ToLower(), null);
-
-                    continue;
-                }
-
-                if (constraints.ContainsKey(key))
-                {
-
-                    var constraint = constraints[key];
-                    IRouteConstraint ic;
-                    if (constraint is OptionalRouteConstraint optionalRouteConstraint)
-                    {
-                        ic = optionalRouteConstraint.InnerConstraint;
-                    }
-                    else
-                    {
-                        ic = constraint;
-                    }
-
-                    object value;
-                    if (ic is IntRouteConstraint)
-                    {
-                        value = val.ToInt();
-                    }
-                    else if (ic is BoolRouteConstraint)
-                    {
-                        value = val.ToBoolean();
-                    }
-                    else if (ic is DateTimeRouteConstraint)
-                    {
-                        value = val.ToDateTime();
-                    }
-                    else if (ic is DecimalRouteConstraint)
-                    {
-                        value = val.ToDecimal();
-                    }
-                    else if (ic is DoubleRouteConstraint)
-                    {
-                        value = val.ToDouble();
-                    }
-                    else if (ic is FloatRouteConstraint)
-                    {
-                        value = val.ToFloat();
-                    }
-                    else if (ic is GuidRouteConstraint)
-                    {
-                        value = new Guid(val);
-                    }
-                    else if (ic is LongRouteConstraint)
-                    {
-                        value = val.ToLong();
-                    }
-                    else
-                    {
-                        value = val;
-                    }
-
-                    routeData.Add(key.ToLower(), value);
-                }
-                else
-                {
-                    routeData.Add(key.ToLower(), val);
-                }
-
-            }
-
-
-            return routeData;
-        }
-
+       
     }
 }

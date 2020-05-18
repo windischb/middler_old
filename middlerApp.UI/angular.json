@@ -77,7 +77,8 @@
                     "options": {
                         "browserTarget": "main:build",
                         "proxyConfig": "proxy.conf.js",
-                        "port": 4200
+                        "port": 4200,
+                        "host": "0.0.0.0"
                     },
                     "configurations": {
                         "production": {

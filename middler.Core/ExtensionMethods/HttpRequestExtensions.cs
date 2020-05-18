@@ -28,44 +28,44 @@ namespace middler.Core.ExtensionMethods
             return sourceIps;
         }
 
-        //internal static Dictionary<string, string> GetHeaders(this HttpRequest request) => request.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(", ", kvp.Value));
+        internal static Dictionary<string, string> GetHeaders(this HttpRequest request) => request.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(", ", kvp.Value));
 
-        //internal static Dictionary<string, string> GetHeaders(this HttpResponse request) => request.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(", ", kvp.Value));
+        internal static Dictionary<string, string> GetHeaders(this HttpResponse request) => request.Headers.ToDictionary(kvp => kvp.Key, kvp => String.Join(", ", kvp.Value));
 
 
-        //internal static Dictionary<string, string> GetQueryParameters(this HttpRequest request)
-        //{
+        internal static Dictionary<string, string> GetQueryParameters(this HttpRequest request)
+        {
 
-        //    var dictionary = new Dictionary<string, string>();
-            
-        //    foreach (var pair in request.Query)
-        //    {
+            var dictionary = new Dictionary<string, string>();
 
-        //        if (String.IsNullOrWhiteSpace(pair.Value))
-        //        {
-        //            dictionary.Add(pair.Key, "true");
-        //            continue;
-        //        }
-        //        var value = GetJoinedValue(pair.Value);
-        //        if (value == "")
-        //            value = null;
+            foreach (var pair in request.Query)
+            {
 
-        //        if (value == "\"\"")
-        //            value = "";
+                if (String.IsNullOrWhiteSpace(pair.Value))
+                {
+                    dictionary.Add(pair.Key, "true");
+                    continue;
+                }
+                var value = GetJoinedValue(pair.Value);
+                if (value == "")
+                    value = null;
 
-        //        dictionary.Add(pair.Key, value);
-        //    }
+                if (value == "\"\"")
+                    value = "";
 
-        //    return dictionary;
+                dictionary.Add(pair.Key, value);
+            }
 
-        //}
+            return dictionary;
 
-        //private static string GetJoinedValue(string[] value)
-        //{
-        //    if (value != null)
-        //        return string.Join(",", value.Select(v => v.ToNull() ?? "true"));
+        }
 
-        //    return null;
-        //}
+        private static string GetJoinedValue(string[] value)
+        {
+            if (value != null)
+                return string.Join(",", value.Select(v => v.ToNull() ?? "true"));
+
+            return null;
+        }
     }
 }

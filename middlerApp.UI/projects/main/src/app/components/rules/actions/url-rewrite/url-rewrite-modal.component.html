@@ -1,17 +1,15 @@
-<div class="ui top attached segment" style="width: 500px; background-color: #292f3b; color: white;">
-    <div class="ui huge header" style="color: whitesmoke;">Url - Rewrite</div>
-</div>
-<div class="ui attached segment" style="width: 500px;border:none">
-    <form [formGroup]="form" class="ui form" style="padding:10px; flex-grow: 1; display: flex; flex-direction: column;">
+
+<action-basic-modal (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form [formGroup]="form" class="ui form">
 
         <div class="required field">
             <label>RewriteTo</label>
             <input type="text" formControlName="RewriteTo">
         </div>
 
+        <ng-template dbPortalTemplate="ActionModalHeader-Left">
+            Url - Rewrite
+        </ng-template>
+
     </form>
-</div>
-<div class="ui bottom attached segment" style="display: flex;padding: 3px;">
-    <button class="ui primary button" style="flex-grow: 1;" (click)="ok()">Save</button>
-    <button class="ui grey button" style="flex-grow: 1;" (click)="cancel()">Cancel</button>
-</div>
+</action-basic-modal>

@@ -1,0 +1,34 @@
+
+<action-basic-modal (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form nz-form [formGroup]="form" class="flex-grow-column" style="width: 100%;" >
+
+
+        <div class="field flex-grow-column">
+            <db-editor formControlName="SourceCode" [language]="form.value.Language" [typings]="(typings$ | async)" [tsOptions]="{noLib: true}">
+            </db-editor>
+        </div>
+
+        <ng-template dbPortalTemplate="ActionModalHeader-Left">
+            Script
+        </ng-template>
+
+        <ng-template dbPortalTemplate="ActionModalHeader-Right">
+            <div class="fields">
+                <div style="width: 180px;">
+                    <nz-select formControlName="Language" style="width: 100%;">
+                        <nz-option nzLabel="Typescript" nzValue="Typescript"></nz-option>
+                        <nz-option nzLabel="Javascript" nzValue="Javascript"></nz-option>
+                        <nz-option nzLabel="Powershell" nzValue="Powershell"></nz-option>
+                      </nz-select>
+                    <!-- <db-dropdown formControlName="Language" class="selection" #lang>
+                        <db-item value="Typescript">Typescript</db-item>
+                        <db-item value="Javascript">Javascript</db-item>
+                        <db-item value="Powershell">Powershell</db-item>
+                    </db-dropdown> -->
+                </div>
+            </div>
+        </ng-template>
+
+    </form>
+</action-basic-modal>
+

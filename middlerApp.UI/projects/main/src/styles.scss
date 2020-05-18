@@ -1,30 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/cdk/overlay-prebuilt.css";
-@import "./semantic.scss";
+@import "~angular-tree-component/dist/angular-tree-component.css";
+@import "~@doob-ng/ui/style.scss";
+@import "~@doob-ng/grid/style.scss";
+
+@import "./styles/modal.scss";
 
 body {
-  margin: 0px;
-  padding: 0px;
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  background-color: #eaeaeb;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: #eaeaeb;
+    overflow: hidden;
 }
 
 .whitespace {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .dark-backdrop {
-  opacity: 1;
-  background-color: #2f2f2f96;
+    opacity: 1;
+    background-color: #2f2f2f96;
 }
 
-.cdk-overlay-pane.action-panel > ng-component {
+.cdk-overlay-pane > ng-component {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
+
+.cdk-overlay-pane > generic-modal {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+generic-modal form ng-component {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.context-menu {
+    box-shadow: 2px 2px 4px 1px rgba(82, 94, 118, 0.7) !important;
+    background-color: whitesmoke !important;
+    border: 1px solid whitesmoke !important;
+}
+.context-menu db-header {
+    background-color: #525e76 !important;
+    color: white !important;
+}
+
+.scrollable {
+    overflow-y: auto;
+}
+

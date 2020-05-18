@@ -12,7 +12,8 @@ namespace middlerApp.API.ExtensionMethods
 
             var config = httpContext.RequestServices.GetRequiredService<IConfiguration>().Get<StartUpConfiguration>();
 
-            return httpContext.Connection.LocalPort == config.AdminSettings.HttpsPort;
+            var isAdmin = httpContext.Connection.LocalPort == config.AdminSettings.HttpsPort;
+            return isAdmin;
 
         }
 

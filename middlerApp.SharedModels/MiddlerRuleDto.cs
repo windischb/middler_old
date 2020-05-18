@@ -15,7 +15,7 @@ namespace middler.Hosting.Models {
         public string Path { get; set; }
         public List<string> HttpMethods { get; set; } = new List<string>();
         public List<MiddlerRulePermission> Permissions { get; set; } = new List<MiddlerRulePermission>();
-        public List<MiddlerAction> Actions { get; set; } = new List<MiddlerAction>();
+        public List<MiddlerActionDto> Actions { get; set; } = new List<MiddlerActionDto>();
 
         public bool Enabled { get; set; }
 

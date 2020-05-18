@@ -1,28 +1,19 @@
 ﻿using System;
 using System.Net;
+using middler.Common.Variables.HelperClasses;
+
 
 namespace middler.Scripting.HttpCommand
 {
     public class HttpOptionsBuilder
     {
-        private readonly HttpHandlerOptions _httpHandlerOptions = new HttpHandlerOptions();
+        private readonly HttpHandlerOptions _httpHandlerOptions;
 
-        public HttpOptionsBuilder()
+        public HttpOptionsBuilder(string url)
         {
-
+            _httpHandlerOptions = new HttpHandlerOptions(UriHelper.BuildUri(url));
         }
-
-        public HttpOptionsBuilder UseBaseUrl(Uri uri)
-        {
-            _httpHandlerOptions.RequestUri = uri;
-            return this;
-        }
-
-        public HttpOptionsBuilder UseBaseUrl(string url)
-        {
-            return UseBaseUrl(UriHelper.BuildUri(url));
-        }
-
+        
 
         public HttpOptionsBuilder UseProxy(WebProxy proxy)
         {
@@ -45,6 +36,12 @@ namespace middler.Scripting.HttpCommand
             return UseProxy(webProxy);
         }
 
+        public HttpOptionsBuilder UseProxy(Uri proxy, SimpleCredentials credentials)
+        {
+            return UseProxy(proxy, (NetworkCredential)credentials);
+        }
+
+
         public HttpOptionsBuilder UseProxy(string proxy)
         {
             var uri = UriHelper.BuildUri(proxy);
@@ -57,9 +54,20 @@ namespace middler.Scripting.HttpCommand
             return UseProxy(uri, credentials);
         }
 
+        public HttpOptionsBuilder UseProxy(string proxy, SimpleCredentials credentials)
+        {
+            var uri = UriHelper.BuildUri(proxy);
+            return UseProxy(uri, (NetworkCredential)credentials);
+        }
+
+        public HttpOptionsBuilder IgnoreProxy()
+        {
+            return IgnoreProxy(true);
+        }
+
         public HttpOptionsBuilder IgnoreProxy(bool value)
         {
-            _httpHandlerOptions.IgnoreProxy = true;
+            _httpHandlerOptions.IgnoreProxy = value;
             return this;
         }
 

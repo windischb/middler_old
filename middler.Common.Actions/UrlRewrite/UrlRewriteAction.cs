@@ -10,24 +10,52 @@ namespace middler.Common.Actions.UrlRewrite
     {
         internal static string DefaultActionType => "UrlRewrite";
 
-        public override bool ContinueAfterwards => true;
+        public override bool Terminating => false;
 
         public override bool WriteStreamDirect => false;
         public override string ActionType => DefaultActionType;
 
 
-        public void ExecuteRequest(HttpContext httpContext)
+        public void ExecuteRequest(IMiddlerContext middlerContext, IActionHelper actionHelper)
         {
 
-            var builder = new UriBuilder(httpContext.Request.GetDisplayUrl());
-            builder.Path = Parameters.RewriteTo;
-            httpContext.Request.Path = builder.Uri.LocalPath;
+            var rewriteTo = actionHelper.BuildPathFromRoutData(Parameters.RewriteTo);
+            var isAbsolute = Uri.IsWellFormedUriString(rewriteTo, UriKind.Absolute);
+            if (isAbsolute)
+            {
+                middlerContext.Request.Uri = new Uri(rewriteTo);
+            }
+            else
+            {
+                var builder = new UriBuilder(middlerContext.Request.Uri);
+                builder.Query = null;
+                if (rewriteTo.Contains("?"))
+                {
+                    builder.Path = rewriteTo.Split("?")[0];
+                    builder.Query = rewriteTo.Split("?")[1];
+                }
+                else
+                {
+                    builder.Path = rewriteTo;
+                }
+                
+                
+                middlerContext.Request.Uri = builder.Uri;
+            }
+
+
+
+            //middlerContext.ForwardBody();
+
+            //var nUrl = new UriBuilder(Parameters.RewriteTo);
+            //builder.Path = Parameters.RewriteTo;
+
         }
 
-        public void ExecuteResponse(HttpContext httpContext)
+        public void ExecuteResponse(IMiddlerContext middlerContext)
         {
-            httpContext.Response.Headers["TestHeader"] = "irgendwas";
-            httpContext.Response.WriteAsync($" - {GetType().Name}");
+            middlerContext.Response.Headers["TestHeader"] = "irgendwas";
+           
         }
     }
 }

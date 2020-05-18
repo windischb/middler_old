@@ -5,31 +5,35 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using middler.Action.Scripting.ExtensionMethods;
 using middler.Action.Scripting.Shared;
+using middler.Common;
 using middler.Common.SharedModels.Models;
 
 namespace middler.Action.Scripting.Models
 {
-    public class ScriptContextRequest: IScriptContextRequest
+    public class ScriptContextRequest : IScriptContextRequest
     {
-        public string HttpMethod { get; }
-        public Uri Uri { get; }
-        public Dictionary<string, object> RouteData { get; set; }
-        public Dictionary<string, object> Headers { get; set; }
-        public Dictionary<string, string> QueryParameters { get; set; }
-        public string UserAgent { get; }
-        public string ClientIp { get; }
-        public string[] ProxyServers { get; }
+        public string HttpMethod => _middlerRequestContext.HttpMethod;
+        public Uri Uri => _middlerRequestContext.Uri;
+        public MiddlerRouteData RouteData => _middlerRequestContext.RouteData;
+        public SimpleDictionary<string> Headers => _middlerRequestContext.Headers;
+        public MiddlerRouteQueryParameters QueryParameters => _middlerRequestContext.QueryParameters;
+        public string ClientIp=> _middlerRequestContext.SourceIPAddress.ToString();
+        public string[] ProxyServers => _middlerRequestContext.ProxyServers.Select(ip => ip.ToString()).ToArray();
 
-        public ScriptContextRequest(HttpContext httpContext)
+        private readonly IMiddlerRequestContext _middlerRequestContext;
+        public ScriptContextRequest(IMiddlerRequestContext middlerRequestContext)
         {
-            HttpMethod = httpContext.Request.Method;
-            Uri = new Uri(httpContext.Request.GetDisplayUrl());
-            UserAgent = httpContext.Request.Headers["User-Agent"].ToString();
-            ClientIp = httpContext.Request.FindSourceIp().FirstOrDefault()?.ToString();
-            ProxyServers = httpContext.Request.FindSourceIp().Skip(1).Select(ip => ip.ToString()).ToArray();
-            RouteData = new RuleRouteData(httpContext.Features.Get<MiddlerRouteData>());
-            Headers = new SimpleDictionary<object>(httpContext.Request.GetHeaders());
-            QueryParameters = new ScriptContextQueryParameters(httpContext.Request.GetQueryParameters());
+            _middlerRequestContext = middlerRequestContext;
+        }
+
+        public string GetBodyAsString()
+        {
+            return _middlerRequestContext.GetBodyAsString();
+        }
+
+        public void SetBody(object body)
+        {
+            _middlerRequestContext.SetBody(body);
         }
     }
 }

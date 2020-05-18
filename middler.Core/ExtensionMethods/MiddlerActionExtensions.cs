@@ -9,7 +9,7 @@ namespace middler.Core.ExtensionMethods {
         {
             var act = new MiddlerAction
             {
-                ContinueAfterwards = middlerAction.ContinueAfterwards,
+                Terminating = middlerAction.Terminating,
                 WriteStreamDirect = middlerAction.WriteStreamDirect,
                 ActionType = middlerAction.ActionType,
                 Parameters =

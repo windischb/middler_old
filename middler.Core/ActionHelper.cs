@@ -3,37 +3,93 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
+using middler.Common;
 using middler.Common.Interfaces;
 using middler.Common.SharedModels.Models;
+using Reflectensions.ExtensionMethods;
+using Scriban;
+using Scriban.Runtime;
 
 namespace middler.Core
 {
     public class ActionHelper: IActionHelper
     {
-        private MiddlerRouteData _routeData;
+        private IMiddlerRequestContext _middlerRequestContext;
 
-        public ActionHelper(HttpContext httpContext)
+        public ActionHelper(IMiddlerRequestContext middlerRequestContext)
         {
-            _routeData = httpContext.Features.Get<MiddlerRouteData>();
+            _middlerRequestContext = middlerRequestContext;
         }
 
         public string BuildPathFromRoutData(string template)
         {
-            string ProcessHtmlTag(Match m)
+
+
+            var queryObj = new ScriptObject
             {
-                string part = m.Groups["part"].Value;
+                ["*"] = _middlerRequestContext.Uri.Query?.Substring(1)
+            };
 
-                if (_routeData.ContainsKey(part))
-                {
-                    return _routeData[part]?.ToString();
-                }
+            queryObj.Import(_middlerRequestContext.QueryParameters, renamer:member => member.Name);
 
-                return null;
+            foreach (var (key, value) in _middlerRequestContext.QueryParameters)
+            {
+                queryObj[key] = value;
             }
 
-            Regex regex = new Regex("{(?<part>([a-zA-Z0-9]*))}");
-            string cleanString = regex.Replace(template, ProcessHtmlTag);
-            return cleanString;
+            var uriObj = new ScriptObject();
+            uriObj.Import(_middlerRequestContext.Uri, renamer: member => member.Name);
+
+            var routeObj = new ScriptObject();
+                routeObj.Import(_middlerRequestContext.RouteData);
+
+            var scriptObj = new ScriptObject
+            {
+                ["Route"] = routeObj,
+                ["Query"] = queryObj,
+                ["Uri"] = uriObj
+            };
+
+
+            var scribanTemplate = Template.Parse(template);
+            var result = scribanTemplate.Render(scriptObj, member => member.Name);
+
+            return result;
+
+            //string ProcessHtmlTag(Match m)
+            //{
+            //    string part = m.Groups["part"].Value;
+
+            //    if (part.StartsWith("@"))
+            //    {
+            //        part = part.Substring(1);
+            //        try
+            //        {
+            //            return _middlerRequestContext.Uri.GetPropertyValue<object>(part).ToString();
+            //        }
+            //        catch
+            //        {
+            //            // ignored
+            //        }
+            //    }
+
+            //    if (part.StartsWith("?"))
+            //    {
+            //        part = part.Substring(1);
+            //        if (part == "*")
+            //        {
+            //            return _middlerRequestContext.Uri.Query?.Substring(1);
+            //        }
+            //        return _middlerRequestContext.QueryParameters.TryGetValue(part, out var qp) ? qp : null;
+            //    }
+
+            //    return _middlerRequestContext.RouteData.TryGetValue(part, out var rd) ? rd.ToString() : null;
+
+            //}
+
+            //Regex regex = new Regex("{(?<part>([?@a-zA-Z0-9*]*))}");
+            //string cleanString = regex.Replace(template, ProcessHtmlTag);
+            //return cleanString;
         }
     }
 }

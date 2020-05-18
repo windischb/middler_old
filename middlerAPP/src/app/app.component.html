@@ -1,0 +1,113 @@
+<div style="display: flex; width: 100%; overflow: hidden;">
+
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="13rem" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null" nzTheme="light">
+    <div class="sidebar-logo" (click)="isCollapsed = !isCollapsed">
+      <div *ngIf="!isCollapsed">
+        middler
+      </div>
+      <div *ngIf="isCollapsed">
+        m
+      </div>
+    </div>
+    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
+        <a routerLink="/">
+          <i nz-icon nzType="dashboard" nzTheme="outline"></i>
+          <ng-container *ngIf="!isCollapsed">Dashboard</ng-container>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/endpoint-rules">
+          <!-- <i nz-icon nzType="partition" nzTheme="outline"></i> -->
+          <fa-icon nz-icon [icon]="['fas', 'stream']"></fa-icon>
+          <ng-container *ngIf="!isCollapsed">Endpoints Rules</ng-container>
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
+        <a routerLink="/global-variables">
+          <i nz-icon nzType="folder" nzTheme="outline"></i>
+          <ng-container *ngIf="!isCollapsed">Global Variables</ng-container>
+        </a>
+      </li>
+    </ul>
+    <div class="whitespace"></div>
+    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
+        <a routerLink="/app-settings">
+          <i nz-icon nzType="setting" nzTheme="outline"></i>
+          <ng-container *ngIf="!isCollapsed">Settings</ng-container>
+        </a>
+      </li>
+    </ul>
+
+  </nz-sider>
+
+  <div class="main">
+    <ng-container *ngIf="uiContext$ | async; let ui">
+      <div class="main-header">
+        <div class="title-container ui container">
+          <div class="title-icon" *ngIf="prepareIcon(ui.Header.Icon); let icon">
+            <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
+              [nzType]="icon.icon" nzTheme="outline"></i>
+            <fa-icon *ngIf="icon.type == 'fa'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
+              [icon]="icon.icon"></fa-icon>
+          </div>
+          <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.3em;">
+            <div class="title" [class.title-only]="!ui.Header.SubTitle">
+              {{ui.Header.Title}}
+            </div>
+            <div class="subtitle" *ngIf="ui.Header.SubTitle">
+              {{ui.Header.SubTitle}}
+            </div>
+          </div>
+
+          <div class="whitespace">
+
+          </div>
+
+          <div *ngIf="ui.Header.Outlet">
+            <ng-container [ngTemplateOutlet]="ui.Header.Outlet"></ng-container>
+          </div>
+
+        </div>
+      </div>
+      <div class="main-content" style="overflow: hidden;">
+        <div class="ui main-container" [class.container]="ui.Content.Container" [class.scrollable]="ui.Content.Scrollable">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+      <div class="main-footer" *ngIf="ui.Footer.Show">
+        <div class="ui container">
+          <ng-container *ngIf="ui.Footer.UseTemplate">
+            <ng-container [ngTemplateOutlet]="ui.Footer.UseTemplate"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="!ui.Footer.UseTemplate">
+
+
+
+            <button nz-button nzType="primary" *ngIf="ui.Footer.Button1?.Visible" (click)="ui.Footer.Button1?.OnClick()"
+              [class.disabled]="ui.Footer.Button1.Disabled" [nzLoading]="ui.Footer.Button1.Loading">
+              {{ui.Footer.Button1?.Text}}</button>
+
+            <button nz-button *ngIf="ui.Footer.Button2?.Visible" (click)="ui.Footer.Button2?.OnClick()"
+              [class.disabled]="ui.Footer.Button2.Disabled" [nzLoading]="ui.Footer.Button2.Loading">
+              {{ui.Footer.Button2?.Text}}</button>
+
+            <div class="whitespace">
+
+            </div>
+
+            <div *ngIf="ui.Footer.Outlet">
+              <ng-container [ngTemplateOutlet]="ui.Footer.Outlet"></ng-container>
+            </div>
+
+          </ng-container>
+
+
+        </div>
+
+      </div>
+    </ng-container>
+  </div>
+</div>

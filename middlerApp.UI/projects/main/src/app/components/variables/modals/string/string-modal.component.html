@@ -1,0 +1,28 @@
+<basic-modal [variable]="variable" (ok)="ok()" (cancel)="cancel()" [form]="form">
+
+    <form [formGroup]="form" class="ui form" style="flex-grow: 1; display: flex; flex-direction: column;">
+
+        <ng-template dbPortalTemplate="VariableModalHeader-Left">
+            {{form.value.Name}}
+        </ng-template>
+
+        <ng-template dbPortalTemplate="ModalSubHeader">
+            {{variable.Parent}}
+        </ng-template>
+
+        <div class="required field" *ngIf="create">
+            <input formControlName="Name" placeholder="Variable Name" [dbAllowedCharacters]="'[a-zA-Z0-9_]'"
+                [dbSetFocus] />
+        </div>
+
+        <div class="field" style="flex-grow: 1; display: flex; flex-direction: column;">
+            <label>Value</label>
+            <input formControlName="Content" />
+        </div>
+
+        <div *ngIf="error">
+            {{error}}
+        </div>
+
+    </form>
+</basic-modal>

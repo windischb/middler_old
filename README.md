@@ -39,3 +39,12 @@ Detailed Information for each Action will be available in WIKI at some Time...
 
 ## Example of a Javascript Script Action
 ![Javascript Rule](documentation/images/rule_action_javascript.png)
+
+
+|Action        | Header    | Url |Body  | Terminal |
+|--------------|:---------:|:---:|:----:|:--------:|
+|Modify Header | In/Out    |     |      |          |
+|Rewrite Url   |           | In  |      |          |
+|Redirect      | In        |     |      |   Yes    |
+|Proxy         |           |     | Out  |   Yes    |
+|Script        | In/Out    |     |In/Out|  Yes/No  |

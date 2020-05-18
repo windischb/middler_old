@@ -1,0 +1,29 @@
+<div style="font-size: x-small">
+
+    <ng-container [ngTemplateOutlet]="template"></ng-container>
+</div>
+
+
+<ng-template #urlredirect>
+    <div>
+        Redirect to {{action.Parameters.RedirectTo}}
+    </div>
+    <div>
+        Permanent: {{action.Parameters.Permanent}}
+    </div>
+    <div>
+        PreserveMethod: {{action.Parameters.PreserveMethod}}
+    </div>
+</ng-template>
+
+<ng-template #urlrewrite>
+    <div>
+        Rewrite to {{action.Parameters.RewriteTo}}
+    </div>
+</ng-template>
+
+<ng-template #script>
+    <div>
+        {{action.Parameters.Language}}
+    </div>
+</ng-template>

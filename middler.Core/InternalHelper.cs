@@ -39,7 +39,7 @@ namespace middler.Core
                 concreteAction.SetPropertyValue("Parameters", actParams);
             }
 
-            concreteAction.ContinueAfterwards = middlerAction.ContinueAfterwards;
+            concreteAction.Terminating = middlerAction.Terminating;
             concreteAction.WriteStreamDirect = middlerAction.WriteStreamDirect;
 
             return concreteAction;
@@ -76,7 +76,7 @@ namespace middler.Core
 
             var act = new MiddlerAction
             {
-                ContinueAfterwards = middlerAction.ContinueAfterwards,
+                Terminating = middlerAction.Terminating,
                 WriteStreamDirect = middlerAction.WriteStreamDirect,
                 ActionType = typeAlias,
                 Parameters =

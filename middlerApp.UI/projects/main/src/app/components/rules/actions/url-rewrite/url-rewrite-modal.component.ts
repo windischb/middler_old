@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActionEditModalOverlayRef } from '../../modal/action-edit-modal-overlay-ref';
-import { ACTION_DIALOG_DATA } from '../../modal/action-edit-modal.tokens';
+import { OverlayContext } from '@doob-ng/cdk-helper';
 import { MiddlerAction } from '../../models/middler-action';
 
 @Component({
@@ -14,9 +13,7 @@ export class UrlRewriteModalComponent implements OnInit {
 
     form: FormGroup;
 
-    constructor(private fb: FormBuilder,
-        public dialogRef: ActionEditModalOverlayRef,
-        @Inject(ACTION_DIALOG_DATA) public actionContext: MiddlerAction) {
+    constructor(private fb: FormBuilder, private context: OverlayContext<MiddlerAction>) {
 
     }
 
@@ -26,16 +23,16 @@ export class UrlRewriteModalComponent implements OnInit {
             RewriteTo: []
         });
 
-        this.form.patchValue(this.actionContext.Parameters)
+        this.form.patchValue(this.context.data.Parameters)
 
     }
 
     ok() {
-        this.dialogRef.ok(this.form.value);
-        this.dialogRef.close();
+        this.context.invoke("OK", this.form.value);
+        this.context.handle.Close();
     }
 
     cancel() {
-        this.dialogRef.close();
+        this.context.handle.Close();
     }
 }
