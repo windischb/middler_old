@@ -1,11 +1,12 @@
 <div class="outer" style="flex-grow: 1; height:100%" cdkDropList #nullList="cdkDropList"
     (contextmenu)="openOuterContextMenu($event, outerContextMenu)">
     <div class=""
-        style="padding: 10px 10px 20px 10px; margin-top: 8px; max-height: calc(100% - 30px); overflow-y: auto;"
+        style="padding: 2px; margin-top: 8px; max-height: calc(100% - 30px); overflow-y: auto;"
         cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
         <div *ngIf="((rules$ | async) || []).length === 0"
-            style="text-align: center; font-size: 1.5em; font-weight: bold; color: #525e7678; line-height: 1.4em; line-height: 2em; margin: 0px 10px;">
-            Drop new Rule here
+            style="text-align: center; font-size: 1.3em; font-weight: bold; color: #525e7678; line-height: 1.4em; line-height: 2em; margin: 0px 10px;">
+            <div style="font-size: 1.5em;">Currently there is nothing...</div>
+            <p>Use the ContextMenu to create your first rule!</p>
         </div>
         <div class="rule-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected"
             [class.disabled]="!rule.Item.Enabled" (click)="clickAction($event, rule)"
@@ -29,8 +30,14 @@
                     <div>
                         {{rule.Item.Actions?.length || 0}} Actions
                     </div>
-                    <span *ngFor="let action of rule.Item.Actions" [attr.data-tooltip]="action.ActionType">
-                        <i class="icon" [ngClass]="GetIcon(action)"></i>
+                    <span *ngFor="let action of rule.Item.Actions" nz-tooltip [nzTooltipTitle]="action.ActionType">
+                        <ng-container *ngIf="prepareIcon(GetIcon(action)); let icon" >
+                            <i *ngIf="icon.type == 'ant'" style="font-size: large; text-align: left;" nz-icon
+                                [nzType]="icon.icon" nzTheme="outline" [class.disabled]="!action.Enabled"></i>
+                            <fa-icon *ngIf="icon.type == 'fa'" style="font-size: large; text-align: left;" nz-icon
+                                [icon]="icon.icon" [class.disabled]="!action.Enabled"></fa-icon>
+                        </ng-container>
+                        <!-- <i class="icon" [ngClass]="GetIcon(action)"></i> -->
                     </span>
 
                 </div>

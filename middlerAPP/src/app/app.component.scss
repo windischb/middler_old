@@ -142,6 +142,10 @@
   flex-direction: column;
 }
 
+.main-container {
+  overflow: hidden;
+}
+
 .main-footer {
   min-height: 50px;
   max-height: 50px;
@@ -199,6 +203,10 @@
 
 .whitespace {
   flex-grow: 1;
+}
+
+[nz-button] {
+  margin-right: 8px;
 }
 
 

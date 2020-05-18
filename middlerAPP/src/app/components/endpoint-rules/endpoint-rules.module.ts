@@ -19,6 +19,16 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { EndpointActionsListComponent } from './endpoint-actions-list/endpoint-actions-list.component';
 import { ActionListDetailsComponent } from './endpoint-actions-list/action-list-details/action-list-details.component';
+import { ActionBasicModalComponent } from './endpoint-actions/base/action-basic-modal.component';
+import { UrlRewriteModalComponent, UrlRedirectModalComponent, ProxyModalComponent, ScriptModalComponent } from './endpoint-actions';
+import { DoobEditorModule } from '@doob-ng/editor';
+import { DoobCoreModule } from '@doob-ng/core';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+
+const ActionComponents = [
+    ActionBasicModalComponent,
+    UrlRewriteModalComponent, UrlRedirectModalComponent, ProxyModalComponent, ScriptModalComponent
+]
 
 @NgModule({
     imports: [
@@ -38,13 +48,21 @@ import { ActionListDetailsComponent } from './endpoint-actions-list/action-list-
         NzInputNumberModule,
         NzCheckboxModule,
         NzSelectModule,
-        NzCollapseModule
+        NzCollapseModule,
+        DoobEditorModule,
+        DoobCoreModule,
+        NzToolTipModule
     ],
     declarations: [
         ...RoutingComponents,
+        ...ActionComponents,
         EndpointRulesListComponent,
         EndpointActionsListComponent,
         ActionListDetailsComponent
+    ],
+    entryComponents: [
+        ...ActionComponents,
     ]
+    
 })
 export class EndpointRulesModule { }

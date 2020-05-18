@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helper\**" />
+    <EmbeddedResource Remove="Helper\**" />
+    <None Remove="Helper\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
@@ -18,12 +24,9 @@
   <ItemGroup>
     <PackageReference Include="NamedServices.Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Reflectensions" Version="4.0.2" />
-    <PackageReference Include="Reflectensions.Json" Version="4.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Helper\" />
+    <PackageReference Include="Reflectensions" Version="4.0.3" />
+    <PackageReference Include="Reflectensions.Json" Version="4.1.0" />
+    <PackageReference Include="Scriban" Version="2.1.2" />
   </ItemGroup>
 
 </Project>

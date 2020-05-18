@@ -99,6 +99,10 @@ namespace middler.Core
                     terminating = false;
                     foreach (var endpointAction in matchingEndpoint.MiddlerRule.Actions)
                     {
+                        if (!endpointAction.Enabled)
+                        {
+                            continue;
+                        }
                         //if (!first)
                         //{
                         //    middlerContext.PrepareNext();
@@ -301,6 +305,10 @@ namespace middler.Core
             if (!Wildcard.Match($"{middlerContext.MiddlerRequestContext.Uri.Host}:{middlerContext.MiddlerRequestContext.Uri.Port}", rule.Hostname ?? "*"))
                 return null;
 
+            if (String.IsNullOrWhiteSpace(rule.Path))
+            {
+                rule.Path = "{**path}";
+            }
 
             var parsedTemplate = TemplateParser.Parse(rule.Path);
 

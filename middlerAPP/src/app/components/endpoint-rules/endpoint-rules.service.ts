@@ -6,6 +6,7 @@ import { of, BehaviorSubject } from 'rxjs';
 import { tap, shareReplay, take } from 'rxjs/operators';
 import { MessageService } from '@services';
 import { compare } from 'fast-json-patch';
+import { DoobEditorFile } from '@doob-ng/editor';
 //import { DoobEditorFile } from '@doob-ng/editor';
 
 const patchHeaders = new HttpHeaders({
@@ -38,7 +39,7 @@ export class EndpointRulesService {
     constructor(private http: HttpClient, private message: MessageService) {
 
         this.message.RunOnEveryReconnect(() => this.GetAll().subscribe());
-        // this.message.RunOnEveryReconnect(() => this.GetTypings());
+        this.message.RunOnEveryReconnect(() => this.GetTypings());
 
         this.message.Stream<any>("MiddlerRule.Subscribe").pipe(
             tap(item => console.log(item))
@@ -158,18 +159,18 @@ export class EndpointRulesService {
     }
 
 
-    // typings$: BehaviorSubject<DoobEditorFile[]> = new BehaviorSubject<DoobEditorFile[]>([]);
+    typings$: BehaviorSubject<DoobEditorFile[]> = new BehaviorSubject<DoobEditorFile[]>([]);
 
-    // public GetTypings() {
-    //     this.message.Invoke<Array<{Key: string, Value: string}>>("MiddlerRule.GetTypings")
-    //         .pipe(
-    //             take(1),
-    //             tap(typings => {
-    //                 var ts = typings.map(t => new DoobEditorFile(t.Key, t.Value, false))
-    //                 this.typings$.next(ts);
-    //             })
-    //         ).subscribe();
-    // }
+    public GetTypings() {
+        this.message.Invoke<Array<{Key: string, Value: string}>>("MiddlerRule.GetTypings")
+            .pipe(
+                take(1),
+                tap(typings => {
+                    var ts = typings.map(t => new DoobEditorFile(t.Key, t.Value, false))
+                    this.typings$.next(ts);
+                })
+            ).subscribe();
+    }
 
 }
 

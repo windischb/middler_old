@@ -16,18 +16,30 @@ namespace middler.Common.Actions.UrlRewrite
         public override string ActionType => DefaultActionType;
 
 
-        public void ExecuteRequest(IMiddlerContext middlerContext)
+        public void ExecuteRequest(IMiddlerContext middlerContext, IActionHelper actionHelper)
         {
 
-            var isAbsolute = Uri.IsWellFormedUriString(Parameters.RewriteTo, UriKind.Absolute);
+            var rewriteTo = actionHelper.BuildPathFromRoutData(Parameters.RewriteTo);
+            var isAbsolute = Uri.IsWellFormedUriString(rewriteTo, UriKind.Absolute);
             if (isAbsolute)
             {
-                middlerContext.Request.Uri = new Uri(Parameters.RewriteTo);
+                middlerContext.Request.Uri = new Uri(rewriteTo);
             }
             else
             {
                 var builder = new UriBuilder(middlerContext.Request.Uri);
-                builder.Path = Parameters.RewriteTo;
+                builder.Query = null;
+                if (rewriteTo.Contains("?"))
+                {
+                    builder.Path = rewriteTo.Split("?")[0];
+                    builder.Query = rewriteTo.Split("?")[1];
+                }
+                else
+                {
+                    builder.Path = rewriteTo;
+                }
+                
+                
                 middlerContext.Request.Uri = builder.Uri;
             }
 

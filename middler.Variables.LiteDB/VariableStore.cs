@@ -38,7 +38,7 @@ namespace middler.Variables.LiteDB
                 .Ignore(it => it.Children);
 
         }
-        
+
 
         public bool ItemExists(string parent, string name)
         {
@@ -76,6 +76,28 @@ namespace middler.Variables.LiteDB
             UpdateItem(it => it.Parent == parent && it.Name == name, update);
         }
 
+        public void UpdateVariableContent(string parent, string name, object content)
+        {
+
+            var variable = GetVariable(parent, name);
+
+            switch (variable.Extension)
+            {
+                case "credential":
+                    {
+                        content = JsonSerializer.Deserialize(content.ToString());
+                        break;
+                    }
+                default:
+                    {
+                        content = content.ToString();
+                        break;
+                    }
+            }
+
+            UpdateItem(parent, name, node => node.Content = content);
+        }
+
         #region Folders
 
         public TreeNode GetFolderTree()
@@ -110,7 +132,7 @@ namespace middler.Variables.LiteDB
         {
             var item = new TreeNode
             {
-                Parent = parent.Trim('/'), 
+                Parent = parent.Trim('/'),
                 Name = name.Trim('/'),
                 IsFolder = true
             };
@@ -173,5 +195,5 @@ namespace middler.Variables.LiteDB
             DeleteItem(parent, name);
         }
     }
-    
+
 }

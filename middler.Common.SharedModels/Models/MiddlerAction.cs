@@ -8,7 +8,7 @@ namespace middler.Common.SharedModels.Models {
         public Guid Id { get; set; } = Guid.NewGuid();
         public virtual bool Terminating { get; set; } = false;
         public virtual bool WriteStreamDirect { get; set; } = false;
-
+        public virtual bool Enabled { get; set; } = true;
         public string ActionType { get; set; }
 
         public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
@@ -21,6 +21,7 @@ namespace middler.Common.SharedModels.Models {
 
         public virtual bool Terminating { get; set; } = false;
         public virtual bool WriteStreamDirect { get; set; } = false;
+        public virtual bool Enabled { get; set; } = true;
         public abstract string ActionType { get; }
 
 

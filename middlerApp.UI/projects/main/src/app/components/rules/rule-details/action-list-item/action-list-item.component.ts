@@ -1,6 +1,8 @@
 import { Component, Input, TemplateRef, ViewChild, OnInit } from "@angular/core";
 import { MiddlerAction } from '../../models/middler-action';
 
+
+
 @Component({
     selector: 'action-list-item',
     templateUrl: './action-list-item.component.html',

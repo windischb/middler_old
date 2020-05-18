@@ -8,6 +8,8 @@ using middler.Common.Variables;
 using middler.Variables;
 using middler.Variables.LiteDB;
 using middlerApp.API.Helper;
+using middlerApp.API.JsonConverters;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SignalARRR.Attributes;
 using SignalARRR.Server;
@@ -25,9 +27,10 @@ namespace middlerApp.API.HubMethods
             VariablesStore = variablesStore;
         }
 
-        public TreeNode GetFolderTree()
+        public object GetFolderTree()
         {
-            return VariablesStore.GetFolderTree();
+            var tree =  VariablesStore.GetFolderTree();
+            return tree;
         }
 
         public IEnumerable<TreeNode> GetVariablesInParent(string parent)
@@ -55,26 +58,26 @@ namespace middlerApp.API.HubMethods
             return VariablesStore.GetVariable(parent, name);
         }
 
-        //public void UpdateVariableContent(string path, object content)
-        //{
-        //    string contentString = null;
-        //    switch (content)
-        //    {
-        //        case String str:
-        //            {
-        //                contentString = content.ToString();
-        //                break;
-        //            }
+        public void UpdateVariableContent(string parent, string name, object content)
+        {
+            //string contentString = null;
+            //switch (content)
+            //{
+            //    case String str:
+            //        {
+            //            contentString = content.ToString();
+            //            break;
+            //        }
 
-        //        default:
-        //            {
-        //                contentString = Converter.Json.ToJson(content);
-        //                break;
-        //            }
-        //    }
+            //    default:
+            //        {
+            //            contentString = Converter.Json.ToJson(content);
+            //            break;
+            //        }
+            //}
 
-        //    VariablesStore.UpdateVariableContent(path, contentString);
-        //}
+            VariablesStore.UpdateVariableContent(parent, name, content);
+        }
 
 
         public void CreateVariable(TreeNode variable)

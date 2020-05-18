@@ -6,7 +6,9 @@ import { AppUIService } from '@services';
 import { DoobModalService, DoobOverlayService, IOverlayHandle } from '@doob-ng/cdk-helper';
 import { CdkDragDrop, copyArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { ActionHelper } from '../endpoint-actions/action-helper';
+import { ActionHelperService } from '../endpoint-actions/action-helper';
+import { UrlRedirectAction, UrlRewriteAction, ScriptAction } from '../endpoint-actions';
+import { ListContext } from '../endpoint-rules-list/list-context';
 
 @Component({
     selector: 'endpoint-actions-list',
@@ -42,7 +44,8 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
         public overlay: DoobOverlayService,
         public viewContainerRef: ViewContainerRef,
         private cref: ChangeDetectorRef,
-        private componentFactoryResolver: ComponentFactoryResolver) {
+        private componentFactoryResolver: ComponentFactoryResolver,
+        private actionHelper: ActionHelperService) {
 
     }
 
@@ -71,7 +74,14 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
         }
 
         this.ContextMenu?.Close();
-        this.ContextMenu = this.overlay.OpenContextMenu($event, contextMenu, this.viewContainerRef, {})
+        this.ContextMenu = this.overlay.OpenContextMenu($event, contextMenu, this.viewContainerRef, this.BuildContext())
+    }
+
+    BuildContext() {
+        const cont = new ListContext<EndpointAction>();
+        cont.AllItems = this.actions
+        cont.Selected = this._actions.filter(sct => sct.Selected).map(li => li.Item);
+        return cont;
     }
 
     clickAction($event: MouseEvent, action: ListItem) {
@@ -109,36 +119,110 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
 
     GetIcon(action: EndpointAction) {
 
-        return ActionHelper.GetIcon(action);
+        return this.actionHelper.GetIcon(action);
     }
 
     public prepareIcon(icon: string) {
-    
-        if(!icon)
-          return null;
-    
-        if(icon.startsWith('fa#')) {
-    
-          let res = {
-            type: 'fa',
-            icon: null
-          }
-    
-          icon = icon.substring(3);
-    
-          if(icon.includes('|')) {
-            res.icon = icon.split('|');
-          } else {
-            res.icon = icon;
-          }
-          return res;
+
+        if (!icon)
+            return null;
+
+        if (icon.startsWith('fa#')) {
+
+            let res = {
+                type: 'fa',
+                icon: null
+            }
+
+            icon = icon.substring(3);
+
+            if (icon.includes('|')) {
+                res.icon = icon.split('|');
+            } else {
+                res.icon = icon;
+            }
+            return res;
         }
-    
+
         return {
-          type: 'ant',
-          icon: icon
+            type: 'ant',
+            icon: icon
         };
-      }
+    }
+
+    CreateAction(actionType: string, position: string, currentAction?: EndpointAction) {
+
+        let act = new EndpointAction;
+        switch (actionType.toLowerCase()) {
+            case 'urlredirect': {
+                act = new UrlRedirectAction();
+                break;
+            }
+            case 'urlrewrite': {
+                act = new UrlRewriteAction();
+                break;
+            }
+            case 'script': {
+                act = new ScriptAction();
+                break;
+            }
+        }
+
+        if (position == 'top') {
+            this.actions = [act, ...this.actions]
+            this.propagateChange(this.actions)
+            return;
+        }
+
+        if (position == 'bottom') {
+            this.actions = [...this.actions, act]
+            this.propagateChange(this.actions)
+            return;
+        }
+
+        const actionindex = this.actions.findIndex(r => r === currentAction)
+        let acts = [...this.actions];
+
+        if (position == 'before') {
+            if (actionindex == 0) {
+                this.actions = [act, ...this.actions]
+            } else {
+                acts.splice(actionindex, 0, act)
+                this.actions = [...acts]
+            }
+            
+        }
+
+        if (position == 'after') {
+            if (actionindex == this.actions.length -1) {
+                this.actions = [...this.actions, act]
+            } else {
+
+                acts.splice(actionindex+1, 0, act)
+                this.actions = [...acts]
+            }
+            
+        }
+
+        this.propagateChange(this.actions)
+    }
+
+    SetActionEnabled(action: EndpointAction, value: boolean) {
+        this.actions = this.actions.map(act => {
+            if(act == action) {
+                act.Enabled = value;
+            }
+            return act;
+        });
+        this.propagateChange(this.actions)
+    }
+
+    RemoveActions(actions: Array<EndpointAction>) {
+
+        actions.forEach(act => this.actions = this.actions.filter(ac => ac != act));
+        this.propagateChange(this.actions)
+        this.ContextMenu?.Close();
+    }
 
     drop(event: CdkDragDrop<EndpointAction[]>) {
 
@@ -157,8 +241,60 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
 
     }
 
+    openModal(action: EndpointAction) {
+
+        this.ContextMenu?.Close();
+        switch (action.ActionType) {
+            case 'UrlRedirect': {
+                this.actionHelper.GetModal('UrlRedirect').SetData(action)
+                    .AddEventHandler("OK", context => {
+                        action.Parameters = context.payload;
+                        this.propagateChange([...this.actions]);
+                    }).Open()
+
+                break;
+            }
+            case 'UrlRewrite': {
+                this.actionHelper.GetModal('UrlRewrite')
+                    .SetData(action)
+                    .AddEventHandler("OK", context => {
+                        action.Parameters = context.payload;
+                        this.propagateChange([...this.actions]);
+                    }).Open()
+                break;
+            }
+            // case 'Proxy': {
+            //     this.modal.FromComponent(ProxyModalComponent)
+            //         .SetModalOptions({
+            //             componentFactoryResolver: this.componentFactoryResolver,
+            //             overlayConfig: {
+            //                 width: "50%",
+            //                 maxWidth: "500px"
+            //             }
+            //         })
+            //         .CloseOnOutsideClick()
+            //         .SetData(action)
+            //         .AddEventHandler("OK", context => {
+            //             action.Parameters = context.payload;
+            //             this.propagateChange([...this.actions]);
+            //         }).Open()
+            //     break;
+            // }
+            case 'Script': {
+                this.actionHelper.GetModal('Script')
+                    .SetData(action)
+                    .AddEventHandler("OK", context => {
+                        action.Parameters = context.payload;
+                        this.propagateChange([...this.actions]);
+                    }).Open()
+                break;
+            }
+        }
+
+    }
+
     private propagateChange(value: Array<EndpointAction>) {
-        
+
         this.actionsChanged.next(value);
         this.registered.forEach(fn => {
             fn(value);

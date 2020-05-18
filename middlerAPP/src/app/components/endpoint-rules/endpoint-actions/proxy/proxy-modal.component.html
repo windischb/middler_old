@@ -1,0 +1,25 @@
+
+<action-basic-modal (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form [formGroup]="form" class="ui form">
+
+        <div class="required field">
+            <label>DestinationUrl</label>
+            <input type="text" formControlName="DestinationUrl">
+        </div>
+
+        <div class="field">
+            <db-checkbox formControlName="UserIntermediateStream" mode="toggle">UserIntermediateStream</db-checkbox>
+        </div>
+        <div class="field">
+            <db-checkbox formControlName="AddXForwardedHeaders" mode="toggle">AddXForwardedHeaders</db-checkbox>
+        </div>
+        <div class="field">
+            <db-checkbox formControlName="CopyXForwardedHeaders" mode="toggle">CopyXForwardedHeaders</db-checkbox>
+        </div>
+
+        <ng-template dbPortalTemplate="ActionModalHeader-Left">
+            Proxy
+        </ng-template>
+
+    </form>
+</action-basic-modal>

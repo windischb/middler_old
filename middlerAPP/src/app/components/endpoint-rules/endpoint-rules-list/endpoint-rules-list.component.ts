@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EndpointAction } from '../models/endpoint-action';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
 import { ListContext } from './list-context';
+import { ActionHelperService } from '../endpoint-actions';
 
 @Component({
     selector: 'enpoint-rules-list',
@@ -51,7 +52,14 @@ export class EndpointRulesListComponent {
     @Output() rulesChanged: EventEmitter<Array<EndpointRule>> = new EventEmitter<Array<EndpointRule>>();
 
     selected: Array<string> = []
-    constructor(private rulesService: EndpointRulesService, private cref: ChangeDetectorRef, private overlay: DoobOverlayService, public viewContainerRef: ViewContainerRef, private router: Router, private route: ActivatedRoute) {
+    constructor(
+        private rulesService: EndpointRulesService,
+        private cref: ChangeDetectorRef,
+        private overlay: DoobOverlayService,
+        public viewContainerRef: ViewContainerRef,
+        private router: Router,
+        private route: ActivatedRoute,
+        private actionHelper: ActionHelperService) {
 
     }
 
@@ -199,7 +207,7 @@ export class EndpointRulesListComponent {
     CreateRuleOnTop() {
         let rule = new EndpointRule();
         rule.Enabled = false;
-        if(!this.rules || this.rules.length == 0) {
+        if (!this.rules || this.rules.length == 0) {
             rule.Order = 10;
         } else {
             rule.Order = this.rules[0].Order / 2;
@@ -214,11 +222,11 @@ export class EndpointRulesListComponent {
 
         let rule = new EndpointRule();
         rule.Enabled = false;
-        
+
         if (ruleindex == 0) {
             rule.Order = item.Order / 2;
         } else {
-            rule.Order = item.Order - ((item.Order - this.rules[ruleindex-1].Order) / 2)
+            rule.Order = item.Order - ((item.Order - this.rules[ruleindex - 1].Order) / 2)
         }
 
         console.log(rule);
@@ -233,11 +241,11 @@ export class EndpointRulesListComponent {
 
         let rule = new EndpointRule();
         rule.Enabled = false;
-        
-        if (ruleindex == this.rules.length -1) {
+
+        if (ruleindex == this.rules.length - 1) {
             rule.Order = this.rulesService.GetNextLastOrder();
         } else {
-            rule.Order = item.Order + ((this.rules[ruleindex+1].Order - item.Order) / 2)
+            rule.Order = item.Order + ((this.rules[ruleindex + 1].Order - item.Order) / 2)
         }
 
         console.log(rule);
@@ -442,8 +450,38 @@ export class EndpointRulesListComponent {
 
     }
 
+
     GetIcon(action: EndpointAction) {
-        //return ActionHelper.GetIcon(action);
+
+        return this.actionHelper.GetIcon(action);
+    }
+
+    public prepareIcon(icon: string) {
+
+        if (!icon)
+            return null;
+
+        if (icon.startsWith('fa#')) {
+
+            let res = {
+                type: 'fa',
+                icon: null
+            }
+
+            icon = icon.substring(3);
+
+            if (icon.includes('|')) {
+                res.icon = icon.split('|');
+            } else {
+                res.icon = icon;
+            }
+            return res;
+        }
+
+        return {
+            type: 'ant',
+            icon: icon
+        };
     }
 
 

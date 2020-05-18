@@ -36,6 +36,10 @@
 .ant-menu-submenu-selected {
   color: #292f3b;
 }
+.ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+}
 .ant-layout {
   overflow: hidden;
 }
@@ -212,4 +216,38 @@ fa-icon.anticon {
 }
 .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
   color: black;
+}
+
+
+nz-tabset {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+
+
+.ant-tabs-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.ant-tabs-tabpane-active {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.flex-grow-column {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-tabs-bar {
+  margin: 0px;
+  border-bottom: 1px solid #ffffff;
+  outline: none;
 }

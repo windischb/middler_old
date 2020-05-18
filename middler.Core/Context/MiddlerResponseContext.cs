@@ -43,6 +43,8 @@ namespace middler.Core.Context
         {
 
             Body.Seek(0, SeekOrigin.Begin);
+            
+            Body.SetLength(0);
 
             switch (body)
             {

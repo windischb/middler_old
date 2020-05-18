@@ -7,6 +7,7 @@ import { combineLatest } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { EndpointRule } from '../models/endpoint-rule';
 import { compare } from 'fast-json-patch';
+import { AppSettingsService } from '../../app-settings/app-settings.service';
 
 @Component({
     selector: 'endpoint-rule-details',
@@ -31,7 +32,7 @@ export class EndpointRuleDetailsComponent {
             this.uiService.Set(ui => {
                 ui.Header.Title = "Endpoint Rule";
                 ui.Header.SubTitle = rule.Name
-                ui.Header.Icon = "edit"
+                ui.Header.Icon = "form"
 
                 ui.Footer.Button1.Visible = true;
                 ui.Footer.Button2.Visible = true;
@@ -42,8 +43,14 @@ export class EndpointRuleDetailsComponent {
     )
 
     form: FormGroup;
+    appSettings = this.appSettingsService.AppSettings$;
 
-    constructor(private uiService: AppUIService, private route: ActivatedRoute, private rulesService: EndpointRulesService, private fb: FormBuilder) {
+    constructor(
+        private uiService: AppUIService,
+        private route: ActivatedRoute,
+        private rulesService: EndpointRulesService,
+        private fb: FormBuilder,
+        private appSettingsService: AppSettingsService) {
 
         this.uiService.Set(ui => {
 

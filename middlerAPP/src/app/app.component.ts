@@ -18,6 +18,7 @@ export class AppComponent {
 
     uiService.SetDefault(ui => {
       ui.Content.Scrollable = false;
+      ui.Content.Container = true;
       ui.Header.Icon = null
       ui.Footer.Show = false;
     })

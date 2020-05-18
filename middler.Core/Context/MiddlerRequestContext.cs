@@ -57,7 +57,7 @@ namespace middler.Core
             HttpMethod = httpContext.Request.Method;
             ContentType = httpContext.Request.ContentType;
             MiddlerOptions = middlerOptions;
-
+            
             Body = httpContext.Request.Body;
         }
 
@@ -70,10 +70,10 @@ namespace middler.Core
         {
             var middlerRouteData = new MiddlerRouteData();
 
-            middlerRouteData["@HOST"] = Uri.Host;
-            middlerRouteData["@SCHEME"] = Uri.Scheme;
-            middlerRouteData["@PORT"] = Uri.Port;
-            middlerRouteData["@PATH"] = Uri.AbsolutePath;
+            //middlerRouteData["@HOST"] = Uri.Host;
+            //middlerRouteData["@SCHEME"] = Uri.Scheme;
+            //middlerRouteData["@PORT"] = Uri.Port;
+            //middlerRouteData["@PATH"] = Uri.AbsolutePath;
 
             var rd = GetRouteData();
 
@@ -148,6 +148,8 @@ namespace middler.Core
                 }
 
             }
+
+            RouteData = middlerRouteData;
 
         }
         

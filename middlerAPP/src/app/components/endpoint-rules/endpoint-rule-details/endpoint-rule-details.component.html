@@ -1,6 +1,6 @@
 <ng-container *ngIf="(rule$ | async); let rule">
 
-    <form nz-form [formGroup]="form" style="padding:10px; flex-grow: 1; display: flex; flex-direction: column;">
+    <form nz-form [formGroup]="form" style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
         <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}">
             <nz-tab [nzTitle]="BasicTitle">
                 <ng-template #BasicTitle>
@@ -70,9 +70,9 @@
                 <ng-template #ActionsTitle> <i nz-icon nzType="ordered-list"></i>Actions</ng-template>
                 <endpoint-actions-list formControlName="Actions"></endpoint-actions-list>
             </nz-tab>
-            <nz-tab [nzTitle]="DebugTitle">
+            <nz-tab [nzTitle]="DebugTitle" *ngIf="(appSettings | async).Debug">
                 <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>
-                <div style="overflow: auto; height: 100%;">
+                <div style="height: 100%;">
                     <pre>{{form.value | json}}</pre>
                 </div>
             </nz-tab>

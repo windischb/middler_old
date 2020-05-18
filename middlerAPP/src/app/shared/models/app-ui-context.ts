@@ -41,5 +41,5 @@ class AppUIButton {
 
 class AppUIContent {
     Scrollable: boolean = false;
-    Container: boolean = true;
+    Container: boolean = false;
 }

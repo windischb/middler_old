@@ -1,0 +1,24 @@
+<action-basic-modal (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form nz-form [formGroup]="form" style="width: 100%;" >
+
+        <nz-form-label nzRequired nzFor="RedirectTo">RedirectTo</nz-form-label>
+        <nz-form-control>
+            <input nz-input formControlName="RedirectTo" id="RedirectTo" style="width: 100%;" />
+        </nz-form-control>
+
+        <div style="display: flex; flex-direction: row;">
+            <div class="field">
+                <label nz-checkbox formControlName="PreserveMethod">PreserveMethod</label>
+            </div>
+            <div class="field">
+                <label nz-checkbox formControlName="Permanent">Permanent</label>
+            </div>
+        </div>
+        
+
+        <ng-template dbPortalTemplate="ActionModalHeader-Left">
+            Url - Redirect
+        </ng-template>
+
+    </form>
+</action-basic-modal>
