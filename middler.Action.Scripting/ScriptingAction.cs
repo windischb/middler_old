@@ -43,9 +43,9 @@ namespace middler.Action.Scripting
             scriptContext.Terminating = Terminating;
 
             scriptEngine.Initialize();
-            scriptEngine.SetValue("Context", scriptContext);
+            scriptEngine.SetValue("context", scriptContext);
 
-            scriptEngine.SetValue("Middler", new Environment(middlerContext.RequestServices.GetService<VariableStore>()));
+            scriptEngine.SetValue("m", new Environment(middlerContext.RequestServices.GetService<VariableStore>()));
             
 
             try

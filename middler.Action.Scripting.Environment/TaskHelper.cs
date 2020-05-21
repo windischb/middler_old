@@ -27,5 +27,15 @@ namespace middler.Scripting
             Await(task);
         }
 
+        public void WaitAll(params Task[] tasks)
+        {
+            Task.WaitAll(tasks);
+        }
+
+        public Task WhenAll(params Task[] tasks)
+        {
+            return Task.WhenAll(tasks);
+        }
+
     }
 }

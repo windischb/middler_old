@@ -1,5 +1,5 @@
 ﻿
-declare namespace middler.Variables.HelperClasses {
+declare namespace Middler.Variables.HelperClasses {
 
     export class SimpleCredentials {
         UserName: string;

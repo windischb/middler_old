@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -104,6 +105,7 @@ namespace middlerApp.API
 
             app.UseResponseCompression();
 
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -114,6 +116,8 @@ namespace middlerApp.API
             }
 
 
+           
+
             app.UseSerilogRequestLogging(options =>
             {
                 options.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
@@ -121,10 +125,7 @@ namespace middlerApp.API
                     "[{RequestMethod}] {RequestPath} | {User} | {StatusCode} in {Elapsed:0.0000} ms";
             });
 
-
-
-
-
+            
 
             app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
             {
@@ -170,7 +171,6 @@ namespace middlerApp.API
             app.UseWhen(context => !context.IsAdminAreaRequest(), builder =>
             {
                 builder.UseRouting();
-
                 builder.UseMiddler(map => { map.AddNamedRepo("litedb"); });
 
             });

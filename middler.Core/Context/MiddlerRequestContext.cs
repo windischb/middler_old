@@ -215,7 +215,7 @@ namespace middler.Core
 
         private void SetObjectBody(object @object)
         {
-            using var sw = new StreamWriter(Body, Encoding.UTF8, 8192, true);
+            using var sw = new StreamWriter(Body, new UTF8Encoding(false), 8192, true);
             JsonSerializer serializer = new JsonSerializer();
             serializer.Serialize(sw, @object);
 
@@ -223,7 +223,7 @@ namespace middler.Core
 
         private void SetStringBody(string content)
         {
-            using var sw = new StreamWriter(Body, Encoding.UTF8, 8192, true);
+            using var sw = new StreamWriter(Body, new UTF8Encoding(false), 8192, true);
             sw.Write(content);
         }
 

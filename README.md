@@ -1,5 +1,19 @@
 # middler
 
+Currently there is a live Demo available at:  
+* AdminUI -> https://middler.westeurope.azurecontainer.io:4444/  
+* Rules are available on Port 80 and 443
+
+For now without any Authentication, working on it...  
+
+
+## IN PROGRESS...
+
+ > UI, Features, Sysntax and Code Examples may change!  
+ > I'm currently trying to figure out the best combination for all of this Parts.
+
+  
+    
 `middler` aims to be kind of a Reverse Proxy or API Gateway  
 You define `Rule's` which, based on matching criterias, can be invoked, ignored or denied.  
 Creating, updating or removing of `Rules` can easily be done on the UI at runtime.
@@ -40,11 +54,3 @@ Detailed Information for each Action will be available in WIKI at some Time...
 ## Example of a Javascript Script Action
 ![Javascript Rule](documentation/images/rule_action_javascript.png)
 
-
-|Action        | Header    | Url |Body  | Terminal |
-|--------------|:---------:|:---:|:----:|:--------:|
-|Modify Header | In/Out    |     |      |          |
-|Rewrite Url   |           | In  |      |          |
-|Redirect      | In        |     |      |   Yes    |
-|Proxy         |           |     | Out  |   Yes    |
-|Script        | In/Out    |     |In/Out|  Yes/No  |

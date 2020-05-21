@@ -1,6 +1,6 @@
-﻿declare const Context: middler.Action.Scripting.Models.ScriptContext;
+﻿declare const context: Middler.Action.Scripting.Models.ScriptContext;
 
-declare namespace middler.Action.Scripting.Models {
+declare namespace Middler.Action.Scripting.Models {
 
     export class ScriptContext {
 
