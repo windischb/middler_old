@@ -12,10 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.0.0" />
-    <PackageReference Include="Reflectensions" Version="4.0.2" />
+    <PackageReference Include="Reflectensions" Version="4.0.3" />
     <PackageReference Include="Reflectensions.Json" Version="4.1.0" />
+    <PackageReference Include="Scriban" Version="2.1.2" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 
@@ -36,6 +38,15 @@
     <None Update="TypeDefinitions\middler.d.ts">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+    <None Update="TypeDefinitions\smtp.d.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TypeDefinitions\task.d.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TypeDefinitions\template.d.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TypeDefinitions\variables.d.ts">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

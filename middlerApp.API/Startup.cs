@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,8 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using SignalARRR.Server.ExtensionMethods;
 using middler.Variables.LiteDB;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace middlerApp.API
 {
@@ -45,6 +48,24 @@ namespace middlerApp.API
 
             var sConfig = Configuration.Get<StartUpConfiguration>();
             sConfig.SetDefaultSettings();
+
+            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
+                .AddAzureAD(options =>
+                {
+                    options.Instance = "https://login.microsoftonline.com";
+                    options.Domain = "winbe.onmicrosoft.com";
+                    options.TenantId = "38b3384d-944e-403f-a649-e7990d0a69f9";
+                    options.ClientId = "72d40c69-28f3-4e94-9c67-a474d722955c";
+                    options.CallbackPath = "/signin-oidc";
+                    options.SignedOutCallbackPath = "/signout-callback-oidc";
+                });
+
+            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
+            {
+                options.Authority = options.Authority + "/v2.0/";         // Microsoft identity platform
+
+                options.TokenValidationParameters.ValidateIssuer = false; // accept several tenants (here simplified)
+            });
 
             services.AddControllers(options =>
             {
@@ -104,6 +125,7 @@ namespace middlerApp.API
 
             app.UseResponseCompression();
 
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -114,6 +136,8 @@ namespace middlerApp.API
             }
 
 
+           
+
             app.UseSerilogRequestLogging(options =>
             {
                 options.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
@@ -121,10 +145,7 @@ namespace middlerApp.API
                     "[{RequestMethod}] {RequestPath} | {User} | {StatusCode} in {Elapsed:0.0000} ms";
             });
 
-
-
-
-
+            
 
             app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
             {
@@ -132,6 +153,9 @@ namespace middlerApp.API
 
 
                 builder.UseRouting();
+
+                builder.UseAuthentication();
+                builder.UseAuthorization();
 
                 builder.UseEndpoints(endpoints =>
                 {
@@ -170,6 +194,8 @@ namespace middlerApp.API
             app.UseWhen(context => !context.IsAdminAreaRequest(), builder =>
             {
                 builder.UseRouting();
+                builder.UseAuthentication();
+                builder.UseAuthorization();
 
                 builder.UseMiddler(map => { map.AddNamedRepo("litedb"); });
 

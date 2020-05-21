@@ -1,10 +1,12 @@
-﻿declare const Middler: middler.Scripting.Environment;
+﻿declare const m: Middler.Scripting.Environment;
 
-declare namespace middler.Scripting {
+declare namespace Middler.Scripting {
 
     export class Environment {
-        Http: middler.Scripting.HttpCommand.Http;
-        Task: any;
-        Variables: middler.Scripting.Variables.VariableCommand;
+        Http: Middler.Scripting.HttpCommand.Http;
+        Task: Middler.Scripting.TaskHelper;
+        Variables: Middler.Scripting.Variables.VariableCommand;
+        Smtp: Middler.Scripting.SmtpCommand.Smtp;
+        Template: Middler.Scripting.TemplateCommand.MTemplate;
     }
 }

@@ -27,7 +27,7 @@ namespace middler.Core
 
             var queryObj = new ScriptObject
             {
-                ["*"] = _middlerRequestContext.Uri.Query?.Substring(1)
+                ["*"] = _middlerRequestContext.Uri.Query.ToNull()?.Substring(1)
             };
 
             queryObj.Import(_middlerRequestContext.QueryParameters, renamer:member => member.Name);

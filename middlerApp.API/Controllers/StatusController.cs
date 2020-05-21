@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using middlerApp.API.Attributes;
@@ -25,6 +26,7 @@ namespace middlerApp.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetStatus()
         {
             var status = new Status()

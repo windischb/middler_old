@@ -1,6 +1,6 @@
 ﻿
 
-declare namespace middler.Scripting.Variables {
+declare namespace Middler.Scripting.Variables {
 
     export class VariableCommand {
 
@@ -9,7 +9,7 @@ declare namespace middler.Scripting.Variables {
         GetString(path: string): string;
         GetNumber(path: string): number;
         GetBoolean(path: string): boolean;
-        GetCredential(path: string): middler.Variables.HelperClasses.SimpleCredentials;
+        GetCredential(path: string): Middler.Variables.HelperClasses.SimpleCredentials;
 
     }
 }

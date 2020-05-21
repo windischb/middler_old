@@ -1,6 +1,6 @@
 ﻿
 
-declare namespace middler.Scripting.HttpCommand {
+declare namespace Middler.Scripting.HttpCommand {
 
     export class Http {
 
@@ -11,7 +11,7 @@ declare namespace middler.Scripting.HttpCommand {
     export class HttpOptionsBuilder {
 
         UseProxy(proxy: string): HttpOptionsBuilder;
-        UseProxy(proxy: string, credentials: middler.Variables.HelperClasses.SimpleCredentials): HttpOptionsBuilder;
+        UseProxy(proxy: string, credentials: Middler.Variables.HelperClasses.SimpleCredentials): HttpOptionsBuilder;
         IgnoreProxy(value?: boolean): HttpOptionsBuilder;
     }
 
