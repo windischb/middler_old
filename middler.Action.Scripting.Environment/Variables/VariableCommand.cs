@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Linq;
-using middler.Common.Variables;
-using middler.Common.Variables.HelperClasses;
-using middler.Variables.LiteDB;
-using Reflectensions.ExtensionMethods;
+using middler.Common.SharedModels.Models;
+using middlerApp.Data;
+using TreeNode = middlerApp.Data.TreeNode;
 
 namespace middler.Scripting.Variables
 {
     public class VariableCommand
     {
-        private readonly VariableStore _variablesStore;
+        private readonly VariablesRepository _variablesStore;
 
-        public VariableCommand(VariableStore variablesStore)
+        public VariableCommand(VariablesRepository variablesStore)
         {
             _variablesStore = variablesStore;
         }
@@ -30,6 +29,12 @@ namespace middler.Scripting.Variables
             }
 
             return _variablesStore.GetVariable(parent, name);
+        }
+
+        public T GetVariableContent<T>(string path)
+        {
+            var variable = this.GetVariable(path);
+            return Converter.Json.ToObject<T>(variable.Content);
         }
 
         public object GetAny(string path)
@@ -58,8 +63,7 @@ namespace middler.Scripting.Variables
 
         public SimpleCredentials GetCredential(string path)
         {
-            var variable = this.GetVariable($"{path}.credential");
-            return (SimpleCredentials)variable.Content;
+            return GetVariableContent<SimpleCredentials>($"{path}.credential");
         }
     }
 }

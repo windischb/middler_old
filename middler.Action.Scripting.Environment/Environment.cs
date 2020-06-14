@@ -2,7 +2,7 @@
 using middler.Scripting.SmtpCommand;
 using middler.Scripting.TemplateCommand;
 using middler.Scripting.Variables;
-using middler.Variables.LiteDB;
+using middlerApp.Data;
 
 namespace middler.Scripting
 {
@@ -17,7 +17,7 @@ namespace middler.Scripting
 
         public MTemplate Template => new MTemplate();
 
-        public Environment(VariableStore variableStore)
+        public Environment(VariablesRepository variableStore)
         {
             Variables = new VariableCommand(variableStore);    
         }

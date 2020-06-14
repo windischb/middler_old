@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
-namespace middler.Hosting.Models {
-    public class MiddlerActionDto {
+namespace middlerApp.SharedModels {
+    public class EndpointActionDto {
 
+        public Guid Id { get; set; }
+        public decimal Order { get; set; }
+        public Guid EndpointRuleEntityId { get; set; }
         public virtual bool Terminating { get; set; }
         public virtual bool WriteStreamDirect { get; set; }
         public virtual bool Enabled { get; set; }

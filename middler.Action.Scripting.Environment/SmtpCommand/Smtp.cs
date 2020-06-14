@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using MailKit.Security;
-using middler.Common.Variables.HelperClasses;
+using middler.Common.SharedModels.Models;
 
 namespace middler.Scripting.SmtpCommand
 {

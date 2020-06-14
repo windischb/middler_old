@@ -11,6 +11,7 @@ import { EndpointAction } from '../models/endpoint-action';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
 import { ListContext } from './list-context';
 import { ActionHelperService } from '../endpoint-actions';
+import { EndpointRuleListDto } from '../models/endpoint-rule-list-dto';
 
 @Component({
     selector: 'enpoint-rules-list',
@@ -25,10 +26,10 @@ export class EndpointRulesListComponent {
     overlayRef: OverlayRef | null;
     sub: Subscription;
 
-    private _rules: Array<ListItem<EndpointRule>> = [];
-    private rulesSubject$ = new BehaviorSubject<Array<ListItem<EndpointRule>>>(this._rules);
+    private _rules: Array<ListItem<EndpointRuleListDto>> = [];
+    private rulesSubject$ = new BehaviorSubject<Array<ListItem<EndpointRuleListDto>>>(this._rules);
     @Input()
-    set rules(value: Array<EndpointRule>) {
+    set rules(value: Array<EndpointRuleListDto>) {
 
         this._rules = (value || []).map(v => {
             const f = this._rules.find(r => r.Item.Id === v.Id)
@@ -48,8 +49,8 @@ export class EndpointRulesListComponent {
         return this._rules.map(la => la.Item);
     }
 
-    rules$: Observable<Array<ListItem<EndpointRule>>> = this.rulesSubject$.asObservable();
-    @Output() rulesChanged: EventEmitter<Array<EndpointRule>> = new EventEmitter<Array<EndpointRule>>();
+    rules$: Observable<Array<ListItem<EndpointRuleListDto>>> = this.rulesSubject$.asObservable();
+    @Output() rulesChanged: EventEmitter<Array<EndpointRuleListDto>> = new EventEmitter<Array<EndpointRuleListDto>>();
 
     selected: Array<string> = []
     constructor(
@@ -162,7 +163,7 @@ export class EndpointRulesListComponent {
         })
     }
 
-    SetRuleEnabled(rule: EndpointRule, value: boolean) {
+    SetRuleEnabled(rule: EndpointRuleListDto, value: boolean) {
 
         this.rulesService.SetRuleEnabled(rule, value)
     }
@@ -330,7 +331,7 @@ export class EndpointRulesListComponent {
     }
 
     public SaveOrder() {
-        this.rulesService.UpdateRulesOrder();
+        this.rulesService.UpdateRulesOrder().subscribe();
     }
 
     editRule(id: string) {
@@ -485,7 +486,7 @@ export class EndpointRulesListComponent {
     }
 
 
-    private propagateChange(value: Array<EndpointRule>) {
+    private propagateChange(value: Array<EndpointRuleListDto>) {
         this.rulesChanged.next(value);
         this.registered.forEach(fn => {
             fn(value);
@@ -495,7 +496,7 @@ export class EndpointRulesListComponent {
 
     ///ControlValueAccessor
 
-    writeValue(obj: Array<EndpointRule>): void {
+    writeValue(obj: Array<EndpointRuleListDto>): void {
         this.rules = obj;
     }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,7 +17,7 @@ using middler.Action.Scripting.Powershell;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
 using middler.Core;
-using middler.Storage.LiteDB;
+//using middler.Storage.LiteDB;
 using middlerApp.API.Attributes;
 using middlerApp.API.ExtensionMethods;
 using middlerApp.API.Helper;
@@ -26,7 +27,8 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using SignalARRR.Server.ExtensionMethods;
-using middler.Variables.LiteDB;
+using middlerApp.Data;
+using middlerApp.Identity;
 
 namespace middlerApp.API
 {
@@ -82,20 +84,32 @@ namespace middlerApp.API
 
             );
 
+            services.AddDbContext<MiddlerDbContext>(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp"));
 
-            services.AddNamedMiddlerRepo("litedb", sp =>
-            {
-                var path = PathHelper.GetFullPath(sConfig.EndpointRulesSettings.DbFilePath);
-                return new LiteDBRuleRepository($"Filename={path}");
-            });
+            //services.AddDbContext<MiddlerDbContext>(opt => opt.UseSqlite("Filename=MyDatabase.db"), ServiceLifetime.Scoped);
 
-            services.AddSingleton(sp =>
-            {
-                var path = PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.DbFilePath);
-                return new VariableStore($"Filename={path}");
-                //StoreConfig b = new StoreConfigBuilder().UseRootPath(PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.RootPath));
-                //return new VariablesStore(b);
-            });
+            services.AddScoped<EndpointRuleRepository>();
+
+            services.AddMiddlerRepo<EFCoreMiddlerRepository>(ServiceLifetime.Scoped);
+
+            services.AddScoped<VariablesRepository>();
+
+
+            services.AddMiddlerIdentityServer(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp", sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
+
+            //services.AddNamedMiddlerRepo("litedb", sp =>
+            //{
+            //    var path = PathHelper.GetFullPath(sConfig.EndpointRulesSettings.DbFilePath);
+            //    return new LiteDBRuleRepository($"Filename={path}");
+            //});
+
+            //services.AddSingleton(sp =>
+            //{
+            //    var path = PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.DbFilePath);
+            //    return new VariableStore($"Filename={path}");
+            //    StoreConfig b = new StoreConfigBuilder().UseRootPath(PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.RootPath));
+            //    return new VariablesStore(b);
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,7 +139,7 @@ namespace middlerApp.API
                     "[{RequestMethod}] {RequestPath} | {User} | {StatusCode} in {Elapsed:0.0000} ms";
             });
 
-            
+            app.UseMiddlerIdentityServer();
 
             app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
             {
@@ -171,7 +185,11 @@ namespace middlerApp.API
             app.UseWhen(context => !context.IsAdminAreaRequest(), builder =>
             {
                 builder.UseRouting();
-                builder.UseMiddler(map => { map.AddNamedRepo("litedb"); });
+                builder.UseMiddler(map =>
+                {
+                    map.AddRepo<EFCoreMiddlerRepository>();
+                    //map.AddNamedRepo("litedb");
+                });
 
             });
 

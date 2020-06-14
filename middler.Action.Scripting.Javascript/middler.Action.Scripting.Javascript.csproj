@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jint" Version="3.0.0-beta-1715" />
+    <PackageReference Include="Jint" Version="3.0.0-beta-1828" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Reflectensions.Json" Version="4.0.0" />
+    <PackageReference Include="Reflectensions.Json" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>

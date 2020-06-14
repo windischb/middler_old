@@ -1,5 +1,5 @@
 <div class="outer" style="flex-grow: 1; height:100%" cdkDropList #nullList="cdkDropList"
-    (contextmenu)="openOuterContextMenu($event, outerContextMenu)">
+    (contextmenu)="OpenOuterContextMenu($event, outerContextMenu)">
     <div style="padding: 2px; margin-top: 8px; max-height: calc(100% - 30px); overflow-y: auto;"
         cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
         <div *ngIf="((actions$ | async) || []).length === 0"
@@ -30,12 +30,12 @@
             </div>
         </div> -->
 
-        <div class="action-item" *ngFor="let action of (actions$ | async); let i = index;" [class.selected]="action.Selected"
-            [class.disabled]="!action.Item.Enabled" (click)="clickAction($event, action)" (dblclick)="openModal(action.Item)"
+        <div class="action-item" *ngFor="let action of (actions$ | async); let i = index;" [class.selected]="IsActionSelected(action)"
+            [class.disabled]="!action.Enabled" (click)="ClickAction($event, action)" (dblclick)="openModal(action)"
             (contextmenu)="openItemContextMenu($event, itemContextMenu, action)" cdkDrag cdkDragLockAxis="y">
             <div style="display: flex;">
                 <div class="dragHandle" style="padding: 10px 0px 0px 5px;" cdkDragHandle>
-                    <div class="title-icon" *ngIf="prepareIcon(GetIcon(action.Item)); let icon">
+                    <div class="title-icon" *ngIf="prepareIcon(GetIcon(action)); let icon">
                         <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 40px; text-align: left;"
                             nz-icon [nzType]="icon.icon" nzTheme="outline"></i>
                         <fa-icon *ngIf="icon.type == 'fa'" style="font-size: xx-large; width: 40px; text-align: left;"
@@ -43,8 +43,8 @@
                     </div>
                 </div>
                 <div style="padding: 5px; min-width: 50%; max-width: 50%;">
-                    <div style="font-size: large; font-weight: bold; color: #292f3b;">{{action.Item.ActionType}}</div>
-                    <action-list-details [action]="action.Item"></action-list-details>
+                    <div style="font-size: large; font-weight: bold; color: #292f3b;">{{action.ActionType}}</div>
+                    <action-list-details [action]="action"></action-list-details>
                     <!-- <div>{{rule.Item.Order}}</div> -->
                 </div>
             </div>

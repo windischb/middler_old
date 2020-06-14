@@ -3,11 +3,13 @@ import { AppUIService } from '@services';
 import { ActivatedRoute } from '@angular/router';
 import { EndpointRulesService } from '../endpoint-rules.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { combineLatest } from 'rxjs';
+import { combineLatest, BehaviorSubject } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { EndpointRule } from '../models/endpoint-rule';
 import { compare } from 'fast-json-patch';
 import { AppSettingsService } from '../../app-settings/app-settings.service';
+import { NzTabChangeEvent } from 'ng-zorro-antd/tabs/public-api';
+import { EndpointAction } from '../models/endpoint-action';
 
 @Component({
     selector: 'endpoint-rule-details',
@@ -18,16 +20,20 @@ export class EndpointRuleDetailsComponent {
 
     private Id: string;
 
+    public ruleActions: Array<EndpointAction>;
+
     public rule$ = combineLatest(this.route.paramMap, this.route.queryParamMap, this.route.fragment).pipe(
         map(([paramMap, queryParamMap, fragment]) => {
             this.Id = paramMap.get('id')
-            return this.rulesService.Get(this.Id);
+            return this.rulesService.GetRule(this.Id);
         }),
         mergeAll(),
         tap(rule => {
             if (!this.BaseRule) {
                 this.BaseRule = rule;
             }
+            
+            this.rulesService.GetActionsForRule(rule.Id).subscribe(actions => this.ruleActions = actions);
 
             this.uiService.Set(ui => {
                 ui.Header.Title = "Endpoint Rule";
@@ -42,8 +48,12 @@ export class EndpointRuleDetailsComponent {
         })
     )
 
+
+
     form: FormGroup;
     appSettings = this.appSettingsService.AppSettings$;
+
+    private selectedTab = new BehaviorSubject<number>(0);
 
     constructor(
         private uiService: AppUIService,
@@ -53,27 +63,28 @@ export class EndpointRuleDetailsComponent {
         private appSettingsService: AppSettingsService) {
 
         this.uiService.Set(ui => {
-
-            ui.Footer.Button1.Visible = true;
+            ui.Footer.Button1.Disabled = true;
+            ui.Footer.Button2.Disabled = true;
             ui.Footer.Button1.OnClick = () => {
                 this.save()
             }
-
             ui.Footer.Button2.Text = "Reset";
             ui.Footer.Button2.OnClick = () => {
                 this.form.reset(this.BaseRule);
             }
             ui.Footer.Show = true;
         })
+
+
         this.form = this.fb.group({
             Id: [null],
             Name: [null, Validators.required],
             Scheme: [],
             Hostname: [],
             Path: [],
-            Actions: [[]], //this.fb.array([]),
+            //Actions: [[]], //this.fb.array([]),
             HttpMethods: [[]],
-            Permissions: [[]],
+            //Permissions: [[]],
             Order: [],
             Enabled: [false]
         })
@@ -83,6 +94,20 @@ export class EndpointRuleDetailsComponent {
     }
 
     ngOnInit() {
+
+        this.selectedTab.subscribe(index => {
+            if (index === 0) {
+                this.uiService.Set(ui => {
+                    ui.Footer.Button1.Visible = true;
+                    ui.Footer.Button2.Visible = true;
+                })
+            } else {
+                this.uiService.Set(ui => {
+                    ui.Footer.Button1.Visible = false;
+                    ui.Footer.Button2.Visible = false;
+                })
+            }
+        })
 
         this.form.get('Name').valueChanges.subscribe(name => this.uiService.Set(ui => ui.Header.SubTitle = name))
         this.form.valueChanges.subscribe(v => {
@@ -99,8 +124,15 @@ export class EndpointRuleDetailsComponent {
         })
     }
 
-    GeneratePatchDocument() {
-        var patchDocument = compare(this.BaseRule, this.form.value);
+    GeneratePatchDocument(base?: any, comp?: any) {
+        base = base ?? this.BaseRule;
+        comp = comp ?? this.form.value;
+
+        base.Actions = null;
+        base.Permissions = null;
+        comp.Actions = null;
+        comp.Permissions = null;
+        var patchDocument = compare(base, comp);
         return patchDocument;
     }
 
@@ -116,7 +148,7 @@ export class EndpointRuleDetailsComponent {
     }
 
     private SetButtonStatus(rule: EndpointRule) {
-        var patch = compare(this.BaseRule, rule)
+        var patch = this.GeneratePatchDocument(this.BaseRule, rule)
 
         if (patch.length > 0) {
             this.uiService.Set(ui => {
@@ -136,6 +168,10 @@ export class EndpointRuleDetailsComponent {
                 ui.Footer.Button2.Disabled = true;
             })
         }
+    }
+
+    tabChanged(event: NzTabChangeEvent) {
+        this.selectedTab.next(event.index ?? 0);
     }
 
     isNotSelected(value: string): boolean {

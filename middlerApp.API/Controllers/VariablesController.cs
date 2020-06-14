@@ -4,9 +4,8 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using middler.Variables;
-using middler.Variables.LiteDB;
 using middlerApp.API.Attributes;
+using middlerApp.Data;
 
 namespace middlerApp.API.Controllers
 {
@@ -15,9 +14,9 @@ namespace middlerApp.API.Controllers
     [AdminController]
     public class VariablesController: Controller
     {
-        public VariableStore VariablesStore { get; }
+        public VariablesRepository VariablesStore { get; }
 
-        public VariablesController(VariableStore variablesStore)
+        public VariablesController(VariablesRepository variablesStore)
         {
             VariablesStore = variablesStore;
         }

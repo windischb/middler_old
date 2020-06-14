@@ -1,42 +1,48 @@
-import { Component, Input, EventEmitter, Output, ViewContainerRef, ChangeDetectorRef, ComponentFactoryResolver, TemplateRef } from "@angular/core";
+import { Component, Input, EventEmitter, Output, ViewContainerRef, ChangeDetectorRef, ComponentFactoryResolver, TemplateRef, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { ListItem } from '../endpoint-rules-list/list-item';
 import { EndpointAction } from '../models/endpoint-action';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AppUIService } from '@services';
 import { DoobModalService, DoobOverlayService, IOverlayHandle } from '@doob-ng/cdk-helper';
 import { CdkDragDrop, copyArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ActionHelperService } from '../endpoint-actions/action-helper';
 import { UrlRedirectAction, UrlRewriteAction, ScriptAction } from '../endpoint-actions';
 import { ListContext } from '../endpoint-rules-list/list-context';
+import { EndpointRulesService } from '../endpoint-rules.service';
+import { compare } from 'fast-json-patch';
 
 @Component({
     selector: 'endpoint-actions-list',
     templateUrl: './endpoint-actions-list.component.html',
     styleUrls: ['./endpoint-actions-list.component.scss'],
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: EndpointActionsListComponent,
-        multi: true
-    }],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EndpointActionsListComponent implements ControlValueAccessor {
+export class EndpointActionsListComponent implements OnInit {
 
 
-    private _actions: Array<ListItem<EndpointAction>> = [];
-    private actionsSubject$ = new BehaviorSubject<Array<ListItem<EndpointAction>>>(this._actions);
-    @Input()
-    set actions(value: Array<EndpointAction>) {
-        this._actions = (value || []).map(act => new ListItem(act));
-        this.actionsSubject$.next(this._actions)
-    }
+    @Input() ruleId: string;
+
+    private actionsSubject$ = new BehaviorSubject<Array<EndpointAction>>(null);
+    actions$ = this.actionsSubject$.asObservable();
+
     get actions() {
-        return this._actions.map(la => la.Item);
+        return this.actionsSubject$.value;
+    }
+    set actions(value: Array<EndpointAction>) {
+
+        value = value?.sort((a, b) => {
+            if (a.Order > b.Order) {
+                return 1;
+            } else if (a.Order < b.Order) {
+                return -1;
+            }
+            return 0;
+        })
+
+        this.actionsSubject$.next(value);
     }
 
-    actions$: Observable<Array<ListItem<EndpointAction>>> = this.actionsSubject$.asObservable();
-
-    @Output() actionsChanged: EventEmitter<Array<EndpointAction>> = new EventEmitter<Array<EndpointAction>>();
+    selectedActions: Array<string> = [];
 
     constructor(
         private uiService: AppUIService,
@@ -45,32 +51,66 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
         public viewContainerRef: ViewContainerRef,
         private cref: ChangeDetectorRef,
         private componentFactoryResolver: ComponentFactoryResolver,
-        private actionHelper: ActionHelperService) {
+        private actionHelper: ActionHelperService,
+        private rulesService: EndpointRulesService, ) {
 
     }
 
+    ngOnInit() {
+
+        this.rulesService.GetActionsForRule(this.ruleId).subscribe(actions => {
+            this.actions = actions;
+        })
+    }
+
+    IsActionSelected(action: EndpointAction) {
+        return this.selectedActions.includes(action.Id);
+    }
+
+    private setActionSelected(action: EndpointAction, value: boolean) {
+
+        if (!value) {
+            this.selectedActions = this.selectedActions.filter(actId => actId != action.Id);
+        } else {
+            this.selectedActions = [...new Set([...this.selectedActions, action.Id])]
+        }
+
+    }
+
+
+    GetSelectedActions() {
+        return this.actions.filter(act => this.selectedActions.includes(act.Id));
+    }
+
+
+
+    ClickAction($event: MouseEvent, action: EndpointAction) {
+        if ($event.ctrlKey) {
+            const isSelected = this.IsActionSelected(action);
+            this.setActionSelected(action, !isSelected)
+        } else {
+            this.selectedActions = [];
+            this.setActionSelected(action, true);
+        }
+    }
+
+
+
+
+
+
     private ContextMenu: IOverlayHandle;
-    openOuterContextMenu($event: MouseEvent, contextMenu: TemplateRef<any>) {
+    OpenOuterContextMenu($event: MouseEvent, contextMenu: TemplateRef<any>) {
         $event.stopPropagation();
         this.ContextMenu?.Close();
         this.ContextMenu = this.overlay.OpenContextMenu($event, contextMenu, this.viewContainerRef, null)
     }
 
-    openItemContextMenu($event: MouseEvent, contextMenu: TemplateRef<any>, item: ListItem) {
+    openItemContextMenu($event: MouseEvent, contextMenu: TemplateRef<any>, action: EndpointAction) {
         $event.stopPropagation();
 
-
-        const selected = this._actions.filter(sct => sct.Selected);
-
-        if (selected.length == 0 || !selected.includes(item)) {
-            this._actions = this._actions.map(act => {
-                if (act == item) {
-                    act.Selected = true;
-                } else {
-                    act.Selected = false;
-                }
-                return act;
-            })
+        if (this.selectedActions.length == 0 || !this.IsActionSelected(action)) {
+            this.setActionSelected(action, true);
         }
 
         this.ContextMenu?.Close();
@@ -79,46 +119,13 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
 
     BuildContext() {
         const cont = new ListContext<EndpointAction>();
-        cont.AllItems = this.actions
-        cont.Selected = this._actions.filter(sct => sct.Selected).map(li => li.Item);
+        cont.AllItems = this.actions;
+        cont.Selected = this.actions.filter(act => this.selectedActions.includes(act.Id));
         return cont;
     }
 
-    clickAction($event: MouseEvent, action: ListItem) {
-
-        if ($event.ctrlKey) {
-            action.Selected = !action.Selected
-        } else {
-            this._actions = this._actions.map(act => {
-                if (act == action) {
-                    act.Selected = true;
-                } else {
-                    act.Selected = false;
-                }
-                return act;
-            })
-        }
-    }
-
-    contextAction($event: MouseEvent, action: ListItem) {
-
-        const selected = this._actions.filter(sct => sct.Selected);
-
-        if (selected.length == 0 || !selected.includes(action)) {
-            this._actions = this._actions.map(act => {
-                if (act == action) {
-                    act.Selected = true;
-                } else {
-                    act.Selected = false;
-                }
-                return act;
-            })
-        }
-
-    }
 
     GetIcon(action: EndpointAction) {
-
         return this.actionHelper.GetIcon(action);
     }
 
@@ -153,6 +160,7 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
     CreateAction(actionType: string, position: string, currentAction?: EndpointAction) {
 
         let act = new EndpointAction;
+
         switch (actionType.toLowerCase()) {
             case 'urlredirect': {
                 act = new UrlRedirectAction();
@@ -168,88 +176,135 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
             }
         }
 
-        if (position == 'top') {
-            this.actions = [act, ...this.actions]
-            this.propagateChange(this.actions)
-            return;
-        }
+        act.Order = this.CalculateOrder(position, currentAction);
 
-        if (position == 'bottom') {
-            this.actions = [...this.actions, act]
-            this.propagateChange(this.actions)
-            return;
-        }
+        this.rulesService.AddAction(this.ruleId, act).subscribe();
 
-        const actionindex = this.actions.findIndex(r => r === currentAction)
-        let acts = [...this.actions];
-
-        if (position == 'before') {
-            if (actionindex == 0) {
-                this.actions = [act, ...this.actions]
-            } else {
-                acts.splice(actionindex, 0, act)
-                this.actions = [...acts]
-            }
-            
-        }
-
-        if (position == 'after') {
-            if (actionindex == this.actions.length -1) {
-                this.actions = [...this.actions, act]
-            } else {
-
-                acts.splice(actionindex+1, 0, act)
-                this.actions = [...acts]
-            }
-            
-        }
-
-        this.propagateChange(this.actions)
     }
 
-    SetActionEnabled(action: EndpointAction, value: boolean) {
-        this.actions = this.actions.map(act => {
-            if(act == action) {
-                act.Enabled = value;
+    private GetLastNextOrder() {
+        if (!this.actions || this.actions.length === 0) {
+            return 10;
+        }
+        return Math.trunc(Math.max(...this.actions.map(r => r.Order)) + 10);
+    }
+    CalculateOrder(position: string, action?: EndpointAction) {
+
+        const currentIndex = this.actions?.findIndex(r => r.Order === action.Order);
+
+        switch (position) {
+            case 'top': {
+                if (!this.actions || this.actions.length == 0) {
+                    return 10;
+                } else {
+                    return this.actions[0].Order / 2;
+                }
             }
-            return act;
+            case 'before': {
+                if (currentIndex == 0) {
+                    return action.Order / 2;
+                } else {
+                    return action.Order - ((action.Order - this.actions[currentIndex - 1].Order) / 2)
+                }
+            }
+            case 'after': {
+                if (currentIndex == this.actions.length - 1) {
+                    return this.GetLastNextOrder();
+                } else {
+                    return action.Order + ((this.actions[currentIndex + 1].Order - action.Order) / 2)
+                }
+            }
+            case 'bottom': {
+                return this.GetLastNextOrder();
+            }
+        }
+    }
+
+
+    SetActionEnabled(action: EndpointAction, value: boolean) {
+        this.rulesService.SetActionEnabled(this.ruleId, action, value).subscribe(_ => {
+            this.actions = this.actions.map(act => {
+                if (act == action) {
+                    act.Enabled = value;
+                }
+                return act;
+            });
         });
-        this.propagateChange(this.actions)
+
     }
 
     RemoveActions(actions: Array<EndpointAction>) {
 
-        actions.forEach(act => this.actions = this.actions.filter(ac => ac != act));
-        this.propagateChange(this.actions)
+        const ids = actions.map(a => a.Id);
+        this.rulesService.RemoveActions(this.ruleId, ...ids).subscribe(_ => {
+            this.actions = this.actions.filter(act => !ids.includes(act.Id))
+        })
         this.ContextMenu?.Close();
     }
 
     drop(event: CdkDragDrop<EndpointAction[]>) {
 
-        if (event.previousContainer !== event.container) {
-            let act = [...this.actions]
-            let action = JSON.parse(JSON.stringify(event.previousContainer.data))
-            copyArrayItem(action, act, event.previousIndex, event.currentIndex);
-            this.actions = [...act]
-            this.propagateChange(this.actions)
-        } else {
-            let act = [...this.actions]
-            moveItemInArray(act, event.previousIndex, event.currentIndex);
-            this.actions = [...act]
-            this.propagateChange(this.actions)
+
+        const currentItem = this.actions[event.previousIndex];
+
+        let direction = null;
+        if (event.previousIndex < event.currentIndex) {
+            direction = "forward"
+        } else if (event.previousIndex > event.currentIndex) {
+            direction = "back"
         }
 
+        if (!direction) {
+            return;
+        }
+
+        if (direction === 'forward') {
+            if (event.currentIndex === this.actions.length - 1) {
+                currentItem.Order = this.rulesService.GetNextLastOrder()
+            } else {
+                const beforeItem = this.actions[event.currentIndex]
+                const nextItem = this.actions[event.currentIndex + 1]
+                currentItem.Order = ((nextItem.Order - beforeItem.Order) / 2) + beforeItem.Order
+            }
+        } else if (direction === 'back') {
+            if (event.currentIndex === 0) {
+                currentItem.Order = this.actions[0].Order / 2
+            } else {
+                const beforeItem = this.actions[event.currentIndex - 1]
+                const nextItem = this.actions[event.currentIndex]
+                currentItem.Order = ((nextItem.Order - beforeItem.Order) / 2) + beforeItem.Order
+            }
+        }
+
+
+        moveItemInArray(this.actions, event.previousIndex, event.currentIndex);
+        this.actions = [...this.actions]
+        this.rulesService.UpdateActionsOrder(this.ruleId, this.actions).subscribe();
+
+    }
+
+
+    private generatePatchDocument(base: any, comp: any) {
+        var patchDocument = compare(base, comp);
+        return patchDocument;
     }
 
     openModal(action: EndpointAction) {
 
         this.ContextMenu?.Close();
+        const origAction = {
+            ...action
+        }
+
         switch (action.ActionType) {
             case 'UrlRedirect': {
                 this.actionHelper.GetModal('UrlRedirect').SetData(action)
                     .AddEventHandler("OK", context => {
                         action.Parameters = context.payload;
-                        this.propagateChange([...this.actions]);
+                        const patchDoc = this.generatePatchDocument(origAction, action);
+                        this.rulesService.PatchAction(this.ruleId, origAction.Id, patchDoc).subscribe(_ => {
+                            this.actions = [...this.actions];
+                        })
                     }).Open()
 
                 break;
@@ -259,7 +314,10 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
                     .SetData(action)
                     .AddEventHandler("OK", context => {
                         action.Parameters = context.payload;
-                        this.propagateChange([...this.actions]);
+                        const patchDoc = this.generatePatchDocument(origAction, action);
+                        this.rulesService.PatchAction(this.ruleId, origAction.Id, patchDoc).subscribe(_ => {
+                            this.actions = [...this.actions];
+                        })
                     }).Open()
                 break;
             }
@@ -285,7 +343,10 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
                     .SetData(action)
                     .AddEventHandler("OK", context => {
                         action.Parameters = context.payload;
-                        this.propagateChange([...this.actions]);
+                        const patchDoc = this.generatePatchDocument(origAction, action);
+                        this.rulesService.PatchAction(this.ruleId, origAction.Id, patchDoc).subscribe(_ => {
+                            this.actions = [...this.actions];
+                        })
                     }).Open()
                 break;
             }
@@ -293,34 +354,5 @@ export class EndpointActionsListComponent implements ControlValueAccessor {
 
     }
 
-    private propagateChange(value: Array<EndpointAction>) {
 
-        this.actionsChanged.next(value);
-        this.registered.forEach(fn => {
-            fn(value);
-        });
-        this.cref.detectChanges();
-    }
-
-    ///ControlValueAccessor
-
-    writeValue(obj: Array<EndpointAction>): void {
-        this.actions = obj;
-    }
-
-    registered = [];
-    registerOnChange(fn: any): void {
-        if (this.registered.indexOf(fn) === -1) {
-            this.registered.push(fn);
-        }
-    }
-
-    onTouched = () => { };
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
-
-    setDisabledState?(isDisabled: boolean): void {
-        throw new Error("Method not implemented.");
-    }
 }

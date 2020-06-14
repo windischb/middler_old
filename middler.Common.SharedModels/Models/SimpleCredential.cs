@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 
-namespace middler.Common.Variables.HelperClasses
+namespace middler.Common.SharedModels.Models
 {
     public class SimpleCredentials
     {

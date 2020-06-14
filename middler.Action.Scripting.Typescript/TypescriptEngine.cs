@@ -65,24 +65,24 @@ namespace middler.Action.Scripting.Typescript
         }
 
 
-        private static Esprima.Ast.Program TypeScriptProgram;
+        private static Esprima.Ast.Script TypeScriptScript;
         private string CompileScriptInternal(string sourceCode)
         {
             if (String.IsNullOrWhiteSpace(sourceCode))
                 return null;
 
-            if (TypeScriptProgram == null) {
+            if (TypeScriptScript == null) {
                 var tsLib = GetFromResources("typescript.min.js");
                 var parser = new JavaScriptParser(tsLib, EsprimaOptions);
-                
-                TypeScriptProgram = parser.ParseProgram();
+
+                TypeScriptScript = parser.ParseScript();
             }
 
            
             
             var _engine = new Engine();
             
-            _engine.Execute(TypeScriptProgram);
+            _engine.Execute(TypeScriptScript);
 
 
            

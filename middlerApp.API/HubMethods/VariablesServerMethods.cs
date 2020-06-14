@@ -4,11 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using middler.Common.Variables;
-using middler.Variables;
-using middler.Variables.LiteDB;
 using middlerApp.API.Helper;
 using middlerApp.API.JsonConverters;
+using middlerApp.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SignalARRR.Attributes;
@@ -20,45 +18,45 @@ namespace middlerApp.API.HubMethods
     [MessageName("Variables")]
     public class VariablesServerMethods : ServerMethods<UIHub>
     {
-        public VariableStore VariablesStore { get; }
+        public VariablesRepository VariablesStore { get; }
 
-        public VariablesServerMethods(VariableStore variablesStore)
+        public VariablesServerMethods(VariablesRepository variablesStore)
         {
             VariablesStore = variablesStore;
         }
 
-        public object GetFolderTree()
+        public async Task<object> GetFolderTree()
         {
-            var tree =  VariablesStore.GetFolderTree();
+            var tree = await VariablesStore.GetFolderTree();
             return tree;
         }
 
-        public IEnumerable<TreeNode> GetVariablesInParent(string parent)
+        public async Task<List<TreeNode>> GetVariablesInParent(string parent)
         {
-            return VariablesStore.GetVariablesInParent(parent);
+            return await VariablesStore.GetVariablesInParent(parent);
         }
 
-        public void NewFolder(string parent, string name)
+        public async Task NewFolder(string parent, string name)
         {
-            VariablesStore.NewFolder(parent, name);
+            await VariablesStore.NewFolder(parent, name);
         }
-        public void RenameFolder(string parent, string oldName, string newName)
+        public async Task RenameFolder(string parent, string oldName, string newName)
         {
-            VariablesStore.RenameFolder(parent, oldName, newName);
-        }
-
-        public void RemoveFolder(string parent, string name)
-        {
-            VariablesStore.RemoveFolder(parent, name);
+            await VariablesStore.RenameFolder(parent, oldName, newName);
         }
 
-
-        public TreeNode GetVariable(string parent, string name)
+        public async Task RemoveFolder(string parent, string name)
         {
-            return VariablesStore.GetVariable(parent, name);
+            await VariablesStore.RemoveFolder(parent, name);
         }
 
-        public void UpdateVariableContent(string parent, string name, object content)
+
+        public async Task<TreeNode> GetVariable(string parent, string name)
+        {
+            return await VariablesStore.GetVariableAsync(parent, name);
+        }
+
+        public async Task UpdateVariableContent(string parent, string name, object content)
         {
             //string contentString = null;
             //switch (content)
@@ -76,18 +74,18 @@ namespace middlerApp.API.HubMethods
             //        }
             //}
 
-            VariablesStore.UpdateVariableContent(parent, name, content);
+            await VariablesStore.UpdateVariableContent(parent, name, content);
         }
 
 
-        public void CreateVariable(TreeNode variable)
+        public async Task CreateVariable(TreeNode variable)
         {
-            VariablesStore.CreateVariable(variable);
+            await VariablesStore.CreateVariable(variable);
         }
 
-        public void RemoveVariable(string parent, string name)
+        public async Task RemoveVariable(string parent, string name)
         {
-            VariablesStore.RemoveVariable(parent, name);
+            await VariablesStore.RemoveVariable(parent, name);
         }
 
         //public List<KeyValuePair<string, string>> GetTypings()

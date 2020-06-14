@@ -84,10 +84,23 @@ export class VariablesFolderContentComponent {
                 })
                 .AddEventHandler<Variable>('ok', (context) => {
 
-                    if (raw) {
-                        context.payload.Extension = variable.Extension
+                    // if (raw) {
+                    //     context.payload.Extension = variable.Extension
+                    // }
+
+                    let content = context.payload.Content
+
+                    if(raw) {
+                        switch(variable.Extension) {
+                            case "credential": {
+                                content = JSON.parse(content);
+                                break;
+                            }
+                        }
                     }
-                    return this.variables.UpdateVariableContent(v.Parent, v.Name, context.payload.Content).pipe(
+                    
+
+                    return this.variables.UpdateVariableContent(v.Parent, v.Name, content).pipe(
                         catchError(err => {
 
                             // this.nameAlreadyExistsErrorToast = this.toast.AddError({ title: "Error", message: err.message }, { displayTime: 0 })

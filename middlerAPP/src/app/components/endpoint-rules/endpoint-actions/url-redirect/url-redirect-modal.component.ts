@@ -33,7 +33,6 @@ export class UrlRedirectModalComponent implements OnInit {
 
     ok() {
         this.context.invoke("OK", this.form.value);
-        this.context.handle.Close();
     }
 
     cancel() {

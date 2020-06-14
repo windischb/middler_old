@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using middler.Common.Variables.HelperClasses;
+using middler.Common.SharedModels.Models;
 
 
 namespace middler.Scripting.HttpCommand

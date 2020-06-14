@@ -1,7 +1,7 @@
 <ng-container *ngIf="(rule$ | async); let rule">
 
     <form nz-form [formGroup]="form" style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
-        <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}">
+        <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}" (nzSelectChange)="tabChanged($event)">
             <nz-tab [nzTitle]="BasicTitle">
                 <ng-template #BasicTitle>
                     <i nz-icon nzType="container"></i>Basic
@@ -68,7 +68,7 @@
             </nz-tab>
             <nz-tab [nzTitle]="ActionsTitle">
                 <ng-template #ActionsTitle> <i nz-icon nzType="ordered-list"></i>Actions</ng-template>
-                <endpoint-actions-list formControlName="Actions"></endpoint-actions-list>
+                <endpoint-actions-list [ruleId]="rule.Id"></endpoint-actions-list>
             </nz-tab>
             <nz-tab [nzTitle]="DebugTitle" *ngIf="(appSettings | async).Debug">
                 <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>

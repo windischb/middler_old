@@ -12,10 +12,10 @@ namespace middler.Core.ExtensionMethods {
                 Terminating = middlerAction.Terminating,
                 WriteStreamDirect = middlerAction.WriteStreamDirect,
                 ActionType = middlerAction.ActionType,
-                Parameters =
-                    middlerAction.Parameters?.GetType().GetProperties()
-                        .ToDictionary(p => p.Name, p => p.GetValue(middlerAction.Parameters)) ??
-                    new Dictionary<string, object>()
+                Parameters = Converter.Json.ToJObject(middlerAction.Parameters)
+                    //middlerAction.Parameters?.GetType().GetProperties()
+                    //    .ToDictionary(p => p.Name, p => p.GetValue(middlerAction.Parameters)) ??
+                    //new Dictionary<string, object>()
             };
 
             return act;

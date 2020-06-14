@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using middler.Common.SharedModels.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace middler.Common.SharedModels.Models {
     public class MiddlerAction: IMiddlerAction {
@@ -11,7 +12,7 @@ namespace middler.Common.SharedModels.Models {
         public virtual bool Enabled { get; set; } = true;
         public string ActionType { get; set; }
 
-        public Dictionary<string, object> Parameters { get; set; } = new Dictionary<string, object>();
+        public JObject Parameters { get; set; } = new JObject();
 
 
     }
