@@ -25,7 +25,7 @@ namespace middlerApp.Data
         public VariablesRepository(MiddlerDbContext middlerDbContext)
         {
             _middlerDbContext = middlerDbContext;
-            _middlerDbContext.Database.EnsureCreated();
+            //_middlerDbContext.Database.EnsureCreated();
 
             //_middlerDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }

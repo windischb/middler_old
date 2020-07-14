@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoMapper;
 using middler.Common.SharedModels.Models;
-using middlerApp.API.MapperProfiles;
 using middlerApp.SharedModels;
 
-namespace middlerApp.Data.MapperProfiles
+namespace middlerApp.API.MapperProfiles
 {
     public class EndpointRuleProfile : Profile
     {
@@ -29,31 +26,40 @@ namespace middlerApp.Data.MapperProfiles
             //        dest => dest.HttpMethods,
             //        expression => expression.MapFrom(src => String.Join("; ", src.HttpMethods)));
 
-            CreateMap<EndpointRuleEntity, EndpointRuleListDto>()
+            CreateMap<API.DataAccess.EndpointRuleEntity, EndpointRuleListDto>()
                 .ForMember(dto => dto.Actions,
                     expression => expression.MapFrom(entity => entity.Actions.OrderBy(a => a.Order)))
                 .ForMember(
                     dest => dest.Scheme,
-                    expression => expression.MapFrom(src => MappingHelper.Split(src.Scheme)))
+                    expression => expression.MapFrom(src => DataAccess.MappingHelper.Split(src.Scheme)))
                 .ForMember(
                     dest => dest.HttpMethods,
-                    expression => expression.MapFrom(src => MappingHelper.Split(src.HttpMethods)));
+                    expression => expression.MapFrom(src => DataAccess.MappingHelper.Split(src.HttpMethods)));
 
-            CreateMap<EndpointRuleEntity, EndpointRuleDto>()
+            CreateMap<API.DataAccess.EndpointRuleEntity, EndpointRuleDto>()
                 .ForMember(
                     dto => dto.Scheme,
-                    opts => opts.MapFrom((dbModel) => MappingHelper.Split(dbModel.Scheme)))
+                    opts => opts.MapFrom((dbModel) => DataAccess.MappingHelper.Split(dbModel.Scheme)))
                 .ForMember(
                     dto => dto.HttpMethods,
-                    opts => opts.MapFrom((dbModel) => MappingHelper.Split(dbModel.HttpMethods)));
+                    opts => opts.MapFrom((dbModel) => DataAccess.MappingHelper.Split(dbModel.HttpMethods)));
 
-            CreateMap<EndpointRuleDto, EndpointRuleEntity>()
+            CreateMap<EndpointRuleDto, API.DataAccess.EndpointRuleEntity>()
                 .ForMember(
                     dto => dto.Scheme,
                     opts => opts.MapFrom((dbModel) => String.Join("; ", dbModel.Scheme)))
                 .ForMember(
                     dto => dto.HttpMethods,
                     opts => opts.MapFrom((dbModel) => String.Join("; ", dbModel.HttpMethods)));
+
+
+            CreateMap<API.DataAccess.EndpointRuleEntity, MiddlerRule>()
+                .ForMember(
+                    dest => dest.Scheme,
+                    expression => expression.MapFrom(src => DataAccess.MappingHelper.Split(src.Scheme)))
+                .ForMember(
+                    dest => dest.HttpMethods,
+                    expression => expression.MapFrom(src => DataAccess.MappingHelper.Split(src.HttpMethods)));
 
         }
 

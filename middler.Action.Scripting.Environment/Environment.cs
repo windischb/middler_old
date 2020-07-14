@@ -1,8 +1,8 @@
-﻿using middler.Scripting.HttpCommand;
+﻿using middler.Common.SharedModels.Interfaces;
+using middler.Scripting.HttpCommand;
 using middler.Scripting.SmtpCommand;
 using middler.Scripting.TemplateCommand;
 using middler.Scripting.Variables;
-using middlerApp.Data;
 
 namespace middler.Scripting
 {
@@ -17,7 +17,7 @@ namespace middler.Scripting
 
         public MTemplate Template => new MTemplate();
 
-        public Environment(VariablesRepository variableStore)
+        public Environment(IVariablesRepository variableStore)
         {
             Variables = new VariableCommand(variableStore);    
         }

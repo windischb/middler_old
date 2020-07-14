@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using middlerApp.API.Helper;
 using Newtonsoft.Json.Linq;
 
-namespace middlerApp.Data.MapperProfiles.Formatters
+namespace middlerApp.API.MapperProfiles.Formatters
 {
     public class StringToJObjectFormatter : IValueConverter<string, JObject>
     {

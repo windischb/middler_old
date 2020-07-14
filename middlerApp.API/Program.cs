@@ -25,7 +25,7 @@ namespace middlerApp.API
                 ConfigureLogging();
 
                 Log.Information("Starting host");
-                CreateHost(args).Build().Run();
+                CreateWebHostBuilder(args).Build().Run();
                 //CreateAdminHost(args).Build().Run();
                 return 0;
             }
@@ -53,7 +53,7 @@ namespace middlerApp.API
                 .CreateLogger();
         }
 
-        public static IHostBuilder CreateHost(string[] args)
+        public static IHostBuilder CreateWebHostBuilder(string[] args)
         {
 
             return Host.CreateDefaultBuilder(args)

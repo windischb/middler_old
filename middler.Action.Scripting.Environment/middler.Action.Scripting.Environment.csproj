@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\middlerApp.Data\middlerApp.Data.csproj" />
+    <ProjectReference Include="..\middler.Common.SharedModels\middler.Common.SharedModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

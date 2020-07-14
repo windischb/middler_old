@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using middler.Common.SharedModels.Interfaces;
 using middlerApp.API.Attributes;
-using middlerApp.Data;
+using middlerApp.API.DataAccess;
+
 
 namespace middlerApp.API.Controllers
 {
@@ -14,9 +11,9 @@ namespace middlerApp.API.Controllers
     [AdminController]
     public class VariablesController: Controller
     {
-        public VariablesRepository VariablesStore { get; }
+        public IVariablesRepository VariablesStore { get; }
 
-        public VariablesController(VariablesRepository variablesStore)
+        public VariablesController(IVariablesRepository variablesStore)
         {
             VariablesStore = variablesStore;
         }

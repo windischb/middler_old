@@ -16,19 +16,20 @@ using middler.Action.Scripting;
 using middler.Action.Scripting.Powershell;
 using middler.Common.Actions.UrlRedirect;
 using middler.Common.Actions.UrlRewrite;
+using middler.Common.SharedModels.Interfaces;
 using middler.Core;
-//using middler.Storage.LiteDB;
 using middlerApp.API.Attributes;
+using middlerApp.API.DataAccess;
 using middlerApp.API.ExtensionMethods;
 using middlerApp.API.Helper;
+using middlerApp.API.IDP;
 using middlerApp.API.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using SignalARRR.Server.ExtensionMethods;
-using middlerApp.Data;
-using middlerApp.Identity;
+
 
 namespace middlerApp.API
 {
@@ -60,6 +61,7 @@ namespace middlerApp.API
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 options.SerializerSettings.Converters.Add(new PSObjectJsonConverter());
                 options.SerializerSettings.Converters.Add(new DecimalJsonConverter());
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
             services.AddResponseCompression();
@@ -71,6 +73,7 @@ namespace middlerApp.API
             {
                 options.PayloadSerializerSettings.ContractResolver = new DefaultContractResolver();
                 options.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
+                options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
             services.AddSignalARRR();
 
@@ -84,18 +87,18 @@ namespace middlerApp.API
 
             );
 
-            services.AddDbContext<MiddlerDbContext>(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp"));
+            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp"));
 
-            //services.AddDbContext<MiddlerDbContext>(opt => opt.UseSqlite("Filename=MyDatabase.db"), ServiceLifetime.Scoped);
+            //services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Filename=MyDatabase.db"), ServiceLifetime.Scoped);
 
             services.AddScoped<EndpointRuleRepository>();
 
             services.AddMiddlerRepo<EFCoreMiddlerRepository>(ServiceLifetime.Scoped);
 
-            services.AddScoped<VariablesRepository>();
+            services.AddScoped<IVariablesRepository, VariablesRepository>();
 
 
-            services.AddMiddlerIdentityServer(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp", sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
+            services.AddMiddlerIdentityServer(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp", sql => sql.MigrationsAssembly(this.GetType().Assembly.FullName)));
 
             //services.AddNamedMiddlerRepo("litedb", sp =>
             //{

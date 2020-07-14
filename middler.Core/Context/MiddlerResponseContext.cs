@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using middler.Common;
-using middler.Common.ExtensionMethods;
-using middler.Common.Interfaces;
 using middler.Common.SharedModels.Models;
-using middler.Common.StreamHelper;
-using middler.Common.ExtensionMethods;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace middler.Core.Context
 {

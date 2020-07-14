@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
-using middler.Action.Scripting;
 using middler.Core;
 using middlerApp.API.Attributes;
-using middlerApp.Data;
+using middlerApp.API.DataAccess;
 using middlerApp.SharedModels;
-using Reflectensions.ExtensionMethods;
+
 
 namespace middlerApp.API.Controllers
 {

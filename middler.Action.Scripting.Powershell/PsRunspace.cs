@@ -76,7 +76,7 @@ namespace middler.Action.Scripting.Powershell
 
                     return ret;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                    
                     throw;

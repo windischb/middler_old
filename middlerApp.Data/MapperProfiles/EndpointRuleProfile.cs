@@ -3,7 +3,7 @@ using middler.Common.SharedModels.Models;
 
 namespace middlerApp.Data.MapperProfiles
 {
-    public class EndpointRuleProfile : Profile
+    internal class EndpointRuleProfile : Profile
     {
         public EndpointRuleProfile()
         {

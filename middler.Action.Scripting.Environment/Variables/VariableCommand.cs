@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Linq;
+using middler.Common.SharedModels.Interfaces;
 using middler.Common.SharedModels.Models;
-using middlerApp.Data;
-using TreeNode = middlerApp.Data.TreeNode;
 
 namespace middler.Scripting.Variables
 {
     public class VariableCommand
     {
-        private readonly VariablesRepository _variablesStore;
+        private readonly IVariablesRepository _variablesStore;
 
-        public VariableCommand(VariablesRepository variablesStore)
+        public VariableCommand(IVariablesRepository variablesStore)
         {
             _variablesStore = variablesStore;
         }
 
-        public TreeNode GetVariable(string path)
+        public ITreeNode GetVariable(string path)
         {
             path = path.Replace(".", "/");
 

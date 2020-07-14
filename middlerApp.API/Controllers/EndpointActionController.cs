@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
 using middler.Action.Scripting;
-using middler.Common.Actions.UrlRedirect;
-using middler.Common.Actions.UrlRewrite;
 using middler.Common.SharedModels.Models;
 using middler.Core;
-using middler.Core.ExtensionMethods;
 using middlerApp.API.Attributes;
-using middlerApp.Data;
+using middlerApp.API.DataAccess;
 using middlerApp.SharedModels;
-using NamedServices.Microsoft.Extensions.DependencyInjection;
-using Reflectensions.ExtensionMethods;
-using Converter = middlerApp.API.Helper.Converter;
 
 namespace middlerApp.API.Controllers
 {

@@ -7,7 +7,7 @@ using middler.Common.SharedModels.Models;
 
 namespace middlerApp.Data.MapperProfiles
 {
-    public class EndpointActionProfile: Profile
+    internal class EndpointActionProfile: Profile
     {
         public EndpointActionProfile()
         {

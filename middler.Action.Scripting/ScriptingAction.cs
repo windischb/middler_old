@@ -10,8 +10,8 @@ using middler.Action.Scripting.Powershell;
 using middler.Action.Scripting.Shared;
 using middler.Action.Scripting.Typescript;
 using middler.Common;
+using middler.Common.SharedModels.Interfaces;
 using middler.Common.SharedModels.Models;
-using middlerApp.Data;
 using Environment = middler.Scripting.Environment;
 
 namespace middler.Action.Scripting
@@ -44,7 +44,7 @@ namespace middler.Action.Scripting
             scriptEngine.Initialize();
             scriptEngine.SetValue("context", scriptContext);
 
-            scriptEngine.SetValue("m", new Environment(middlerContext.RequestServices.GetService<VariablesRepository>()));
+            scriptEngine.SetValue("m", new Environment(middlerContext.RequestServices.GetService<IVariablesRepository>()));
             
 
             try

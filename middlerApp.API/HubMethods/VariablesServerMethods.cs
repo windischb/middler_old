@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using middlerApp.API.Helper;
-using middlerApp.API.JsonConverters;
-using middlerApp.Data;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using middler.Common.SharedModels.Interfaces;
+using middlerApp.API.DataAccess;
 using SignalARRR.Attributes;
 using SignalARRR.Server;
 
@@ -20,9 +15,9 @@ namespace middlerApp.API.HubMethods
     {
         public VariablesRepository VariablesStore { get; }
 
-        public VariablesServerMethods(VariablesRepository variablesStore)
+        public VariablesServerMethods(IVariablesRepository variablesStore)
         {
-            VariablesStore = variablesStore;
+            VariablesStore = variablesStore as VariablesRepository;
         }
 
         public async Task<object> GetFolderTree()

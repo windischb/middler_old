@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using middlerApp.Identity.Models;
 
 namespace middlerApp.Identity
 {
@@ -10,8 +12,18 @@ namespace middlerApp.Identity
     {
         public static void AddMiddlerIdentityServer(this IServiceCollection serviceCollection, Action<DbContextOptionsBuilder> dbContextOptionsBuilder)
         {
+
+            serviceCollection.AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder);
+
+            serviceCollection.AddIdentity<MIdentityUser, IdentityRole>(options =>
+                {
+
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+
             serviceCollection.AddIdentityServer(options => { })
-                .AddTestUsers(TestUsers.Users)
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = dbContextOptionsBuilder;
@@ -19,6 +31,8 @@ namespace middlerApp.Identity
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = dbContextOptionsBuilder;
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 3600;
                 });
         }
     }

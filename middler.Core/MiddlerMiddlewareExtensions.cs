@@ -44,7 +44,7 @@ namespace middler.Core {
             services.AddMiddlerRepo<T>(ServiceLifetime.Singleton);
         }
 
-        public static void AddMiddlerRepo<T>(this IServiceCollection services, Func<IServiceProvider, T>? implementationFactory) where T : class, IMiddlerRepository {
+        public static void AddMiddlerRepo<T>(this IServiceCollection services, Func<IServiceProvider, T> implementationFactory) where T : class, IMiddlerRepository {
             services.AddMiddlerRepo<T>(implementationFactory, ServiceLifetime.Singleton);
         }
 

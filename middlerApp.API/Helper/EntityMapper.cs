@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoMapper;
-using middlerApp.Data.MapperProfiles;
+using middlerApp.API.MapperProfiles;
 
 namespace middlerApp.API.Helper
 {
