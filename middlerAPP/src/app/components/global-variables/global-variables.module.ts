@@ -9,12 +9,12 @@ import { GlobalVariablesExplorerComponent } from './explorer';
 import { DoobCoreModule } from '@doob-ng/core';
 import { DoobGridModule } from "@doob-ng/grid";
 import { VariablesFolderContentComponent } from './folder-content';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
+
 import { IconsProviderModule } from 'src/app/icons-provider.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { VariableModalsModule } from './modals/variable-modals.module';
-import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { GlobalModules } from 'src/app/global-imports.module';
+
 
 @NgModule({
     imports: [
@@ -26,12 +26,10 @@ import { NzTreeModule } from 'ng-zorro-antd/tree';
         DoobCoreModule,
         DoobCdkHelperModule,
         DoobGridModule,
-        NzDropDownModule,
-        NzMenuModule,
         IconsProviderModule,
         FontAwesomeModule,
         VariableModalsModule,
-        NzTreeModule
+        ...GlobalModules
     ],
     declarations: [
         ...RoutingComponents,
@@ -39,7 +37,7 @@ import { NzTreeModule } from 'ng-zorro-antd/tree';
         VariablesFolderContentComponent
     ],
     exports: [
-        NzDropDownModule
+        
     ]
 })
 export class GlobalVariablesModule { }

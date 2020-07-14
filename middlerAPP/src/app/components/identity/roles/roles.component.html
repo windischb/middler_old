@@ -1,0 +1,23 @@
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham"></ag-grid-angular>
+
+<ng-template #itemsContextMenu let-context>
+  <ul nz-menu nzMode="vertical" class="context-menu">
+    <li nz-menu-item (click)="AddRole()">
+      <i nz-icon nzType="user-add" nzTheme="outline"></i>
+      Add Role
+    </li>
+    <li nz-menu-item (click)="EditRole(context.First)" *ngIf="context.Single">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+      Edit Role
+    </li>
+    <li nz-menu-item (click)="RemoveRole(context.SelectedData)" *ngIf="context.Any">
+      <i nz-icon nzType="delete" nzTheme="outline"></i>
+      Delete Role
+    </li>
+    <div nz-menu-divider></div>
+    <li nz-menu-item (click)="ReloadRoles()">
+      <i nz-icon nzType="sync" nzTheme="outline"></i>
+      Reload Roles
+    </li>
+  </ul>
+</ng-template>

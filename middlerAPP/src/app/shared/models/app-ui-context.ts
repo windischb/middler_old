@@ -6,7 +6,7 @@ export class AppUIContext {
     Content = new AppUIContent()
 }
 
-class AppUIHeader {
+export class AppUIHeader {
 
     Title: string;
     SubTitle: string;

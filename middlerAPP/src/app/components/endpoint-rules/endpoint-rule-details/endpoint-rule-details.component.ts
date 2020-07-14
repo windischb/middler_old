@@ -7,7 +7,6 @@ import { combineLatest, BehaviorSubject } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { EndpointRule } from '../models/endpoint-rule';
 import { compare } from 'fast-json-patch';
-import { AppSettingsService } from '../../app-settings/app-settings.service';
 import { NzTabChangeEvent } from 'ng-zorro-antd/tabs/public-api';
 import { EndpointAction } from '../models/endpoint-action';
 
@@ -49,9 +48,8 @@ export class EndpointRuleDetailsComponent {
     )
 
 
-
+    showDebugInformations$ = this.uiService.showDebugInformations$;
     form: FormGroup;
-    appSettings = this.appSettingsService.AppSettings$;
 
     private selectedTab = new BehaviorSubject<number>(0);
 
@@ -59,8 +57,7 @@ export class EndpointRuleDetailsComponent {
         private uiService: AppUIService,
         private route: ActivatedRoute,
         private rulesService: EndpointRulesService,
-        private fb: FormBuilder,
-        private appSettingsService: AppSettingsService) {
+        private fb: FormBuilder) {
 
         this.uiService.Set(ui => {
             ui.Footer.Button1.Disabled = true;

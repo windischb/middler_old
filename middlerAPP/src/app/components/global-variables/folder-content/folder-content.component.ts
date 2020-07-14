@@ -36,9 +36,12 @@ export class VariablesFolderContentComponent {
     grid = new GridBuilder()
         .SetColumns(
             c => c.Default("Name"),
-            c => c.Default("Extension").SetHeader("Type").SetValueFormatter<string>(v => v.value),
-            c => c.Date("CreatedAt", true),
-            c => c.Date("UpdatedAt", true)
+            c => c.Default("Extension")
+                .SetHeader("Type")
+                .SetValueFormatter<string>(v => v.value)
+                .SetMinWidth(120).SetMaxWidth(120),
+            c => c.Date("CreatedAt", true).SetMinWidth(140).SetMaxWidth(140),
+            c => c.Date("UpdatedAt", true).SetMinWidth(140).SetMaxWidth(140)
         )
         .SetGridOptions({
             rowSelection: 'multiple',
@@ -58,7 +61,8 @@ export class VariablesFolderContentComponent {
         })
         .OnRowDoubleClicked(el => {
             this.OpenEditVariableModal(el.data)
-        });
+        })
+        .OnGridSizeChange(ev => ev.api.sizeColumnsToFit());
 
     private contextMenu: IOverlayHandle;
 

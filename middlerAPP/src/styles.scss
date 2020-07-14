@@ -251,3 +251,7 @@ nz-tabset {
   border-bottom: 1px solid #ffffff;
   outline: none;
 }
+
+.deleted div[role='gridcell'] {
+  text-decoration: line-through;
+}

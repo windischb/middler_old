@@ -19,6 +19,10 @@ const routes: Routes = [
   {
     path: 'global-variables',
     loadChildren: () => import('./components/global-variables/global-variables.module').then(m => m.GlobalVariablesModule)
+  },
+  {
+    path: 'identity',
+    loadChildren: () => import('./components/identity/identity.module').then(m => m.IdentityModule)
   }
 ];
 

@@ -1,0 +1,18 @@
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham"></ag-grid-angular>
+
+<ng-template #itemsContextMenu let-context>
+  <ul nz-menu nzMode="vertical" class="context-menu">
+    <li nz-menu-item (click)="AddClient()">
+      <i nz-icon nzType="user-add" nzTheme="outline"></i>
+      Add Client
+    </li>
+    <li nz-menu-item (click)="EditClient(context.First)" *ngIf="context.Single">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+      Edit Client
+    </li>
+    <li nz-menu-item (click)="RemoveClient(context.SelectedData)" *ngIf="context.Any">
+      <i nz-icon nzType="delete" nzTheme="outline"></i>
+      Delete Client
+    </li>
+  </ul>
+</ng-template>

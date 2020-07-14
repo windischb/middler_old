@@ -1,0 +1,133 @@
+<ng-container *ngIf="(user$ | async); let user">
+
+
+    <form nzNoColon nz-form [formGroup]="form"
+        style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}">
+            <nz-tab [nzTitle]="BasicTitle">
+                <ng-template #BasicTitle>
+                    <i nz-icon nzType="container"></i>Basic
+                </ng-template>
+                <div style="display: flex; flex-direction: row; padding:3px">
+                    <div style="flex-grow: 1;">
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzRequired nzFor="UserName">UserName</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="UserName" id="UserName" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                        <div nz-row [nzGutter]="8">
+
+                            <div nz-col nzSpan="12">
+                                <div style="display: flex; flex-direction: row; width: 100%;">
+                                    <nz-form-label nzRequired nzFor="Email">Email</nz-form-label>
+                                    <div style="flex-grow: 1;"></div>
+                                    <label nz-checkbox formControlName="EmailConfirmed"
+                                        style="white-space: nowrap;margin: auto;">Email Confirmed</label>
+                                </div>
+
+                                <nz-form-control>
+                                    <input nz-input formControlName="Email" id="Email" style="flex-grow: 1;" />
+                                </nz-form-control>
+                            </div>
+                            <div nz-col nzSpan="12">
+                                <div style="display: flex; flex-direction: row; width: 100%;">
+                                    <nz-form-label nzFor="PhoneNumber">Phone</nz-form-label>
+                                    <div style="flex-grow: 1;"></div>
+                                    <label nz-checkbox formControlName="PhoneNumberConfirmed"
+                                        style="white-space: nowrap;margin: auto;">Phone Confirmed</label>
+                                </div>
+
+                                <nz-form-control>
+                                    <input nz-input formControlName="PhoneNumber" id="PhoneNumber"
+                                        style="flex-grow: 1;" />
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="12">
+                                <nz-form-label nzFor="FirstName">Firstname</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="FirstName" id="FirstName" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                            <div nz-col nzSpan="12">
+                                <nz-form-label nzFor="LastName">Lastname</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="LastName" id="LastName" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+                    <div style="width: 10px;margin-right: 10px;">
+
+                    </div>
+                    <div style="width: 30%;">
+                        <nz-collapse [nzBordered]="true">
+                            <nz-collapse-panel nzHeader="Options" [nzActive]="true">
+                                <label nz-checkbox formControlName="TwoFactorEnabled">
+                                    TwoFactorEnabled
+                                </label>
+                                <br />
+                                <label nz-checkbox formControlName="LockoutEnabled">
+                                    LockoutEnabled
+                                </label>
+                                <br />
+
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="Expires On" [nzActive]="true">
+                                <nz-date-picker formControlName="ExpiresOn" nzAllowClear style="width: 100%;"
+                                    [nzFormat]="'dd.MM.yyyy 23:59'" (ngModelChange)="onOk($event)"></nz-date-picker>
+                            </nz-collapse-panel>
+                        </nz-collapse>
+                    </div>
+                </div>
+            </nz-tab>
+            <nz-tab [nzTitle]="RolesTitle">
+                <ng-template #RolesTitle>
+                    <i nz-icon nzType="container"></i>Roles
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: row; padding:3px 0px; flex-grow:1">
+                        <roles-manager formControlName="Roles"></roles-manager>
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="ClaimsTitle">
+                <ng-template #ClaimsTitle>
+                    <i nz-icon nzType="container"></i>Claims
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: row; padding:3px 0px; flex-grow:1">
+                        <claims-manager formControlName="Claims"></claims-manager>
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="DebugTitle" *ngIf="showDebugInformations$ | async">
+                <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>
+                <div style="height: 100%;">
+                    <pre>{{form.value | json}}</pre>
+                </div>
+            </nz-tab>
+        </nz-tabset>
+
+        
+    </form>
+
+</ng-container>
+
+<ng-template dbPortalTemplate="Header-Outlet-Right">
+    <button nz-button (click)="Reload()" ><i nz-icon nzType="sync"></i>Reload</button>
+</ng-template>

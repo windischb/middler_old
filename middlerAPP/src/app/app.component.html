@@ -1,47 +1,75 @@
 <div style="display: flex; width: 100%; overflow: hidden;">
 
-  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="13rem" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="13rem" [nzCollapsed]="sideBarCollapsed$ | async"
     [nzTrigger]="null" nzTheme="light">
-    <div class="sidebar-logo" (click)="isCollapsed = !isCollapsed">
-      <div *ngIf="!isCollapsed">
+    <div class="sidebar-logo" (click)="toggleSideBar()">
+      <div *ngIf="!(sideBarCollapsed$ | async)">
         middler
       </div>
-      <div *ngIf="isCollapsed">
+      <div *ngIf="sideBarCollapsed$ | async">
         m
       </div>
     </div>
-    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="sideBarCollapsed$ | async">
       <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
         <a routerLink="/">
           <i nz-icon nzType="dashboard" nzTheme="outline"></i>
-          <ng-container *ngIf="!isCollapsed">Dashboard</ng-container>
+          <ng-container *ngIf="!(sideBarCollapsed$ | async)">Dashboard</ng-container>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/endpoint-rules">
-          <!-- <i nz-icon nzType="partition" nzTheme="outline"></i> -->
           <fa-icon nz-icon [icon]="['fas', 'stream']"></fa-icon>
-          <ng-container *ngIf="!isCollapsed">Endpoints Rules</ng-container>
+          <ng-container *ngIf="!(sideBarCollapsed$ | async)">Endpoints Rules</ng-container>
         </a>
       </li>
       <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
         <a routerLink="/global-variables">
           <i nz-icon nzType="folder" nzTheme="outline"></i>
-          <ng-container *ngIf="!isCollapsed">Global Variables</ng-container>
+          <ng-container *ngIf="!(sideBarCollapsed$ | async)">Global Variables</ng-container>
         </a>
+      </li>
+      <li nz-submenu >
+        <span title>
+          <fa-icon nz-icon [icon]="['far', 'id-badge']"></fa-icon>
+          <span>Identity Server</span>
+        </span>
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/identity/users">
+              <fa-icon nz-icon [icon]="['fas', 'user']"></fa-icon>
+              <ng-container>Users</ng-container>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/identity/roles">
+              <fa-icon nz-icon [icon]="['fas', 'users']"></fa-icon>
+              <ng-container>Roles</ng-container>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/identity/clients">
+              <fa-icon nz-icon [icon]="['fas', 'desktop']"></fa-icon>
+              <ng-container>Clients</ng-container>
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
     <div class="whitespace"></div>
-    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="sideBarCollapsed$ | async">
       <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
         <a routerLink="/app-settings">
           <i nz-icon nzType="setting" nzTheme="outline"></i>
-          <ng-container *ngIf="!isCollapsed">Settings</ng-container>
+          <ng-container *ngIf="!(sideBarCollapsed$ | async)">Settings</ng-container>
         </a>
       </li>
     </ul>
+    
 
   </nz-sider>
+
+  
 
   <div class="main">
     <ng-container *ngIf="uiContext$ | async; let ui">
@@ -66,9 +94,10 @@
 
           </div>
 
-          <div *ngIf="ui.Header.Outlet">
+          <ng-container dbPortal="Header-Outlet-Right"></ng-container>
+          <!-- <div *ngIf="ui.Header.Outlet">
             <ng-container [ngTemplateOutlet]="ui.Header.Outlet"></ng-container>
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -86,11 +115,11 @@
 
 
 
-            <button nz-button nzType="primary" *ngIf="ui.Footer.Button1?.Visible" (click)="ui.Footer.Button1?.OnClick()"
+            <button nz-button nzType="primary" *ngIf="ui.Footer.Button1.Visible" (click)="ui.Footer.Button1.OnClick ? ui.Footer.Button1.OnClick() : null"
               [class.disabled]="ui.Footer.Button1.Disabled" [nzLoading]="ui.Footer.Button1.Loading">
               {{ui.Footer.Button1?.Text}}</button>
 
-            <button nz-button *ngIf="ui.Footer.Button2?.Visible" (click)="ui.Footer.Button2?.OnClick()"
+            <button nz-button *ngIf="ui.Footer.Button2.Visible" (click)="ui.Footer.Button2.OnClick ? ui.Footer.Button2.OnClick() : null"
               [class.disabled]="ui.Footer.Button2.Disabled" [nzLoading]="ui.Footer.Button2.Loading">
               {{ui.Footer.Button2?.Text}}</button>
 

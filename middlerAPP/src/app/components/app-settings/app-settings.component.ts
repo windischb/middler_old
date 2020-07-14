@@ -1,10 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { AppUIContext } from 'src/app/shared/models/app-ui-context';
 import { AppUIService } from '@services';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { AppSettingsService } from './app-settings.service';
 import { compare } from 'fast-json-patch';
 import { AppSettings } from './app-settings';
+import { AppUIStore, AppUIState } from 'src/app/app-ui.store';
 
 @Component({
     selector: 'app-settings',
@@ -15,12 +14,13 @@ export class AppSettingsComponent implements OnInit {
 
 
     form: FormGroup;
-    lastAppSettings: AppSettings;
+    lastAppSettings: AppUIState;
 
     constructor(
         private uiService: AppUIService,
         private fb: FormBuilder,
-        private appSettingsService: AppSettingsService) {
+        private appUIStore: AppUIStore
+        ) {
 
         uiService.Set(ui => {
             ui.Header.Title = "Application Settings",
@@ -31,7 +31,7 @@ export class AppSettingsComponent implements OnInit {
             ui.Footer.Button2.Visible = true;
 
             ui.Footer.Button1.OnClick = () => {
-                this.appSettingsService.SetAppSettings(this.form.value);
+                this.appUIStore.update({...this.form.value})
                 this.lastAppSettings = this.form.value;
                 this.form.patchValue(this.lastAppSettings);
             }
@@ -45,13 +45,13 @@ export class AppSettingsComponent implements OnInit {
 
         
 
-        this.lastAppSettings = this.appSettingsService.GetCurrentAppSettings();
+        this.lastAppSettings = this.appUIStore.getValue(); // this.appSettingsService.GetCurrentAppSettings();
     }
 
     ngOnInit() {
 
         this.form = this.fb.group({
-            Debug: []
+            showDebugInformations: []
         })
         this.form.valueChanges.subscribe(v => {
 
@@ -65,7 +65,7 @@ export class AppSettingsComponent implements OnInit {
             }
 
         })
-
+        console.log(this.lastAppSettings)
         this.form.patchValue(this.lastAppSettings)
 
         

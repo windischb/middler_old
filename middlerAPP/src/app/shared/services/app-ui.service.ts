@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from 'rxjs';
 import { Router, ChildActivationStart } from '@angular/router';
 import { AppUIContext } from '../models/app-ui-context';
+import { AppUIStore, AppUIQuery } from 'src/app/app-ui.store';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,8 @@ export class AppUIService {
     private UIContextSubject$ = new BehaviorSubject<AppUIContext>(this.BuildNewContext())
     public UIContext$ = this.UIContextSubject$.asObservable();
 
-
+    sideBarCollapsed$ = this.appUIQuery.sideBarCollapsed$;
+    showDebugInformations$ = this.appUIQuery.showDebugInformations$;
 
     Set(value: ((context: AppUIContext) => void)) {
         value(this._uiContext);
@@ -26,8 +28,15 @@ export class AppUIService {
 
     }
 
+    
 
-    constructor(private router: Router) {
+    constructor(
+        private router: Router,
+        private appUIStore: AppUIStore,
+        private appUIQuery: AppUIQuery
+    ) {
+
+
         this._uiContext = this.BuildNewContext();
         this.router.events.subscribe(event => {
             if (event instanceof ChildActivationStart) {
@@ -43,5 +52,15 @@ export class AppUIService {
     }
     propagateChanges() {
         this.UIContextSubject$.next(this._uiContext);
+    }
+
+    toggleSideBar() {
+        const isCollapsed = this.appUIStore.getValue().sideBarCollapsed;
+
+        this.appUIStore.update(state => state = {
+            ...state,
+            sideBarCollapsed: !isCollapsed
+        })
+
     }
 }

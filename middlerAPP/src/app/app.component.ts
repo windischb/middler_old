@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppInitializeService } from './app-initialize.service';
 import { AppUIService } from './shared/services';
-import { tap } from 'rxjs/operators';
+import { tap, share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -10,9 +10,9 @@ import { tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  isCollapsed = false;
 
   uiContext$ = this.uiService.UIContext$;
+  sideBarCollapsed$ = this.uiService.sideBarCollapsed$;
 
   constructor(private appInitializeService: AppInitializeService, private uiService: AppUIService) {
 
@@ -25,6 +25,9 @@ export class AppComponent {
 
   }
 
+  toggleSideBar() {
+    this.uiService.toggleSideBar();
+  }
   public prepareIcon(icon: string) {
     
     if(!icon)
