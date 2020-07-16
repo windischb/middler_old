@@ -22,6 +22,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { DoobAntdExtensionsModule } from "@doob-ng/antd-extensions";
+import { NgModule } from '@angular/core';
+//import { DoobIconComponent } from './db-icon.component';
+import { CommonModule } from '@angular/common';
 
 export const GlobalModules = [
     NzFormModule,
@@ -51,3 +54,20 @@ export const GlobalModules = [
 
     DragDropModule
 ]
+
+
+@NgModule({
+    imports: [
+        CommonModule,
+        ...GlobalModules
+    ],
+    declarations: [
+        //DoobIconComponent
+    ],
+    exports: [
+        CommonModule,
+        ...GlobalModules,
+        // DoobIconComponent
+    ]
+})
+export class GlobalImportsModule {}

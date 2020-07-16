@@ -41,7 +41,7 @@ namespace middlerApp.API.HubMethods
             {
                 var z = ev;
                 return z;
-            }).Where(ev => ev.Subject == "IdentityUser");
+            }).Where(ev => ev.Subject == "IdentityUsers");
         }
     }
 }

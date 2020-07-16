@@ -10,7 +10,7 @@ namespace middlerApp.API.IDP.Storage.Entities
 {
     public class ClientGrantType
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string GrantType { get; set; }
 
         public Guid ClientId { get; set; }

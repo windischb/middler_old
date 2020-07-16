@@ -10,8 +10,8 @@ using middlerApp.API.IDP;
 namespace middlerApp.API.Migrations
 {
     [DbContext(typeof(IDPDbContext))]
-    [Migration("20200706192620_IDPContext-Roles")]
-    partial class IDPContextRoles
+    [Migration("20200714181152_IdpInitial")]
+    partial class IdpInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -217,10 +217,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiResource", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AllowedAccessTokenSigningAlgorithms")
                         .HasColumnType("nvarchar(100)")
@@ -267,13 +266,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiResourceClaim", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ApiResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -289,13 +287,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiResourceProperty", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ApiResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -316,13 +313,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiResourceScope", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ApiResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Scope")
                         .IsRequired()
@@ -338,13 +334,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiResourceSecret", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ApiResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -375,10 +370,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiScope", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(1000)")
@@ -415,13 +409,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiScopeClaim", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ScopeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ScopeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -437,18 +430,17 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ApiScopeProperty", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
-                    b.Property<int>("ScopeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ScopeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -621,10 +613,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientClaim", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -648,10 +639,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientCorsOrigin", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -670,10 +660,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientGrantType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -692,10 +681,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientIdPRestriction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -714,10 +702,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientPostLogoutRedirectUri", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -736,10 +723,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientProperty", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -763,10 +749,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientRedirectUri", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -785,10 +770,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientScope", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -807,10 +791,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.ClientSecret", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
@@ -894,10 +877,9 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.IdentityResource", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -943,13 +925,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.IdentityResourceClaim", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("IdentityResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IdentityResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -965,13 +946,12 @@ namespace middlerApp.API.Migrations
 
             modelBuilder.Entity("middlerApp.API.IDP.Storage.Entities.IdentityResourceProperty", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("IdentityResourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IdentityResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Key")
                         .IsRequired()

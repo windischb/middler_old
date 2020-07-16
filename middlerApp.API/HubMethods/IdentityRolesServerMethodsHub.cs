@@ -13,14 +13,14 @@ using SignalARRR.Server;
 namespace middlerApp.API.HubMethods
 {
     [MessageName("IdentityRoles")]
-    public class IdentityRoleServerMethodsHub: ServerMethods<UIHub>
+    public class IdentityRolesServerMethodsHub: ServerMethods<UIHub>
     {
         public IRolesService RolesService { get; }
         public DataEventDispatcher EventDispatcher { get; }
         private readonly IMapper _mapper;
 
 
-        public IdentityRoleServerMethodsHub(IRolesService rolesService, IMapper mapper, DataEventDispatcher eventDispatcher)
+        public IdentityRolesServerMethodsHub(IRolesService rolesService, IMapper mapper, DataEventDispatcher eventDispatcher)
         {
             RolesService = rolesService;
             EventDispatcher = eventDispatcher;
@@ -37,7 +37,7 @@ namespace middlerApp.API.HubMethods
 
         public IObservable<DataEvent> Subscribe()
         {
-            return EventDispatcher.Notifications.Where(ev => ev.Subject == "IdentityRole");
+            return EventDispatcher.Notifications.Where(ev => ev.Subject == "IdentityRoles");
         }
     }
 }

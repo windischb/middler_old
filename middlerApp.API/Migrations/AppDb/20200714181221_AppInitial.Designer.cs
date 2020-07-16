@@ -10,8 +10,8 @@ using middlerApp.API.DataAccess;
 namespace middlerApp.API.Migrations.AppDb
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200706190638_APPContext-Initial")]
-    partial class APPContextInitial
+    [Migration("20200714181221_AppInitial")]
+    partial class AppInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -10,7 +10,7 @@ namespace middlerApp.API.IDP.Storage.Entities
 {
     public class ClientCorsOrigin
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Origin { get; set; }
 
         public Guid ClientId { get; set; }

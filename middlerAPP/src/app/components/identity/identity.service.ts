@@ -10,6 +10,10 @@ import { tap } from 'rxjs/operators';
 import { IdentityUsersQuery, IdentityUsersStore } from 'src/app/identity-users.store';
 import { DataEvent } from 'src/app/shared/models/data-event';
 import { MUserListDto } from './models/m-user-list-dto';
+import { IdentityClientsStore, IdentityClientsQuery } from './clients/identity-clients.store';
+import { IdentityApiResourcesStore, IdentityApiResourcesQuery } from './api-resources/identity-api-resources.store';
+import { IMApiResourceListDto } from './models/m-api-resource-list-dto';
+import { IMApiResourceDto } from './models/m-api-resource-dto';
 
 @Injectable({
     providedIn: 'root'
@@ -22,16 +26,19 @@ export class IdentityService {
         private identityRolesQuery: IdentityRolesQuery,
         private identityUsersStore: IdentityUsersStore,
         private identityUsersQuery: IdentityUsersQuery,
+        private identityClientsStore: IdentityClientsStore,
+        private identityClientsQuery: IdentityClientsQuery,
+        private identityApiResourcesStore: IdentityApiResourcesStore,
+        private identityApiResourcesQuery: IdentityApiResourcesQuery,
         private http: HttpClient,
         private message: MessageService) {
 
         this.message.RunOnEveryReconnect(() => {
             this.SubscribeUserEvents();
-        });
-        this.message.RunOnEveryReconnect(() => {
             this.SubscribeRoleEvents();
+            this.SubscribeClientsEvents();
+            this.SubscribeApiResourcesEvents();
         });
-
 
     }
 
@@ -61,7 +68,7 @@ export class IdentityService {
         ).subscribe()
     }
     ReLoadUsers() {
-        this.http.get<Array<MUserDto>>(`api/identity/users`).pipe(
+        this.http.get<Array<MUserListDto>>(`api/identity/users`).pipe(
             tap(users => this.identityUsersStore.set(users))
         ).subscribe();
     }
@@ -159,19 +166,128 @@ export class IdentityService {
     //#endregion
 
     //#region Clients
-    GetAllClients() {
-        return this.http.get<Array<IMClientDto>>(`api/identity/clients`)
+
+    SubscribeClientsEvents() {
+        this.message.Stream<DataEvent<IMClientDto>>("IdentityClients.Subscribe").pipe(
+            tap(item => {
+                console.log(item)
+                switch (item.Action) {
+                    case "Created": {
+                        this.identityClientsStore.add(item.Payload);
+                        break;
+                    }
+                    case "Updated": {
+                        this.identityClientsStore.update(item.Payload.Id, entity => item.Payload);
+                        break;
+                    }
+                    case "Deleted": {
+                        this.identityClientsStore.update(<any>item.Payload, entity => ({
+                            ...entity,
+                            Deleted: true
+                        }));
+                    }
+                }
+
+            })
+        ).subscribe()
     }
+    ReLoadClients() {
+        this.http.get<Array<IMClientDto>>(`api/identity/clients`).pipe(
+            tap(users => this.identityClientsStore.set(users))
+        ).subscribe();
+    }
+
+    GetAllClients(force?: boolean) {
+        if (force || !this.identityClientsQuery.getHasCache()) {
+            this.ReLoadClients()
+        }
+
+        return this.identityClientsQuery.selectAll();
+    }
+
     GetClient(id: string) {
         return this.http.get<IMClientDto>(`api/identity/clients/${id}`)
     }
 
-    CreateClient(clientModel: IMClientDto) {
-        return this.http.post(`api/identity/clients`, clientModel);
+    CreateClient(dtoModel: IMClientDto) {
+        return this.http.post(`api/identity/clients`, dtoModel);
     }
 
-    UpdateClient(clientModel: IMClientDto) {
-        return this.http.put(`api/identity/clients`, clientModel);
+    UpdateClient(dtoModel: IMClientDto) {
+        return this.http.put(`api/identity/clients`, dtoModel);
     }
+
+    DeleteClient(...ids: string[]) {
+
+        const options = {
+            body: ids
+        }
+
+        return this.http.request("delete", `api/identity/clients`, options);
+    }
+
+    //#endregion
+
+    //#region ApiResources
+
+    SubscribeApiResourcesEvents() {
+        this.message.Stream<DataEvent<IMApiResourceListDto>>("IdentityApiResources.Subscribe").pipe(
+            tap(item => {
+                console.log(item)
+                switch (item.Action) {
+                    case "Created": {
+                        this.identityApiResourcesStore.add(item.Payload);
+                        break;
+                    }
+                    case "Updated": {
+                        this.identityApiResourcesStore.update(item.Payload.Id, entity => item.Payload);
+                        break;
+                    }
+                    case "Deleted": {
+                        this.identityApiResourcesStore.update(<any>item.Payload, entity => ({
+                            ...entity,
+                            Deleted: true
+                        }));
+                    }
+                }
+
+            })
+        ).subscribe()
+    }
+    ReLoadApiResources() {
+        this.http.get<Array<IMApiResourceListDto>>(`api/identity/api-resources`).pipe(
+            tap(users => this.identityApiResourcesStore.set(users))
+        ).subscribe();
+    }
+
+    GetAllApiResources(force?: boolean) {
+        if (force || !this.identityApiResourcesQuery.getHasCache()) {
+            this.ReLoadApiResources()
+        }
+
+        return this.identityApiResourcesQuery.selectAll();
+    }
+
+    GetApiResource(id: string) {
+        return this.http.get<IMApiResourceDto>(`api/identity/api-resources/${id}`)
+    }
+
+    CreateApiResource(dtoModel: IMApiResourceDto) {
+        return this.http.post(`api/identity/api-resources`, dtoModel);
+    }
+
+    UpdateApiResource(dtoModel: IMApiResourceDto) {
+        return this.http.put(`api/identity/api-resources`, dtoModel);
+    }
+
+    DeleteApiResource(...ids: string[]) {
+
+        const options = {
+            body: ids
+        }
+
+        return this.http.request("delete", `api/identity/api-resources`, options);
+    }
+
     //#endregion
 }

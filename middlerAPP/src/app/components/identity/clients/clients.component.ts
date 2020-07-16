@@ -84,4 +84,8 @@ export class ClientsComponent {
     RemoveClient(roles: Array<IMClientDto>) {
 
     }
+
+    ReloadClientsList() {
+        this.idService.ReLoadClients();
+    }
 }

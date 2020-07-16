@@ -255,3 +255,18 @@ nz-tabset {
 .deleted div[role='gridcell'] {
   text-decoration: line-through;
 }
+
+.menu-sidebar .ant-menu-item {
+  margin-bottom: 0px!important;
+  margin-top: 0px!important;
+}
+
+.menu-sidebar .ant-menu-submenu-title {
+  margin-bottom: 0px!important;
+  margin-top: 0px!important;
+}
+
+.ant-menu-vertical .ant-menu-item {
+  margin-bottom: 0px!important;
+  margin-top: 0px!important;
+}

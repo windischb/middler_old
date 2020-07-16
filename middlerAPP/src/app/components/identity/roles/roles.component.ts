@@ -80,7 +80,7 @@ export class RolesComponent {
         uiService.Set(ui => {
             ui.Header.Title = "Identity / Roles"
             ui.Content.Scrollable = false;
-            ui.Header.Icon = "fa#users"
+            ui.Header.Icon = "fa#user-tag"
         })
 
         // idService.GetAllRoles().subscribe(roles => {
@@ -90,21 +90,20 @@ export class RolesComponent {
 
     AddRole() {
         this.router.navigate(["create"], { relativeTo: this.route });
-        this.contextMenu.Close();
+        this.contextMenu?.Close();
     }
 
     EditRole(role: MRoleDto) {
         this.router.navigate([role.Id], { relativeTo: this.route });
-        this.contextMenu.Close();
+        this.contextMenu?.Close();
     }
 
     RemoveRole(roles: Array<MRoleDto>) {
         this.idService.DeleteRole(...roles.map(r => r.Id)).subscribe();
-        this.contextMenu.Close();
+        this.contextMenu?.Close();
     }
 
-    ReloadRoles() {
+    ReloadRolesList() {
         this.idService.ReLoadRoles();
-        this.contextMenu.Close();
     }
 }

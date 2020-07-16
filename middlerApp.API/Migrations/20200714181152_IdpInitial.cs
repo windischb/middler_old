@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace middlerApp.API.Migrations
 {
-    public partial class IDPContextInitial : Migration
+    public partial class IdpInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,8 +11,7 @@ namespace middlerApp.API.Migrations
                 name: "ApiResources",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
                     DisplayName = table.Column<string>(maxLength: 200, nullable: true),
@@ -33,8 +32,7 @@ namespace middlerApp.API.Migrations
                 name: "ApiScopes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
                     DisplayName = table.Column<string>(maxLength: 200, nullable: true),
@@ -125,8 +123,7 @@ namespace middlerApp.API.Migrations
                 name: "IdentityResources",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
                     DisplayName = table.Column<string>(maxLength: 200, nullable: true),
@@ -141,20 +138,6 @@ namespace middlerApp.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IdentityResources", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MRole",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    DisplayName = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MRole", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,6 +158,20 @@ namespace middlerApp.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,10 +221,9 @@ namespace middlerApp.API.Migrations
                 name: "ApiResourceClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Type = table.Column<string>(maxLength: 200, nullable: false),
-                    ApiResourceId = table.Column<int>(nullable: false)
+                    ApiResourceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -244,11 +240,10 @@ namespace middlerApp.API.Migrations
                 name: "ApiResourceProperties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Key = table.Column<string>(maxLength: 250, nullable: false),
                     Value = table.Column<string>(maxLength: 2000, nullable: false),
-                    ApiResourceId = table.Column<int>(nullable: false)
+                    ApiResourceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -265,10 +260,9 @@ namespace middlerApp.API.Migrations
                 name: "ApiResourceScopes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Scope = table.Column<string>(maxLength: 200, nullable: false),
-                    ApiResourceId = table.Column<int>(nullable: false)
+                    ApiResourceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,14 +279,13 @@ namespace middlerApp.API.Migrations
                 name: "ApiResourceSecrets",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     Value = table.Column<string>(maxLength: 4000, nullable: false),
                     Expiration = table.Column<DateTime>(nullable: true),
                     Type = table.Column<string>(maxLength: 250, nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    ApiResourceId = table.Column<int>(nullable: false)
+                    ApiResourceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -309,10 +302,9 @@ namespace middlerApp.API.Migrations
                 name: "ApiScopeClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Type = table.Column<string>(maxLength: 200, nullable: false),
-                    ScopeId = table.Column<int>(nullable: false)
+                    ScopeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -329,11 +321,10 @@ namespace middlerApp.API.Migrations
                 name: "ApiScopeProperties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Key = table.Column<string>(maxLength: 250, nullable: false),
                     Value = table.Column<string>(maxLength: 2000, nullable: false),
-                    ScopeId = table.Column<int>(nullable: false)
+                    ScopeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -350,8 +341,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Type = table.Column<string>(maxLength: 250, nullable: false),
                     Value = table.Column<string>(maxLength: 250, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
@@ -371,8 +361,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientCorsOrigins",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Origin = table.Column<string>(maxLength: 150, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
                 },
@@ -391,8 +380,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientGrantTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     GrantType = table.Column<string>(maxLength: 250, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
                 },
@@ -411,8 +399,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientIdPRestrictions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Provider = table.Column<string>(maxLength: 200, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
                 },
@@ -431,8 +418,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientPostLogoutRedirectUris",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     PostLogoutRedirectUri = table.Column<string>(maxLength: 2000, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
                 },
@@ -451,8 +437,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientProperties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Key = table.Column<string>(maxLength: 250, nullable: false),
                     Value = table.Column<string>(maxLength: 2000, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
@@ -472,8 +457,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientRedirectUris",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     RedirectUri = table.Column<string>(maxLength: 2000, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
                 },
@@ -492,8 +476,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientScopes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Scope = table.Column<string>(maxLength: 200, nullable: false),
                     ClientId = table.Column<Guid>(nullable: false)
                 },
@@ -512,8 +495,7 @@ namespace middlerApp.API.Migrations
                 name: "ClientSecrets",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     Value = table.Column<string>(maxLength: 4000, nullable: false),
                     Expiration = table.Column<DateTime>(nullable: true),
@@ -536,10 +518,9 @@ namespace middlerApp.API.Migrations
                 name: "IdentityResourceClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Type = table.Column<string>(maxLength: 200, nullable: false),
-                    IdentityResourceId = table.Column<int>(nullable: false)
+                    IdentityResourceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -556,11 +537,10 @@ namespace middlerApp.API.Migrations
                 name: "IdentityResourceProperties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
                     Key = table.Column<string>(maxLength: 250, nullable: false),
                     Value = table.Column<string>(maxLength: 2000, nullable: false),
-                    IdentityResourceId = table.Column<int>(nullable: false)
+                    IdentityResourceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -584,9 +564,9 @@ namespace middlerApp.API.Migrations
                 {
                     table.PrimaryKey("PK_MUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_MUserRoles_MRole_RoleId",
+                        name: "FK_MUserRoles_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "MRole",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -916,7 +896,7 @@ namespace middlerApp.API.Migrations
                 name: "IdentityResources");
 
             migrationBuilder.DropTable(
-                name: "MRole");
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Users");

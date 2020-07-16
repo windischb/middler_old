@@ -1,59 +1,53 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppInitializeService } from './app-initialize.service';
 import { AppUIService } from './shared/services';
-import { tap, share } from 'rxjs/operators';
+import { tap, share, map, filter } from 'rxjs/operators';
+import { ActivatedRoute, Router, RouterLink, NavigationEnd } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
 
-  uiContext$ = this.uiService.UIContext$;
-  sideBarCollapsed$ = this.uiService.sideBarCollapsed$;
+    uiContext$ = this.uiService.UIContext$;
+    sideBarCollapsed$ = this.uiService.sideBarCollapsed$;
 
-  constructor(private appInitializeService: AppInitializeService, private uiService: AppUIService) {
 
-    uiService.SetDefault(ui => {
-      ui.Content.Scrollable = false;
-      ui.Content.Container = true;
-      ui.Header.Icon = null
-      ui.Footer.Show = false;
-    })
 
-  }
+    constructor(private appInitializeService: AppInitializeService, private uiService: AppUIService, private router: Router) {
 
-  toggleSideBar() {
-    this.uiService.toggleSideBar();
-  }
-  public prepareIcon(icon: string) {
-    
-    if(!icon)
-      return null;
+        uiService.SetDefault(ui => {
+            ui.Content.Scrollable = false;
+            ui.Content.Container = true;
+            ui.Header.Icon = null
+            ui.Footer.Show = false;
+        })
 
-    if(icon.startsWith('fa#')) {
+        // this.router.events.pipe(
+        //     map(s => {
+        //         if (s instanceof NavigationEnd) {
+        //             return location.pathname;
+        //         }
+        //         return null;
+        //     }),
+        //     filter(p => Boolean(p))
+        // ).subscribe(path => {
+        //     if(path.startsWith("/identity/")){
+        //         this.identity = true;
+        //     }
+        // });
 
-      let res = {
-        type: 'fa',
-        icon: null
-      }
 
-      icon = icon.substring(3);
-
-      if(icon.includes('|')) {
-        res.icon = icon.split('|');
-      } else {
-        res.icon = icon;
-      }
-      return res;
     }
 
-    return {
-      type: 'ant',
-      icon: icon
-    };
-  }
+    identity = false;
+
+    toggleSideBar() {
+        this.uiService.toggleSideBar();
+    }
+
 
 }

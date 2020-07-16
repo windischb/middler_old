@@ -26,23 +26,7 @@ export class ClientDetailsComponent implements OnInit {
             return this.idService.GetClient(this.Id);
         }),
         mergeAll(),
-        tap(dto => {
-            if (!this.BaseDto) {
-                this.BaseDto = dto;
-            }
-
-            this.uiService.Set(ui => {
-                ui.Header.Title = "Client";
-                //ui.Header.SubTitle = user.UserName
-                ui.Header.Icon = "form"
-
-                ui.Footer.Button1.Visible = true;
-                ui.Footer.Button1.Text = dto.Id ? "Save Changes" : "Create Client"
-                ui.Footer.Button2.Visible = true;
-            })
-
-            this.form.patchValue(dto)
-        })
+        tap(dto => this.setClient(dto))
     )
 
     showDebugInformations$ = this.uiService.showDebugInformations$;
@@ -91,7 +75,7 @@ export class ClientDetailsComponent implements OnInit {
             RequireClientSecret: [null],
             RequirePkce: [null],
             AllowPlainTextPkce: [false],
-           
+
 
             AllowedGrantTypes: [[]],
 
@@ -122,14 +106,14 @@ export class ClientDetailsComponent implements OnInit {
 
 
 
-                       
+
 
             ProtocolType: [null],
             ClientSecrets: [[]],
-            
-            
 
-            
+
+
+
             RequireRequestObject: [false],
             AllowAccessTokensViaBrowser: [false],
             RedirectUris: [[]],
@@ -140,23 +124,23 @@ export class ClientDetailsComponent implements OnInit {
             BackChannelLogoutSessionRequired: [false],
             AllowOfflineAccess: [false],
             AllowedScopes: [[]],
-            
+
             AllowedIdentityTokenSigningAlgorithms: [null],
-           
+
             RefreshTokenUsage: [null],
-           
+
             RefreshTokenExpiration: [null],
             AccessTokenType: [null],
             EnableLocalLogin: [false],
             IdentityProviderRestrictions: [[]],
             IncludeJwtId: [false],
-            
-            
+
+
             PairWiseSubjectSalt: [null],
             AllowedCorsOrigins: [[]],
-           
+
             UserCodeType: [null],
-            
+
             NonEditable: [false],
         })
     }
@@ -169,6 +153,32 @@ export class ClientDetailsComponent implements OnInit {
         } else {
             this.idService.UpdateClient(this.form.value).subscribe();
         }
+    }
+
+    setClient(dto: IMClientDto) {
+        if (!this.BaseDto) {
+            this.BaseDto = dto;
+        }
+
+        this.uiService.Set(ui => {
+            ui.Header.Title = "Client";
+            //ui.Header.SubTitle = user.UserName
+            ui.Header.Icon = "form"
+
+            ui.Footer.Button1.Visible = true;
+            ui.Footer.Button1.Text = dto.Id ? "Save Changes" : "Create Client"
+            ui.Footer.Button2.Visible = true;
+        })
+
+        this.form.patchValue(dto)
+    }
+
+    Reload() {
+        this.idService.GetClient(this.Id).subscribe(user => {
+            this.setClient(user)
+        });
+
+
     }
 
     private _baseDto: IMClientDto;

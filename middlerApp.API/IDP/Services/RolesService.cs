@@ -32,7 +32,7 @@ namespace middlerApp.API.IDP.Services
         public async Task<MRole> GetRoleAsync(Guid id)
         {
             return await DbContext.Roles
-                .Include(r => r.UserRoles)
+                .Include(r => r.UserRoles).ThenInclude(ur => ur.User)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -49,7 +49,7 @@ namespace middlerApp.API.IDP.Services
             await DbContext.Roles.AddAsync(role);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchCreatedEvent("IdentityRole", _mapper.Map<MRoleListDto>(role));
+            EventDispatcher.DispatchCreatedEvent("IdentityRoles", _mapper.Map<MRoleListDto>(role));
         }
 
 
@@ -59,7 +59,7 @@ namespace middlerApp.API.IDP.Services
             DbContext.Roles.RemoveRange(roles);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchDeletedEvent("IdentityRole", roles.Select(r => r.Id));
+            EventDispatcher.DispatchDeletedEvent("IdentityRoles", roles.Select(r => r.Id));
         }
 
         public async Task UpdateRoleAsync(MRole updated)
@@ -68,11 +68,11 @@ namespace middlerApp.API.IDP.Services
             var userIds = updated.UserRoles.Select(ur => ur.UserId).ToList();
             var availableUsers = DbContext.Users.Where(r => userIds.Contains(r.Id)).Select(r => r.Id).ToList();
 
-            updated.UserRoles = updated.UserRoles.Where(ur => availableUsers.Contains(ur.RoleId)).ToList();
+            updated.UserRoles = updated.UserRoles.Where(ur => availableUsers.Contains(ur.UserId)).ToList();
 
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchUpdatedEvent("IdentityRole", _mapper.Map<MRoleListDto>(updated));
+            EventDispatcher.DispatchUpdatedEvent("IdentityRoles", _mapper.Map<MRoleListDto>(updated));
         }
 
     }

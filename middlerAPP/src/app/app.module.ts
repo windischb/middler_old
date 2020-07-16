@@ -17,7 +17,7 @@ import { TreeModule } from 'angular-tree-component';
 import { FontAwesomeModule, FaIconLibrary, FaConfig } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import { GlobalModules } from './global-imports.module';
+import { GlobalModules, GlobalImportsModule } from './global-imports.module';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
@@ -41,7 +41,7 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     TreeModule.forRoot(),
     FontAwesomeModule,
-    ...GlobalModules,
+    GlobalImportsModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule
    

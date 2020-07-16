@@ -13,6 +13,6 @@ namespace middlerApp.API.IDP.DtoModels
         public string DisplayName { get; set; }
         public string Description { get; set; }
 
-        public ICollection<MUserDto> Users { get; set; } = new List<MUserDto>();
+        public ICollection<MUserListDto> Users { get; set; } = new List<MUserListDto>();
     }
 }

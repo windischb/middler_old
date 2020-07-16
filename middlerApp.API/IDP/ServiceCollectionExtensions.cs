@@ -17,9 +17,10 @@ namespace middlerApp.API.IDP
 
             services.AddScoped<IPasswordHasher<MUser>, PasswordHasher<MUser>>();
             services.AddScoped<ILocalUserService, LocalUserService>();
-            services.AddScoped<IClientDtoService, ClientDtoService>();
+            services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IApiResourcesService, ApiResourcesService>();
 
 
             services.AddDbContext<IDPDbContext>(dbContextOptionsBuilder);

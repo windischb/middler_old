@@ -40,11 +40,13 @@
             {{context.First.Name}}
         </div>
         <li nz-menu-item (click)="OpenEditVariableModal(context.First)" *ngIf="context.Single">
-            <i nz-icon nzType="edit" nzTheme="outline"></i>
+            <!-- <i nz-icon nzType="edit" nzTheme="outline"></i> -->
+            <db-icon icon="edit"></db-icon>
             Edit
         </li>
         <li nz-menu-item (click)="RemoveVariable(context.SelectedData)" *ngIf="context.Any">
-            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            <!-- <i nz-icon nzType="delete" nzTheme="outline"></i> -->
+            <db-icon icon="delete"></db-icon>
             Delete
         </li>
         <li nz-menu-divider></li>

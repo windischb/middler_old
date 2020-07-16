@@ -8,4 +8,18 @@ export class MUserListDto {
     EmailConfirmed: boolean;
     Active: boolean;
     
+
+    Deleted: boolean;
+}
+
+
+
+export function MUserListDtoSortByName(a: MUserListDto, b: MUserListDto) {
+    if (a.UserName?.toLowerCase() < b.UserName?.toLowerCase()) {
+        return -1;
+    }
+    if (a.UserName?.toLowerCase() > b.UserName?.toLowerCase()) {
+        return 1;
+    }
+    return 0;
 }

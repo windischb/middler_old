@@ -14,10 +14,9 @@
       <i nz-icon nzType="delete" nzTheme="outline"></i>
       Delete Role
     </li>
-    <div nz-menu-divider></div>
-    <li nz-menu-item (click)="ReloadRoles()">
-      <i nz-icon nzType="sync" nzTheme="outline"></i>
-      Reload Roles
-    </li>
   </ul>
+</ng-template>
+
+<ng-template dbPortalTemplate="Header-Outlet-Right">
+  <button nz-button (click)="ReloadRolesList()" ><i nz-icon nzType="sync"></i>Reload Roles</button>
 </ng-template>

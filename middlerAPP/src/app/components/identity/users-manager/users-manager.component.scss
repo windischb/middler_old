@@ -1,0 +1,44 @@
+:host {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editable-cell {
+  position: relative;
+  padding: 5px 12px;
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.editable-row:hover .editable-cell {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 11px;
+}
+
+.editable-row {
+  height: 49px;
+}
+
+nz-table {
+  flex-grow: 1;
+}
+
+.users-manager-sidebar {
+  position: absolute;
+  right: 0px;
+  width: 40%;
+  height: 100%;
+  transition: 0.3s;
+  border-left: 1px solid gray;
+  padding: 0px 1px 1px 0px;
+  transform: translate3d(100%, 0px, 0px)
+}
+
+.users-manager-sidebar.open {
+  
+  transform: translate3d(0px, 0px, 0px)
+}

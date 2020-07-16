@@ -13,7 +13,7 @@ import { ActionListDetailsComponent } from './endpoint-actions-list/action-list-
 import { ActionBasicModalComponent } from './endpoint-actions/base/action-basic-modal.component';
 import { UrlRewriteModalComponent, UrlRedirectModalComponent, ProxyModalComponent, ScriptModalComponent } from './endpoint-actions';
 
-import { GlobalModules } from 'src/app/global-imports.module';
+import { GlobalModules, GlobalImportsModule } from 'src/app/global-imports.module';
 
 
 
@@ -29,7 +29,7 @@ const ActionComponents = [
         EndpointRulesRoutingModule,
         DragDropModule,
         IconsProviderModule,
-        ...GlobalModules
+        GlobalImportsModule
     ],
     declarations: [
         ...RoutingComponents,

@@ -10,7 +10,7 @@ namespace middlerApp.API.IDP.Storage.Entities
 {
     public abstract class Secret
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Description { get; set; }
         public string Value { get; set; }
         public DateTime? Expiration { get; set; }

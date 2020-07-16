@@ -5,9 +5,11 @@ import { IdentityRoutingModule, RoutingComponents } from './identity-routing.mod
 import { ClaimsManagerComponent } from './claims-manager/claims-manager.component';
 import { DoobCdkHelperModule } from '@doob-ng/cdk-helper';
 import { DoobGridModule } from '@doob-ng/grid';
-import { GlobalModules } from 'src/app/global-imports.module';
+import { GlobalModules, GlobalImportsModule } from 'src/app/global-imports.module';
 import { RolesManagerComponent } from './roles-manager/roles-manager.component';
 import { AddRolesListComponent } from './roles-manager/add-roles-list.component';
+import { UsersManagerComponent } from './users-manager/users-manager.component';
+import { AddUsersListComponent } from './users-manager/add-users-list.component';
 
 
 @NgModule({
@@ -18,13 +20,15 @@ import { AddRolesListComponent } from './roles-manager/add-roles-list.component'
         IdentityRoutingModule,
         DoobCdkHelperModule,
         DoobGridModule,
-        ...GlobalModules
+        GlobalImportsModule
        
     ],
     declarations: [
         ClaimsManagerComponent,
         RolesManagerComponent,
         AddRolesListComponent,
+        UsersManagerComponent,
+        AddUsersListComponent,
         ...RoutingComponents
     ]
 })

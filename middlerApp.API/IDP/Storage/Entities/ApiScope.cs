@@ -3,13 +3,14 @@
 
 #pragma warning disable 1591
 
+using System;
 using System.Collections.Generic;
 
 namespace middlerApp.API.IDP.Storage.Entities
 {
     public class ApiScope
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public bool Enabled { get; set; } = true;
         public string Name { get; set; }
         public string DisplayName { get; set; }

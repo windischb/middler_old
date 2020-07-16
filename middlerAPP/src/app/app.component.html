@@ -13,6 +13,7 @@
     <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="sideBarCollapsed$ | async">
       <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
         <a routerLink="/">
+          
           <i nz-icon nzType="dashboard" nzTheme="outline"></i>
           <ng-container *ngIf="!(sideBarCollapsed$ | async)">Dashboard</ng-container>
         </a>
@@ -29,7 +30,7 @@
           <ng-container *ngIf="!(sideBarCollapsed$ | async)">Global Variables</ng-container>
         </a>
       </li>
-      <li nz-submenu >
+      <li nz-submenu [(nzOpen)]="identity">
         <span title>
           <fa-icon nz-icon [icon]="['far', 'id-badge']"></fa-icon>
           <span>Identity Server</span>
@@ -37,20 +38,32 @@
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/identity/users">
-              <fa-icon nz-icon [icon]="['fas', 'user']"></fa-icon>
+              <db-icon icon="fa#user"></db-icon>
               <ng-container>Users</ng-container>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/identity/roles">
-              <fa-icon nz-icon [icon]="['fas', 'users']"></fa-icon>
+              <db-icon icon="fa#user-tag"></db-icon>
               <ng-container>Roles</ng-container>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/identity/clients">
-              <fa-icon nz-icon [icon]="['fas', 'desktop']"></fa-icon>
+              <db-icon icon="fa#desktop"></db-icon>
               <ng-container>Clients</ng-container>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/identity/api-resources">
+              <db-icon icon="fa#cubes"></db-icon>
+              <ng-container>Api Resources</ng-container>
+            </a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/identity/identity-resources">
+              <db-icon icon="fa#address-card" theme="far"></db-icon>
+              <ng-container>Identity Resources</ng-container>
             </a>
           </li>
         </ul>
@@ -75,12 +88,14 @@
     <ng-container *ngIf="uiContext$ | async; let ui">
       <div class="main-header">
         <div class="title-container ui container">
-          <div class="title-icon" *ngIf="prepareIcon(ui.Header.Icon); let icon">
-            <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
+          <db-icon [icon]="ui.Header.Icon" style="font-size: xx-large; width: 52px; text-align: left;"></db-icon>
+          <!-- <div class="title-icon" *ngIf="prepareIcon(ui.Header.Icon); let icon"> -->
+            
+            <!-- <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
               [nzType]="icon.icon" nzTheme="outline"></i>
             <fa-icon *ngIf="icon.type == 'fa'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
-              [icon]="icon.icon"></fa-icon>
-          </div>
+              [icon]="icon.icon"></fa-icon> -->
+          <!-- </div> -->
           <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.3em;">
             <div class="title" [class.title-only]="!ui.Header.SubTitle">
               {{ui.Header.Title}}

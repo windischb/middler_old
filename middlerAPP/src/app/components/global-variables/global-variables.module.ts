@@ -13,7 +13,7 @@ import { VariablesFolderContentComponent } from './folder-content';
 import { IconsProviderModule } from 'src/app/icons-provider.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { VariableModalsModule } from './modals/variable-modals.module';
-import { GlobalModules } from 'src/app/global-imports.module';
+import { GlobalModules, GlobalImportsModule } from 'src/app/global-imports.module';
 
 
 @NgModule({
@@ -29,7 +29,7 @@ import { GlobalModules } from 'src/app/global-imports.module';
         IconsProviderModule,
         FontAwesomeModule,
         VariableModalsModule,
-        ...GlobalModules
+        GlobalImportsModule
     ],
     declarations: [
         ...RoutingComponents,

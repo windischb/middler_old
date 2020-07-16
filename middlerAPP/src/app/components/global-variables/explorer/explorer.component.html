@@ -99,16 +99,19 @@
             {{context.Folder?.Name || "/"}}
         </div>
         <li nz-menu-item (click)="CreateSubFolder(context.Node)">
-            <i nz-icon nzType="folder" nzTheme="outline"></i>
+            <!-- <i nz-icon nzType="folder" nzTheme="outline"></i> -->
+            <db-icon icon="folder"></db-icon>
             <ng-container>New Folder</ng-container>
         </li>
 
         <li nz-menu-item (click)="RenameFolder(context.Node)" *ngIf="context.Folder">
-            <i nz-icon nzType="edit" nzTheme="outline"></i>
+            <!-- <i nz-icon nzType="edit" nzTheme="outline"></i> -->
+            <db-icon icon="edit"></db-icon>
             Rename Folder
         </li>
         <li nz-menu-item (click)="DeleteDirectory(context.Folder)" *ngIf="context.Folder">
-            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            <db-icon icon="delete"></db-icon>
+            <!-- <i nz-icon nzType="delete" nzTheme="outline"></i> -->
             Delete Folder
         </li>
     </ul>

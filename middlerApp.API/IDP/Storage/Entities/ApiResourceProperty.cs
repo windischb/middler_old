@@ -2,13 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System;
+
 #pragma warning disable 1591
 
 namespace middlerApp.API.IDP.Storage.Entities
 {
     public class ApiResourceProperty : Property
     {
-        public int ApiResourceId { get; set; }
+        public Guid ApiResourceId { get; set; }
         public ApiResource ApiResource { get; set; }
     }
 }

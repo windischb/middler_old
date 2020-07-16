@@ -19,13 +19,13 @@ namespace middlerApp.API.Controllers.Identity
     [AdminController]
     public class ClientsController: Controller
     {
-        public IClientDtoService ClientDtoService { get; }
+        public IClientService ClientService { get; }
         private readonly IMapper _mapper;
 
 
-        public ClientsController(IClientDtoService clientDtoService, IMapper mapper)
+        public ClientsController(IClientService clientService, IMapper mapper)
         {
-            ClientDtoService = clientDtoService;
+            ClientService = clientService;
             _mapper = mapper;
 
         }
@@ -34,7 +34,7 @@ namespace middlerApp.API.Controllers.Identity
         [HttpGet]
         public async Task<ActionResult<List<MClientDto>>> GetAllClients()
         {
-            var clients = await ClientDtoService.GetAllClientDtosAsync();
+            var clients = await ClientService.GetAllClientDtosAsync();
             return Ok(clients);
         }
 
@@ -50,7 +50,7 @@ namespace middlerApp.API.Controllers.Identity
             if (!Guid.TryParse(id, out var guid))
                 return NotFound();
 
-            var client = await ClientDtoService.GetClientDtoAsync(guid);
+            var client = await ClientService.GetClientDtoAsync(guid);
 
             if (client == null)
                 return NotFound();
@@ -63,8 +63,34 @@ namespace middlerApp.API.Controllers.Identity
         public async Task<IActionResult> CreateClient(MClientDto createClientDto)
         {
 
-            await ClientDtoService.CreateClientAsync(createClientDto);
+            await ClientService.CreateClientAsync(createClientDto);
             return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateClient(MClientDto roleDto)
+        {
+            var roleInDB = await ClientService.GetClientAsync(roleDto.Id);
+            var updated = _mapper.Map(roleDto, roleInDB);
+
+            await ClientService.UpdateClientAsync(updated);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRole(Guid id)
+        {
+
+            await ClientService.DeleteClientAsync(id);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteRoles([FromBody] List<Guid> ids)
+        {
+
+            await ClientService.DeleteClientAsync(ids.ToArray());
+            return NoContent();
         }
     }
 }

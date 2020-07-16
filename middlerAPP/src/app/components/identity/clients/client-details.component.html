@@ -12,15 +12,6 @@
                     <div style="flex-grow: 1;">
 
                         <div nz-row [nzGutter]="8">
-                            <div nz-col nzSpan="24">
-                                <nz-form-label nzRequired nzFor="ClientName">ClientName</nz-form-label>
-                                <nz-form-control>
-                                    <input nz-input formControlName="ClientName" id="ClientName" style="width: 100%;" />
-                                </nz-form-control>
-                            </div>
-                        </div>
-
-                        <div nz-row [nzGutter]="8">
 
                             <div nz-col nzSpan="24">
                                 <nz-form-label nzRequired nzFor="ClientId">ClientId</nz-form-label>
@@ -30,6 +21,17 @@
                             </div>
 
                         </div>
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzRequired nzFor="ClientName">ClientName</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="ClientName" id="ClientName" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                        
 
                         <div nz-row [nzGutter]="8">
                             <div nz-col nzSpan="24">
@@ -275,3 +277,7 @@
     </form>
 
 </ng-container>
+
+<ng-template dbPortalTemplate="Header-Outlet-Right">
+    <button nz-button (click)="Reload()" ><i nz-icon nzType="sync"></i>Reload</button>
+</ng-template>

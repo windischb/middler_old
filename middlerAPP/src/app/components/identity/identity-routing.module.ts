@@ -6,6 +6,8 @@ import { ClientsComponent } from './clients/clients.component';
 import { UserDetailsComponent } from './users/user-details.component';
 import { RoleDetailsComponent } from './roles/role-details.component';
 import { ClientDetailsComponent } from './clients/client-details.component';
+import { ApiResourcesComponent } from './api-resources/api-resources.component';
+import { ApiResourceDetailsComponent } from './api-resources/api-resource-details.component';
 
 
 const routes: Routes = [
@@ -14,7 +16,9 @@ const routes: Routes = [
     { path: 'roles', component: RolesComponent },
     { path: 'roles/:id', component: RoleDetailsComponent },
     { path: 'clients', component: ClientsComponent },
-    { path: 'clients/:id', component: ClientDetailsComponent }
+    { path: 'clients/:id', component: ClientDetailsComponent },
+    { path: 'api-resources', component: ApiResourcesComponent },
+    { path: 'api-resources/:id', component: ApiResourceDetailsComponent }
 ];
 
 export const RoutingComponents = [
@@ -23,7 +27,9 @@ export const RoutingComponents = [
     RolesComponent,
     RoleDetailsComponent,
     ClientsComponent,
-    ClientDetailsComponent
+    ClientDetailsComponent,
+    ApiResourcesComponent,
+    ApiResourceDetailsComponent
 ]
 
 @NgModule({

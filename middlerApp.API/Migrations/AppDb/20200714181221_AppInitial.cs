@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace middlerApp.API.Migrations.AppDb
 {
-    public partial class APPContextInitial : Migration
+    public partial class AppInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
