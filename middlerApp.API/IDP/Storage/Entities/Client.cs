@@ -16,7 +16,7 @@ namespace middlerApp.API.IDP.Storage.Entities
         public bool Enabled { get; set; } = true;
         public string ClientId { get; set; }
         public string ProtocolType { get; set; } = "oidc";
-        public List<ClientSecret> ClientSecrets { get; set; }
+        public List<ClientSecret> ClientSecrets { get; set; } = new List<ClientSecret>();
         public bool RequireClientSecret { get; set; } = true;
         public string ClientName { get; set; }
         public string Description { get; set; }
@@ -25,19 +25,19 @@ namespace middlerApp.API.IDP.Storage.Entities
         public bool RequireConsent { get; set; } = false;
         public bool AllowRememberConsent { get; set; } = true;
         public bool AlwaysIncludeUserClaimsInIdToken { get; set; }
-        public List<ClientGrantType> AllowedGrantTypes { get; set; }
+        public List<ClientGrantType> AllowedGrantTypes { get; set; } = new List<ClientGrantType>();
         public bool RequirePkce { get; set; } = true;
         public bool AllowPlainTextPkce { get; set; }
         public bool RequireRequestObject { get; set; }
         public bool AllowAccessTokensViaBrowser { get; set; }
-        public List<ClientRedirectUri> RedirectUris { get; set; }
-        public List<ClientPostLogoutRedirectUri> PostLogoutRedirectUris { get; set; }
+        public List<ClientRedirectUri> RedirectUris { get; set; } = new List<ClientRedirectUri>();
+        public List<ClientPostLogoutRedirectUri> PostLogoutRedirectUris { get; set; } = new List<ClientPostLogoutRedirectUri>();
         public string FrontChannelLogoutUri { get; set; }
         public bool FrontChannelLogoutSessionRequired { get; set; } = true;
         public string BackChannelLogoutUri { get; set; }
         public bool BackChannelLogoutSessionRequired { get; set; } = true;
         public bool AllowOfflineAccess { get; set; }
-        public List<ClientScope> AllowedScopes { get; set; }
+        public List<ClientScope> AllowedScopes { get; set; } = new List<ClientScope>();
         public int IdentityTokenLifetime { get; set; } = 300;
         public string AllowedIdentityTokenSigningAlgorithms { get; set; }
         public int AccessTokenLifetime { get; set; } = 3600;
@@ -50,14 +50,14 @@ namespace middlerApp.API.IDP.Storage.Entities
         public int RefreshTokenExpiration { get; set; } = (int)TokenExpiration.Absolute;
         public int AccessTokenType { get; set; } = (int)0; // AccessTokenType.Jwt;
         public bool EnableLocalLogin { get; set; } = true;
-        public List<ClientIdPRestriction> IdentityProviderRestrictions { get; set; }
+        public List<ClientIdPRestriction> IdentityProviderRestrictions { get; set; } = new List<ClientIdPRestriction>();
         public bool IncludeJwtId { get; set; }
-        public List<ClientClaim> Claims { get; set; }
+        public List<ClientClaim> Claims { get; set; } = new List<ClientClaim>();
         public bool AlwaysSendClientClaims { get; set; }
         public string ClientClaimsPrefix { get; set; } = "client_";
         public string PairWiseSubjectSalt { get; set; }
-        public List<ClientCorsOrigin> AllowedCorsOrigins { get; set; }
-        public List<ClientProperty> Properties { get; set; }
+        public List<ClientCorsOrigin> AllowedCorsOrigins { get; set; } = new List<ClientCorsOrigin>();
+        public List<ClientProperty> Properties { get; set; } = new List<ClientProperty>();
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime? Updated { get; set; }
         public DateTime? LastAccessed { get; set; }

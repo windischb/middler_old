@@ -54,36 +54,69 @@ namespace middlerApp.API.Controllers.Identity
             if (!Guid.TryParse(id, out var guid))
                 return NotFound();
 
-            var role = await ApiResourcesService.GetApiResourceDtoAsync(guid);
+            var apiResource = await ApiResourcesService.GetApiResourceDtoAsync(guid);
 
-            if (role == null)
+            if (apiResource == null)
                 return NotFound();
 
           
-            return Ok(role);
+            return Ok(apiResource);
 
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRole(MApiResourceDto dto)
+        public async Task<IActionResult> CreateApiResource(MApiResourceDto dto)
         {
             await ApiResourcesService.CreateApiResourceAsync(dto);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateRole(MApiResourceDto dto)
+        public async Task<IActionResult> UpdateApiResource(MApiResourceDto dto)
         {
             var resourceInDB = await ApiResourcesService.GetApiResourceAsync(dto.Id);
+
+            var secrets = resourceInDB.Secrets.ToDictionary(sec => sec.Id, sec => sec);
+            var newSecrets = new List<ApiResourceSecret>();
+            foreach (var dtoSecret in dto.Secrets)
+            {
+                ApiResourceSecret sec = null;
+                if (dtoSecret.Id != Guid.Empty)
+                {
+                    sec = secrets[dtoSecret.Id];
+                    if (sec.Description != dtoSecret.Description)
+                    {
+                        sec.Description = dtoSecret.Description;
+                    }
+
+                    if (sec.Expiration != dtoSecret.Expiration)
+                    {
+                        sec.Expiration = dtoSecret.Expiration;
+                    }
+                    
+                }
+                else
+                {
+                    sec =_mapper.Map<ApiResourceSecret>(dtoSecret);
+
+                }
+
+                if (sec != null)
+                {
+                    newSecrets.Add(sec);
+                }
+            }
+            
             var updated = _mapper.Map(dto, resourceInDB);
+            updated.Secrets = newSecrets;
 
             await ApiResourcesService.UpdateApiResourceAsync(updated);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRole(Guid id)
+        public async Task<IActionResult> DeleteApiResource(Guid id)
         {
 
             await ApiResourcesService.DeleteApiResourceAsync(id);
@@ -91,7 +124,7 @@ namespace middlerApp.API.Controllers.Identity
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteRoles([FromBody] List<Guid> ids)
+        public async Task<IActionResult> DeleteApiResources([FromBody] List<Guid> ids)
         {
 
             await ApiResourcesService.DeleteApiResourceAsync(ids.ToArray());

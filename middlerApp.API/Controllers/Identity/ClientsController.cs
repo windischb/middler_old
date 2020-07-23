@@ -71,7 +71,40 @@ namespace middlerApp.API.Controllers.Identity
         public async Task<IActionResult> UpdateClient(MClientDto roleDto)
         {
             var roleInDB = await ClientService.GetClientAsync(roleDto.Id);
+
+            var secrets = roleInDB.ClientSecrets.ToDictionary(sec => sec.Id, sec => sec);
+            var newSecrets = new List<ClientSecret>();
+            foreach (var dtoSecret in roleDto.ClientSecrets)
+            {
+                ClientSecret sec = null;
+                if (dtoSecret.Id != Guid.Empty)
+                {
+                    sec = secrets[dtoSecret.Id];
+                    if (sec.Description != dtoSecret.Description)
+                    {
+                        sec.Description = dtoSecret.Description;
+                    }
+
+                    if (sec.Expiration != dtoSecret.Expiration)
+                    {
+                        sec.Expiration = dtoSecret.Expiration;
+                    }
+
+                }
+                else
+                {
+                    sec = _mapper.Map<ClientSecret>(dtoSecret);
+
+                }
+
+                if (sec != null)
+                {
+                    newSecrets.Add(sec);
+                }
+            }
+
             var updated = _mapper.Map(roleDto, roleInDB);
+            updated.ClientSecrets = newSecrets;
 
             await ClientService.UpdateClientAsync(updated);
             return Ok();

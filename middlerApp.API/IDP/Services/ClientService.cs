@@ -30,7 +30,17 @@ namespace middlerApp.API.IDP.Services
 
         public async Task<Client> GetClientAsync(Guid id)
         {
-            return await DbContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
+            return await DbContext.Clients
+                .Include(c => c.AllowedGrantTypes)
+                .Include(c => c.ClientSecrets)
+                .Include(c => c.RedirectUris)
+                .Include(c => c.PostLogoutRedirectUris)
+                .Include(c => c.AllowedScopes)
+                .Include(c => c.IdentityProviderRestrictions)
+                .Include(c => c.Claims)
+                .Include(c => c.AllowedCorsOrigins)
+                .Include(c => c.Properties)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<MClientDto> GetClientDtoAsync(Guid id)

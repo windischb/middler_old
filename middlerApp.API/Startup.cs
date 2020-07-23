@@ -59,6 +59,7 @@ namespace middlerApp.API
 
                 options.SerializerSettings.Formatting = Formatting.Indented;
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.Converters.Add(new PSObjectJsonConverter());
                 options.SerializerSettings.Converters.Add(new DecimalJsonConverter());
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

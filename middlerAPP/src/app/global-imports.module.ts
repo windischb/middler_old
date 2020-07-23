@@ -23,7 +23,7 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { DoobAntdExtensionsModule } from "@doob-ng/antd-extensions";
 import { NgModule } from '@angular/core';
-//import { DoobIconComponent } from './db-icon.component';
+import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { CommonModule } from '@angular/common';
 
 export const GlobalModules = [
@@ -45,6 +45,7 @@ export const GlobalModules = [
     NzGridModule,
     NzToolTipModule,
     NzDrawerModule,
+    NzCalendarModule,
 
     DoobEditorModule,
     DoobCoreModule,
@@ -62,12 +63,10 @@ export const GlobalModules = [
         ...GlobalModules
     ],
     declarations: [
-        //DoobIconComponent
     ],
     exports: [
         CommonModule,
         ...GlobalModules,
-        // DoobIconComponent
     ]
 })
 export class GlobalImportsModule {}

@@ -31,7 +31,7 @@
                             </div>
                         </div>
 
-                        
+
 
                         <div nz-row [nzGutter]="8">
                             <div nz-col nzSpan="24">
@@ -43,6 +43,15 @@
                             </div>
                         </div>
 
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzFor="Description">Client Secrets</nz-form-label>
+                                <nz-form-control>
+                                    <secrets-manager formControlName="ClientSecrets" style="height: 200px;">
+                                    </secrets-manager>
+                                </nz-form-control>
+                            </div>
+                        </div>
 
                     </div>
                     <div style="width: 10px;margin-right: 10px;">
@@ -169,7 +178,7 @@
                         <div style="width: 25%;">
                             <nz-collapse [nzBordered]="true">
                                 <nz-collapse-panel nzHeader="Options" [nzActive]="true">
-                                    
+
                                     <label nz-checkbox formControlName="AlwaysSendClientClaims">
                                         Always Send Client Claims
                                     </label>
@@ -279,5 +288,5 @@
 </ng-container>
 
 <ng-template dbPortalTemplate="Header-Outlet-Right">
-    <button nz-button (click)="Reload()" ><i nz-icon nzType="sync"></i>Reload</button>
+    <button nz-button (click)="Reload()"><i nz-icon nzType="sync"></i>Reload</button>
 </ng-template>

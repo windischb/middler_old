@@ -10,6 +10,8 @@ import { RolesManagerComponent } from './roles-manager/roles-manager.component';
 import { AddRolesListComponent } from './roles-manager/add-roles-list.component';
 import { UsersManagerComponent } from './users-manager/users-manager.component';
 import { AddUsersListComponent } from './users-manager/add-users-list.component';
+import { SecretsManagerComponent } from './secrets-manager/secrets-manager.component';
+import { SecretModalComponent } from './secrets-manager/secret-modal.component';
 
 
 @NgModule({
@@ -29,7 +31,12 @@ import { AddUsersListComponent } from './users-manager/add-users-list.component'
         AddRolesListComponent,
         UsersManagerComponent,
         AddUsersListComponent,
+        SecretsManagerComponent,
+        SecretModalComponent,
         ...RoutingComponents
+    ],
+    entryComponents: [
+        SecretModalComponent
     ]
 })
 export class IdentityModule {
