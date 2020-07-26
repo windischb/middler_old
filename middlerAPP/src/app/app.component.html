@@ -33,35 +33,35 @@
       <li nz-submenu [(nzOpen)]="identity">
         <span title>
           <fa-icon nz-icon [icon]="['far', 'id-badge']"></fa-icon>
-          <span>Identity Server</span>
+          <span>Identity Provider</span>
         </span>
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/identity/users">
+            <a routerLink="/idp/users">
               <db-icon icon="fa#user"></db-icon>
               <ng-container>Users</ng-container>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/identity/roles">
+            <a routerLink="/idp/roles">
               <db-icon icon="fa#user-tag"></db-icon>
               <ng-container>Roles</ng-container>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/identity/clients">
+            <a routerLink="/idp/clients">
               <db-icon icon="fa#desktop"></db-icon>
               <ng-container>Clients</ng-container>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/identity/api-resources">
+            <a routerLink="/idp/api-resources">
               <db-icon icon="fa#cubes"></db-icon>
               <ng-container>Api Resources</ng-container>
             </a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/identity/identity-resources">
+            <a routerLink="/idp/identity-resources">
               <db-icon icon="fa#address-card" theme="far"></db-icon>
               <ng-container>Identity Resources</ng-container>
             </a>

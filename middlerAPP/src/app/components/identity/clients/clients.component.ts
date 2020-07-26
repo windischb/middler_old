@@ -3,7 +3,7 @@ import { AppUIService } from '@services';
 import { IMClientDto } from '../models/m-client-dto';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -60,7 +60,7 @@ export class ClientsComponent {
 
     constructor(
         private uiService: AppUIService,
-        private idService: IdentityService,
+        private idService: IDPService,
         private router: Router,
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,

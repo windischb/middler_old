@@ -56,27 +56,29 @@
 
                     </div>
                     <div style="width: 30%;">
-                        <nz-collapse [nzBordered]="true">
+                        <nz-collapse [nzBordered]="true" nzAccordion>
                             <nz-collapse-panel nzHeader="Options" [nzActive]="true">
-
+                                <label nz-checkbox formControlName="Enabled">
+                                    Enabled
+                                </label>
+                                <br />
+                                <label nz-checkbox formControlName="ShowInDiscoveryDocument">
+                                    Show in Discovery Document
+                                </label>
+                                <br />
+                                <label nz-checkbox formControlName="AllowedAccessTokenSigningAlgorithms">
+                                    Allowed AccessToken SigningAlgorithms
+                                </label>
                             </nz-collapse-panel>
-                            <nz-collapse-panel nzHeader="Expires On" [nzActive]="true">
-
+                            <nz-collapse-panel nzHeader="Scopes">
+                                <simple-list style="height: 300px;" header="Name" formControlName="Scopes"></simple-list>
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="User Claims">
+                                <simple-list style="height: 300px;" header="Name" formControlName="UserClaims"></simple-list>
                             </nz-collapse-panel>
                         </nz-collapse>
                     </div>
                 </div>
-            </nz-tab>
-            <nz-tab [nzTitle]="UsersTitle">
-                <ng-template #UsersTitle>
-                    <db-icon icon="fa#users"></db-icon>Members
-                    <!-- <i nz-icon nzType="container"></i>Roles -->
-                </ng-template>
-                <ng-template nz-tab>
-                    <div style="display: flex; flex-direction: row; padding:3px 0px; flex-grow:1">
-                        <users-manager formControlName="Users"></users-manager>
-                    </div>
-                </ng-template>
             </nz-tab>
             <nz-tab [nzTitle]="DebugTitle" *ngIf="showDebugInformations$ | async">
                 <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>

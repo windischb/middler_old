@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { combineLatest, Subject, BehaviorSubject, Observable, merge, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -66,7 +66,7 @@ export class AddUsersListComponent implements OnInit {
 
     constructor(
         private identityUsersQuery: IdentityUsersQuery,
-        private identityService: IdentityService,
+        private identityService: IDPService,
         private fb: FormBuilder,
 
     ) {

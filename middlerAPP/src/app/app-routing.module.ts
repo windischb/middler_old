@@ -21,7 +21,7 @@ const routes: Routes = [
     loadChildren: () => import('./components/global-variables/global-variables.module').then(m => m.GlobalVariablesModule)
   },
   {
-    path: 'identity',
+    path: 'idp',
     loadChildren: () => import('./components/identity/identity.module').then(m => m.IdentityModule)
   }
 ];

@@ -8,6 +8,8 @@ import { RoleDetailsComponent } from './roles/role-details.component';
 import { ClientDetailsComponent } from './clients/client-details.component';
 import { ApiResourcesComponent } from './api-resources/api-resources.component';
 import { ApiResourceDetailsComponent } from './api-resources/api-resource-details.component';
+import { IdentityResourcesComponent } from './identity-resources/identity-resources.component';
+import { IdentityResourceDetailsComponent } from './identity-resources/identity-resource-details.component';
 
 
 const routes: Routes = [
@@ -18,7 +20,9 @@ const routes: Routes = [
     { path: 'clients', component: ClientsComponent },
     { path: 'clients/:id', component: ClientDetailsComponent },
     { path: 'api-resources', component: ApiResourcesComponent },
-    { path: 'api-resources/:id', component: ApiResourceDetailsComponent }
+    { path: 'api-resources/:id', component: ApiResourceDetailsComponent },
+    { path: 'identity-resources', component: IdentityResourcesComponent },
+    { path: 'identity-resources/:id', component: IdentityResourceDetailsComponent }
 ];
 
 export const RoutingComponents = [
@@ -29,7 +33,9 @@ export const RoutingComponents = [
     ClientsComponent,
     ClientDetailsComponent,
     ApiResourcesComponent,
-    ApiResourceDetailsComponent
+    ApiResourceDetailsComponent,
+    IdentityResourcesComponent,
+    IdentityResourceDetailsComponent
 ]
 
 @NgModule({

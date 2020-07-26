@@ -5,7 +5,7 @@ import { combineLatest, from, Observable, of } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { MUserDto } from '../models/m-user-dto';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { AppUIQuery } from 'src/app/app-ui.store';
 
 @Component({
@@ -34,7 +34,7 @@ export class UserDetailsComponent implements OnInit {
         private uiService: AppUIService,
         private fb: FormBuilder,
         private route: ActivatedRoute,
-        private idService: IdentityService,
+        private idService: IDPService,
         private cref: ChangeDetectorRef
     ) {
         uiService.Set(ui => {

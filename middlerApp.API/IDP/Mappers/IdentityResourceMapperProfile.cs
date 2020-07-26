@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using AutoMapper;
+using middlerApp.API.IDP.DtoModels;
 
 namespace middlerApp.API.IDP.Storage.Mappers
 {
@@ -29,6 +30,12 @@ namespace middlerApp.API.IDP.Storage.Mappers
                .ConstructUsing(x => x.Type)
                .ReverseMap()
                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src));
+
+            CreateMap<Entities.IdentityResource, MIdentityResourceListDto>();
+
+            CreateMap<Entities.IdentityResource, MIdentityResourceDto>();
+
+            CreateMap<MIdentityResourceDto, Entities.IdentityResource>();
         }
     }
 }

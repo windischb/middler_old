@@ -11,14 +11,17 @@ import { IdentityUsersQuery, IdentityUsersStore } from 'src/app/identity-users.s
 import { DataEvent } from 'src/app/shared/models/data-event';
 import { MUserListDto } from './models/m-user-list-dto';
 import { IdentityClientsStore, IdentityClientsQuery } from './clients/identity-clients.store';
-import { IdentityApiResourcesStore, IdentityApiResourcesQuery } from './api-resources/identity-api-resources.store';
+import { ApiResourcesStore, ApiResourcesQuery } from './api-resources/api-resources.store';
 import { IMApiResourceListDto } from './models/m-api-resource-list-dto';
 import { IMApiResourceDto } from './models/m-api-resource-dto';
+import { IMIdentityResourceListDto } from './models/m-identity-resource-list-dto';
+import { IdentityResourcesStore, IdentityResourcesQuery } from './identity-resources/identity-resources.store';
+import { IMIdentityResourceDto } from './models/m-identity-resource-dto';
 
 @Injectable({
     providedIn: 'root'
 })
-export class IdentityService {
+export class IDPService {
 
 
     constructor(
@@ -28,8 +31,10 @@ export class IdentityService {
         private identityUsersQuery: IdentityUsersQuery,
         private identityClientsStore: IdentityClientsStore,
         private identityClientsQuery: IdentityClientsQuery,
-        private identityApiResourcesStore: IdentityApiResourcesStore,
-        private identityApiResourcesQuery: IdentityApiResourcesQuery,
+        private identityApiResourcesStore: ApiResourcesStore,
+        private identityApiResourcesQuery: ApiResourcesQuery,
+        private identityResourcesStore: IdentityResourcesStore,
+        private identityResourcesQuery: IdentityResourcesQuery,
         private http: HttpClient,
         private message: MessageService) {
 
@@ -38,6 +43,7 @@ export class IdentityService {
             this.SubscribeRoleEvents();
             this.SubscribeClientsEvents();
             this.SubscribeApiResourcesEvents();
+            this.SubscribeIdentityResourcesEvents();
         });
 
     }
@@ -287,6 +293,69 @@ export class IdentityService {
         }
 
         return this.http.request("delete", `api/identity/api-resources`, options);
+    }
+
+    //#endregion
+
+    //#region ApiResources
+
+    SubscribeIdentityResourcesEvents() {
+        this.message.Stream<DataEvent<IMIdentityResourceListDto>>("IDPIdentityResources.Subscribe").pipe(
+            tap(item => {
+                console.log(item)
+                switch (item.Action) {
+                    case "Created": {
+                        this.identityResourcesStore.add(item.Payload);
+                        break;
+                    }
+                    case "Updated": {
+                        this.identityResourcesStore.update(item.Payload.Id, entity => item.Payload);
+                        break;
+                    }
+                    case "Deleted": {
+                        this.identityResourcesStore.update(<any>item.Payload, entity => ({
+                            ...entity,
+                            Deleted: true
+                        }));
+                    }
+                }
+
+            })
+        ).subscribe()
+    }
+    ReLoadIdentityResources() {
+        this.http.get<Array<IMIdentityResourceListDto>>(`api/identity/identity-resources`).pipe(
+            tap(users => this.identityResourcesStore.set(users))
+        ).subscribe();
+    }
+
+    GetAllIdentityResources(force?: boolean) {
+        if (force || !this.identityResourcesQuery.getHasCache()) {
+            this.ReLoadIdentityResources()
+        }
+
+        return this.identityResourcesQuery.selectAll();
+    }
+
+    GetIdentityResource(id: string) {
+        return this.http.get<IMIdentityResourceDto>(`api/identity/identity-resources/${id}`)
+    }
+
+    CreateIdentityResource(dtoModel: IMIdentityResourceDto) {
+        return this.http.post(`api/identity/identity-resources`, dtoModel);
+    }
+
+    UpdateIdentityResource(dtoModel: IMIdentityResourceDto) {
+        return this.http.put(`api/identity/identity-resources`, dtoModel);
+    }
+
+    DeleteIdentityResource(...ids: string[]) {
+
+        const options = {
+            body: ids
+        }
+
+        return this.http.request("delete", `api/identity/identity-resources`, options);
     }
 
     //#endregion

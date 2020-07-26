@@ -35,7 +35,7 @@ namespace middlerApp.API.IDP.DtoModels
         public ICollection<MUserLogin> Logins { get; set; } = new List<MUserLogin>();
         public ICollection<MUserSecret> Secrets { get; set; } = new List<MUserSecret>();
 
-        public ICollection<MRoleDto> Roles { get; set; } = new List<MRoleDto>();
+        public ICollection<MRoleListDto> Roles { get; set; } = new List<MRoleListDto>();
 
     }
 }

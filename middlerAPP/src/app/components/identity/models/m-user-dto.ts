@@ -1,6 +1,8 @@
+import { SimpleClaim } from '../claims-manager/simple-claim';
+import { MRoleDto } from './m-role-dto';
 
 export class MUserDto {
-    Id: string;
+    Id: string; 
     UserName: string;
     Email: string;
     Firstname: string;
@@ -12,13 +14,14 @@ export class MUserDto {
     TwoFactorEnabled: boolean;
     LockoutEnabled: boolean;
 
-    DateTime: Date | null;
+    ExpiresOn: Date | null;
 
     Active: boolean;
    
-    Claims: Array<any>;
-    Logins: Array<any>;
-    Secrets: Array<any>;
+    Claims: Array<SimpleClaim>;
+    Roles: Array<MRoleDto>;
+    //Logins: Array<any>;
+    //Secrets: Array<any>;
 
     
 }

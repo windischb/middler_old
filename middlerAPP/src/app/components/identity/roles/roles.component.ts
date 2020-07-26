@@ -2,7 +2,7 @@ import { Component, ViewChild, TemplateRef, ViewContainerRef } from "@angular/co
 import { AppUIService } from '@services';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MRoleDto } from '../models/m-role-dto';
 import { tap, takeUntil } from 'rxjs/operators';
@@ -70,7 +70,7 @@ export class RolesComponent {
 
     constructor(
         private uiService: AppUIService,
-        private idService: IdentityService,
+        private idService: IDPService,
         private router: Router,
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,

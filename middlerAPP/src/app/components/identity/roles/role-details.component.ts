@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { MRoleDto } from '../models/m-role-dto';
 
 @Component({
@@ -33,7 +33,7 @@ export class RoleDetailsComponent implements OnInit {
         private uiService: AppUIService,
         private fb: FormBuilder,
         private route: ActivatedRoute,
-        private idService: IdentityService,
+        private idService: IDPService,
         private cref: ChangeDetectorRef
     ) {
         uiService.Set(ui => {

@@ -37,6 +37,8 @@ namespace middlerApp.API.IDP.Services
         {
             return await DbContext.ApiResources
                 .Include(u => u.Secrets)
+                .Include(u => u.Scopes)
+                .Include(u => u.UserClaims)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 

@@ -21,6 +21,7 @@ namespace middlerApp.API.IDP
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IApiResourcesService, ApiResourcesService>();
+            services.AddScoped<IIdentityResourcesService, IdentityResourcesService>();
 
 
             services.AddDbContext<IDPDbContext>(dbContextOptionsBuilder);

@@ -6,7 +6,7 @@ import { combineLatest, from, Observable, of } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { MUserDto } from '../models/m-user-dto';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { IMClientDto } from '../models/m-client-dto';
 
 @Component({
@@ -35,7 +35,7 @@ export class ClientDetailsComponent implements OnInit {
         private uiService: AppUIService,
         private fb: FormBuilder,
         private route: ActivatedRoute,
-        private idService: IdentityService,
+        private idService: IDPService,
         private cref: ChangeDetectorRef
     ) {
 

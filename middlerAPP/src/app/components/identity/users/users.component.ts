@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewContainerRef, ViewChild, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { AppUIService } from '@services';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { MUserDto } from '../models/m-user-dto';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
@@ -16,21 +16,22 @@ import { MUserListDto } from '../models/m-user-list-dto';
 export class UsersComponent {
 
     @ViewChild('itemsContextMenu') itemsContextMenu: TemplateRef<any>
-    
+
     grid = new GridBuilder<MUserListDto>()
         .SetColumns(
-            c=>c.Default("")
-            .SetMaxWidth(40)
-            .SetMaxWidth(40)
-            .SuppressSizeToFit()
-            .Set(cl => {
-                cl.headerCheckboxSelection = true;
-                cl.checkboxSelection = true;
-            }),
-            c => c.Default("UserName"),
-            c => c.Default("Email"),
-            c => c.Default("FirstName"),
-            c => c.Default("LastName")
+            c => c.Default("")
+                .SetMaxWidth(40)
+                .SetMaxWidth(40)
+                .SuppressSizeToFit()
+                .Set(cl => {
+                    cl.headerCheckboxSelection = true;
+                    cl.checkboxSelection = true;
+                }),
+            c => c.Default("UserName")
+                .SetInitialWidth(200, true),
+            c => c.Default("FirstName").SetInitialWidth(200, true),
+            c => c.Default("LastName").SetInitialWidth(200, true),
+            c => c.Default("Email")
         )
         .SetData(this.idService.GetAllUsers())
         .WithRowSelection("multiple")
@@ -61,11 +62,11 @@ export class UsersComponent {
         })
         .SetDataImmutable(data => data.Id);
 
-        private contextMenu: IOverlayHandle;
-        
+    private contextMenu: IOverlayHandle;
+
     constructor(
-        private uiService: AppUIService, 
-        private idService: IdentityService, 
+        private uiService: AppUIService,
+        private idService: IDPService,
         private router: Router,
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,
@@ -76,7 +77,7 @@ export class UsersComponent {
             ui.Header.Icon = "fa#user"
         })
     }
-   
+
 
     AddUser() {
         this.router.navigate(["create"], { relativeTo: this.route })

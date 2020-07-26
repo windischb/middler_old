@@ -38,6 +38,10 @@ export class SecretModalComponent {
 
     }
 
+    onOk(date: Date) {
+        date?.setHours(23, 59, 0, 0)
+    }
+
     ok() {
 
         this.context.invoke<Observable<any>>('ok', this.form.value).subscribe(() => {

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { IdentityRolesQuery } from 'src/app/identity-roles.store';
-import { IdentityService } from '../identity.service';
+import { IDPService } from '../identity.service';
 import { MRoleDto, MRoleDtoSortByName } from '../models/m-role-dto';
 import { combineLatest, Subject, BehaviorSubject, Observable, merge, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -65,7 +65,7 @@ export class AddRolesListComponent implements OnInit {
 
     constructor(
         private identityRolesQuery: IdentityRolesQuery,
-        private identityService: IdentityService,
+        private identityService: IDPService,
         private fb: FormBuilder,
 
     ) {

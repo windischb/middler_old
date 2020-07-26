@@ -25,6 +25,8 @@ import { DoobAntdExtensionsModule } from "@doob-ng/antd-extensions";
 import { NgModule } from '@angular/core';
 import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { CommonModule } from '@angular/common';
+import { SimpleListComponent } from './components/simple-list/simple-list.component';
+import { DoobGridModule } from '@doob-ng/grid';
 
 export const GlobalModules = [
     NzFormModule,
@@ -50,6 +52,7 @@ export const GlobalModules = [
     DoobEditorModule,
     DoobCoreModule,
     DoobAntdExtensionsModule,
+    DoobGridModule,
 
     FontAwesomeModule,
 
@@ -63,10 +66,12 @@ export const GlobalModules = [
         ...GlobalModules
     ],
     declarations: [
+        SimpleListComponent
     ],
     exports: [
         CommonModule,
-        ...GlobalModules,
+        SimpleListComponent,
+        ...GlobalModules
     ]
 })
 export class GlobalImportsModule {}

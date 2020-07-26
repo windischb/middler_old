@@ -7,18 +7,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { tap, takeUntil } from 'rxjs/operators';
 
 import { Subject, BehaviorSubject } from 'rxjs';
-import { IMApiResourceListDto } from '../models/m-api-resource-list-dto';
-import { ApiResourcesQuery } from './api-resources.store';
+import { IMIdentityResourceListDto } from '../models/m-identity-resource-list-dto';
+import { IdentityResourcesQuery } from './identity-resources.store';
 
 @Component({
-    templateUrl: './api-resources.component.html',
-    styleUrls: ['./api-resources.component.scss']
+    templateUrl: './identity-resources.component.html',
+    styleUrls: ['./identity-resources.component.scss']
 })
-export class ApiResourcesComponent {
+export class IdentityResourcesComponent {
 
     @ViewChild('itemsContextMenu') itemsContextMenu: TemplateRef<any>
    
-    grid = new GridBuilder<IMApiResourceListDto>()
+    grid = new GridBuilder<IMIdentityResourceListDto>()
         .SetColumns(
             c => c.Default("")
                 .SetMaxWidth(40)
@@ -33,7 +33,7 @@ export class ApiResourcesComponent {
             c => c.Default("DisplayName"),
             c => c.Default("Description")
         )
-        .SetData(this.idService.GetAllApiResources())
+        .SetData(this.idService.GetAllIdentityResources())
         .WithRowSelection("multiple")
         .WithFullRowEditType()
         .WithShiftResizeMode()
@@ -46,19 +46,19 @@ export class ApiResourcesComponent {
             let vContext = new DefaultContextMenuContext(ev.api, ev.event as MouseEvent)
             this.contextMenu = this.overlay.OpenContextMenu(ev.event as MouseEvent, this.itemsContextMenu, this.viewContainerRef, vContext)
         })
-        .OnViewPortContextMenu((ev, api) => {
-            let vContext = new DefaultContextMenuContext(api, ev)
+        .OnViewPortContextMenu((ev, identity) => {
+            let vContext = new DefaultContextMenuContext(identity, ev)
             this.contextMenu = this.overlay.OpenContextMenu(ev, this.itemsContextMenu, this.viewContainerRef, vContext)
         })
         .OnRowDoubleClicked(el => {
-            this.EditApiResource(el.node.data);
+            this.EditIdentityResource(el.node.data);
             //console.log("double Clicked", el)
 
         })
         .StopEditingWhenGridLosesFocus()
         .OnGridSizeChange(ev => ev.api.sizeColumnsToFit())
-        .OnViewPortClick((ev, api) => {
-            api.deselectAll();
+        .OnViewPortClick((ev, identity) => {
+            identity.deselectAll();
         })
         .SetRowClassRules({
             'deleted': 'data.Deleted'
@@ -76,35 +76,35 @@ export class ApiResourcesComponent {
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,
         public viewContainerRef: ViewContainerRef,
-        private apiResourcesQuery: ApiResourcesQuery
+        private identityResourcesQuery: IdentityResourcesQuery
     ) {
         uiService.Set(ui => {
-            ui.Header.Title = "Identity / ApiResources"
+            ui.Header.Title = "IdentityResources"
             ui.Content.Scrollable = false;
             ui.Header.Icon = "fa#cubes"
         })
 
-        // idService.GetAllApiResources().subscribe(api-resources => {
-        //     this.grid.SetData(api-resources);
+        // idService.GetAllIdentityResources().subscribe(identity-resources => {
+        //     this.grid.SetData(identity-resources);
         // });
     }
 
-    AddApiResource() {
+    AddIdentityResource() {
         this.router.navigate(["create"], { relativeTo: this.route });
         this.contextMenu?.Close();
     }
 
-    EditApiResource(item: IMApiResourceListDto) {
+    EditIdentityResource(item: IMIdentityResourceListDto) {
         this.router.navigate([item.Id], { relativeTo: this.route });
         this.contextMenu?.Close();
     }
 
-    RemoveApiResource(item: Array<IMApiResourceListDto>) {
-        this.idService.DeleteApiResource(...item.map(r => r.Id)).subscribe();
+    RemoveIdentityResource(item: Array<IMIdentityResourceListDto>) {
+        this.idService.DeleteIdentityResource(...item.map(r => r.Id)).subscribe();
         this.contextMenu?.Close();
     }
 
-    ReloadApiResourcesList() {
-        this.idService.ReLoadApiResources();
+    ReloadIdentityResourcesList() {
+        this.idService.ReLoadIdentityResources();
     }
 }
