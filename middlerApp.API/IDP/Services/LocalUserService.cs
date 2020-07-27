@@ -159,7 +159,7 @@ namespace middlerApp.API.IDP.Services
             
             await _context.Users.AddAsync(userToAdd);
             await _context.SaveChangesAsync();
-            EventDispatcher.DispatchCreatedEvent("IdentityUsers", _mapper.Map<MUserDto>(userToAdd));
+            EventDispatcher.DispatchCreatedEvent("IDPUsers", _mapper.Map<MUserDto>(userToAdd));
         }
 
 
@@ -201,7 +201,7 @@ namespace middlerApp.API.IDP.Services
             userToAdd.Password = _passwordHasher.HashPassword(userToAdd, password);
             _context.Users.Add(userToAdd);
             _context.SaveChanges();
-            EventDispatcher.DispatchCreatedEvent("IdentityUsers", _mapper.Map<MUserDto>(userToAdd));
+            EventDispatcher.DispatchCreatedEvent("IDPUsers", _mapper.Map<MUserDto>(userToAdd));
         }
 
         //public void AddUser(MUser userToAdd, string password)

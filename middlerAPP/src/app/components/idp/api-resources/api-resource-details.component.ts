@@ -4,15 +4,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { IDPService } from '../identity.service';
-import { IMIdentityResourceDto } from '../models/m-identity-resource-dto';
+import { IDPService } from '../idp.service';
+import { IMApiResourceDto } from '../models/m-api-resource-dto';
 
 
 @Component({
-    templateUrl: './identity-resource-details.component.html',
-    styleUrls: ['./identity-resource-details.component.scss']
+    templateUrl: './api-resource-details.component.html',
+    styleUrls: ['./api-resource-details.component.scss']
 })
-export class IdentityResourceDetailsComponent implements OnInit {
+export class ApiResourceDetailsComponent implements OnInit {
 
 
     form: FormGroup
@@ -22,10 +22,10 @@ export class IdentityResourceDetailsComponent implements OnInit {
     public user$ = combineLatest(this.route.paramMap, this.route.queryParamMap, this.route.fragment).pipe(
         map(([paramMap, queryParamMap, fragment]) => {
             this.Id = paramMap.get('id')
-            return this.idService.GetIdentityResource(this.Id);
+            return this.idService.GetApiResource(this.Id);
         }),
         mergeAll(),
-        tap(dto => this.setIdentityResource(dto))
+        tap(dto => this.setApiResource(dto))
     )
 
     showDebugInformations$ = this.uiService.showDebugInformations$;
@@ -38,7 +38,7 @@ export class IdentityResourceDetailsComponent implements OnInit {
         private cref: ChangeDetectorRef
     ) {
         uiService.Set(ui => {
-            ui.Header.Title = "IdentityResource"
+            ui.Header.Title = "ApiResource"
             ui.Content.Scrollable = false;
             ui.Header.Icon = "fa#cubes"
 
@@ -58,13 +58,17 @@ export class IdentityResourceDetailsComponent implements OnInit {
 
         this.form = this.fb.group({
             Id: [null],
-            Enabled: [],
+
             Name: [null, Validators.required],
             DisplayName: [null, Validators.required],
             Description: [null],
-            Required: [],
-            Emphasize: [],
+
+
+            Enabled: [],
+            AllowedAccessTokenSigningAlgorithms: [],
             ShowInDiscoveryDocument: [],
+            Secrets: [[]],
+            Scopes: [[]],
             UserClaims: [[]],
             Properties: []
         })
@@ -80,24 +84,24 @@ export class IdentityResourceDetailsComponent implements OnInit {
 
         console.log(this);
         if (this.Id == 'create') {
-            this.idService.CreateIdentityResource(this.form.value).subscribe();
+            this.idService.CreateApiResource(this.form.value).subscribe();
         } else {
-            this.idService.UpdateIdentityResource(this.form.value).subscribe();
+            this.idService.UpdateApiResource(this.form.value).subscribe();
         }
     }
 
-    setIdentityResource(dto: IMIdentityResourceDto) {
+    setApiResource(dto: IMApiResourceDto) {
         if (!this.BaseDto) {
             this.BaseDto = dto;
         }
 
         this.uiService.Set(ui => {
-            ui.Header.Title = "IdentityResource";
+            ui.Header.Title = "ApiResource";
             //ui.Header.SubTitle = user.UserName
             ui.Header.Icon = "form"
 
             ui.Footer.Button1.Visible = true;
-            ui.Footer.Button1.Text = dto.Id ? "Save Changes" : "Create IdentityResource"
+            ui.Footer.Button1.Text = dto.Id ? "Save Changes" : "Create ApiResource"
             ui.Footer.Button2.Visible = true;
         })
 
@@ -105,16 +109,16 @@ export class IdentityResourceDetailsComponent implements OnInit {
     }
 
     Reload() {
-        this.idService.GetIdentityResource(this.Id).subscribe(apiresource => {
-            this.setIdentityResource(apiresource)
+        this.idService.GetApiResource(this.Id).subscribe(apiresource => {
+            this.setApiResource(apiresource)
             this.idService.ReLoadUsers();
         });
 
 
     }
 
-    private _baseDto: IMIdentityResourceDto;
-    private set BaseDto(rule: IMIdentityResourceDto) {
+    private _baseDto: IMApiResourceDto;
+    private set BaseDto(rule: IMApiResourceDto) {
         this._baseDto = JSON.parse(JSON.stringify(rule));
 
     }

@@ -12,15 +12,15 @@ using SignalARRR.Server;
 
 namespace middlerApp.API.HubMethods
 {
-    [MessageName("IdentityApiResources")]
-    public class IdentityApiResourcesServerMethodsHub: ServerMethods<UIHub>
+    [MessageName("IDPApiResources")]
+    public class IDPApiResourcesServerMethodsHub : ServerMethods<UIHub>
     {
         public IApiResourcesService ApiResourcesService { get; }
         public DataEventDispatcher EventDispatcher { get; }
         private readonly IMapper _mapper;
 
 
-        public IdentityApiResourcesServerMethodsHub(IApiResourcesService apiResourcesService, IMapper mapper, DataEventDispatcher eventDispatcher)
+        public IDPApiResourcesServerMethodsHub(IApiResourcesService apiResourcesService, IMapper mapper, DataEventDispatcher eventDispatcher)
         {
             ApiResourcesService = apiResourcesService;
             EventDispatcher = eventDispatcher;
@@ -37,7 +37,7 @@ namespace middlerApp.API.HubMethods
 
         public IObservable<DataEvent> Subscribe()
         {
-            return EventDispatcher.Notifications.Where(ev => ev.Subject == "IdentityApiResources");
+            return EventDispatcher.Notifications.Where(ev => ev.Subject == "IDPApiResources");
         }
     }
 }

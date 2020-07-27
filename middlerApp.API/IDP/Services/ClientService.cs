@@ -55,7 +55,7 @@ namespace middlerApp.API.IDP.Services
             await DbContext.Clients.AddAsync(client);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchCreatedEvent("IdentityClients", _mapper.Map<MClientDto>(client));
+            EventDispatcher.DispatchCreatedEvent("IDPClients", _mapper.Map<MClientDto>(client));
         }
 
         public async Task DeleteClientAsync(params Guid[] id)
@@ -64,7 +64,7 @@ namespace middlerApp.API.IDP.Services
             DbContext.Clients.RemoveRange(clients);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchDeletedEvent("IdentityClients", clients.Select(r => r.Id));
+            EventDispatcher.DispatchDeletedEvent("IDPClients", clients.Select(r => r.Id));
         }
 
         public async Task UpdateClientAsync(Client updated)
@@ -77,7 +77,7 @@ namespace middlerApp.API.IDP.Services
 
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchUpdatedEvent("IdentityClients", _mapper.Map<MClientDto>(updated));
+            EventDispatcher.DispatchUpdatedEvent("IDPClients", _mapper.Map<MClientDto>(updated));
         }
     }
 }

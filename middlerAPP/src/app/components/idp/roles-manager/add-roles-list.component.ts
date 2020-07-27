@@ -1,26 +1,25 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
-
-import { IDPService } from '../identity.service';
+import { IdentityRolesQuery } from 'src/app/identity-roles.store';
+import { IDPService } from '../idp.service';
+import { MRoleDto, MRoleDtoSortByName } from '../models/m-role-dto';
 import { combineLatest, Subject, BehaviorSubject, Observable, merge, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MUserListDto, MUserListDtoSortByName } from '../models/m-user-list-dto';
-import { IdentityUsersQuery } from 'src/app/identity-users.store';
 
 @Component({
-    selector: 'add-users-list',
-    templateUrl: './add-users-list.component.html',
-    styleUrls: ['./add-users-list.component.scss']
+    selector: 'add-roles-list',
+    templateUrl: './add-roles-list.component.html',
+    styleUrls: ['./add-roles-list.component.scss']
 })
-export class AddUsersListComponent implements OnInit {
+export class AddRolesListComponent implements OnInit {
 
-    private selectedUsersSubject$ = new BehaviorSubject<Array<MUserListDto>>([]);
+    private selectedRolesSubject$ = new BehaviorSubject<Array<MRoleDto>>([]);
     @Input()
-    set selectedUsers(value: Array<MUserListDto>) {
-        this.selectedUsersSubject$.next(value);
+    set selectedRoles(value: Array<MRoleDto>) {
+        this.selectedRolesSubject$.next(value);
     }
 
-    @Output() selectedUsersChanged = new EventEmitter<Array<MUserListDto>>()
+    @Output() selectedRolesChanged = new EventEmitter<Array<MRoleDto>>()
 
     @Output()closeSidebar = new EventEmitter();
 
@@ -30,7 +29,7 @@ export class AddUsersListComponent implements OnInit {
 
     filter$ = merge(of(null), this.form.get("Filter").valueChanges)
 
-    availableUsers$ = combineLatest(this.identityService.GetAllUsers(), this.selectedUsersSubject$, this.filter$).pipe(
+    availableRoles$ = combineLatest(this.identityService.GetAllRoles(), this.selectedRolesSubject$, this.filter$).pipe(
         map(([available, selected, filter]) => {
 
             
@@ -43,17 +42,17 @@ export class AddUsersListComponent implements OnInit {
                         Deleted: selectedDeleted.includes(s)
                     })
                 )
-                this.selectedUsersChanged.next(nSelected);
+                this.selectedRolesChanged.next(nSelected);
             }
 
             let filtered = available;
             if (filter) {
                 const reg = new RegExp(`${filter}`, "i")
                 filtered = filtered.filter(r => {
-                    return r.UserName.match(reg) || r.Email.match(reg) || r.Firstname.match(reg) || r.Lastname.match(reg)
+                    return r.Name.match(reg) || r.DisplayName.match(reg)
                 })
             }
-            return filtered.sort(MUserListDtoSortByName).map(r => {
+            return filtered.sort(MRoleDtoSortByName).map(r => {
                 return {
                     ...r,
                     Selected: selected.map(r => r.Id).includes(r.Id)
@@ -65,7 +64,7 @@ export class AddUsersListComponent implements OnInit {
 
 
     constructor(
-        private identityUsersQuery: IdentityUsersQuery,
+        private identityRolesQuery: IdentityRolesQuery,
         private identityService: IDPService,
         private fb: FormBuilder,
 
@@ -80,15 +79,15 @@ export class AddUsersListComponent implements OnInit {
     }
 
 
-    ToggleUser(role) {
+    ToggleRole(role) {
 
-        let nUsers = [];
+        let nRoles = [];
         if (role.Selected) {
-            nUsers = this.selectedUsersSubject$.getValue().filter(r => r.Id != role.Id);
+            nRoles = this.selectedRolesSubject$.getValue().filter(r => r.Id != role.Id);
         } else {
-            nUsers = [...this.selectedUsersSubject$.getValue(), role];
+            nRoles = [...this.selectedRolesSubject$.getValue(), role];
         }
-        this.selectedUsersChanged.next(nUsers);
+        this.selectedRolesChanged.next(nRoles);
 
     }
 

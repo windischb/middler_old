@@ -1,6 +1,6 @@
 import { StoreConfig, EntityState, EntityStore, QueryEntity } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { MUserListDto } from './components/identity/models/m-user-list-dto';
+import { MUserListDto } from './components/idp/models/m-user-list-dto';
 
 
 export interface IdentityUsersState extends EntityState<MUserListDto, string> { }

@@ -2,7 +2,7 @@ import { Component, ViewChild, TemplateRef, ViewContainerRef } from "@angular/co
 import { AppUIService } from '@services';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { IDPService } from '../identity.service';
+import { IDPService } from '../idp.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { tap, takeUntil } from 'rxjs/operators';
 
@@ -79,9 +79,9 @@ export class IdentityResourcesComponent {
         private identityResourcesQuery: IdentityResourcesQuery
     ) {
         uiService.Set(ui => {
-            ui.Header.Title = "IdentityResources"
+            ui.Header.Title = "IDP / Identity-Resources"
             ui.Content.Scrollable = false;
-            ui.Header.Icon = "fa#cubes"
+            ui.Header.Icon = "fa#far|address-card"
         })
 
         // idService.GetAllIdentityResources().subscribe(identity-resources => {

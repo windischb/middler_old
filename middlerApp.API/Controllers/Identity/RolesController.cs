@@ -18,7 +18,7 @@ using Reflectensions.ExtensionMethods;
 namespace middlerApp.API.Controllers.Identity
 {
     [ApiController]
-    [Route("api/identity/roles")]
+    [Route("api/idp/roles")]
     [AdminController]
     public class RolesController : Controller
     {

@@ -50,7 +50,7 @@ export class IDPService {
 
     //#region  Users
     SubscribeUserEvents() {
-        this.message.Stream<DataEvent<MUserListDto>>("IdentityUsers.Subscribe").pipe(
+        this.message.Stream<DataEvent<MUserListDto>>("IDPUsers.Subscribe").pipe(
             tap(item => {
                 console.log(item)
                 switch (item.Action) {
@@ -74,7 +74,7 @@ export class IDPService {
         ).subscribe()
     }
     ReLoadUsers() {
-        this.http.get<Array<MUserListDto>>(`api/identity/users`).pipe(
+        this.http.get<Array<MUserListDto>>(`api/idp/users`).pipe(
             tap(users => this.identityUsersStore.set(users))
         ).subscribe();
     }
@@ -87,15 +87,15 @@ export class IDPService {
     }
 
     GetUser(id: string) {
-        return this.http.get<MUserDto>(`api/identity/users/${id}`)
+        return this.http.get<MUserDto>(`api/idp/users/${id}`)
     }
 
     CreateUser(createUserModel: MUserDto) {
-        return this.http.post(`api/identity/users`, createUserModel);
+        return this.http.post(`api/idp/users`, createUserModel);
     }
 
     UpdateUser(createUserModel: MUserDto) {
-        return this.http.put(`api/identity/users`, createUserModel);
+        return this.http.put(`api/idp/users`, createUserModel);
     }
 
     DeleteUser(...ids: string[]) {
@@ -104,7 +104,7 @@ export class IDPService {
             body: ids
         }
 
-        return this.http.request("delete", `api/identity/users`, options);
+        return this.http.request("delete", `api/idp/users`, options);
     }
 
     //#endregion
@@ -112,7 +112,7 @@ export class IDPService {
     //#region Roles
 
     SubscribeRoleEvents() {
-        this.message.Stream<DataEvent<MRoleDto>>("IdentityRoles.Subscribe").pipe(
+        this.message.Stream<DataEvent<MRoleDto>>("IDPRoles.Subscribe").pipe(
             tap(item => {
                 console.log(item)
                 switch (item.Action) {
@@ -137,7 +137,7 @@ export class IDPService {
         ).subscribe()
     }
     ReLoadRoles() {
-        this.message.Invoke<Array<MRoleDto>>("IdentityRoles.GetRolesList").pipe(
+        this.message.Invoke<Array<MRoleDto>>("IDPRoles.GetRolesList").pipe(
             tap(roles => this.identityRolesStore.set(roles))
         ).subscribe();
     }
@@ -150,15 +150,15 @@ export class IDPService {
     }
 
     GetRole(id: string) {
-        return this.http.get<MRoleDto>(`api/identity/roles/${id}`)
+        return this.http.get<MRoleDto>(`api/idp/roles/${id}`)
     }
 
     CreateRole(roleModel: MRoleDto) {
-        return this.http.post(`api/identity/roles`, roleModel);
+        return this.http.post(`api/idp/roles`, roleModel);
     }
 
     UpdateRole(roleModel: MRoleDto) {
-        return this.http.put(`api/identity/roles`, roleModel);
+        return this.http.put(`api/idp/roles`, roleModel);
     }
 
     DeleteRole(...ids: string[]) {
@@ -167,14 +167,14 @@ export class IDPService {
             body: ids
         }
 
-        return this.http.request("delete", `api/identity/roles`, options);
+        return this.http.request("delete", `api/idp/roles`, options);
     }
     //#endregion
 
     //#region Clients
 
     SubscribeClientsEvents() {
-        this.message.Stream<DataEvent<IMClientDto>>("IdentityClients.Subscribe").pipe(
+        this.message.Stream<DataEvent<IMClientDto>>("IDPClients.Subscribe").pipe(
             tap(item => {
                 console.log(item)
                 switch (item.Action) {
@@ -198,7 +198,7 @@ export class IDPService {
         ).subscribe()
     }
     ReLoadClients() {
-        this.http.get<Array<IMClientDto>>(`api/identity/clients`).pipe(
+        this.http.get<Array<IMClientDto>>(`api/idp/clients`).pipe(
             tap(users => this.identityClientsStore.set(users))
         ).subscribe();
     }
@@ -212,15 +212,15 @@ export class IDPService {
     }
 
     GetClient(id: string) {
-        return this.http.get<IMClientDto>(`api/identity/clients/${id}`)
+        return this.http.get<IMClientDto>(`api/idp/clients/${id}`)
     }
 
     CreateClient(dtoModel: IMClientDto) {
-        return this.http.post(`api/identity/clients`, dtoModel);
+        return this.http.post(`api/idp/clients`, dtoModel);
     }
 
     UpdateClient(dtoModel: IMClientDto) {
-        return this.http.put(`api/identity/clients`, dtoModel);
+        return this.http.put(`api/idp/clients`, dtoModel);
     }
 
     DeleteClient(...ids: string[]) {
@@ -229,7 +229,7 @@ export class IDPService {
             body: ids
         }
 
-        return this.http.request("delete", `api/identity/clients`, options);
+        return this.http.request("delete", `api/idp/clients`, options);
     }
 
     //#endregion
@@ -237,7 +237,7 @@ export class IDPService {
     //#region ApiResources
 
     SubscribeApiResourcesEvents() {
-        this.message.Stream<DataEvent<IMApiResourceListDto>>("IdentityApiResources.Subscribe").pipe(
+        this.message.Stream<DataEvent<IMApiResourceListDto>>("IDPApiResources.Subscribe").pipe(
             tap(item => {
                 console.log(item)
                 switch (item.Action) {
@@ -261,7 +261,7 @@ export class IDPService {
         ).subscribe()
     }
     ReLoadApiResources() {
-        this.http.get<Array<IMApiResourceListDto>>(`api/identity/api-resources`).pipe(
+        this.http.get<Array<IMApiResourceListDto>>(`api/idp/api-resources`).pipe(
             tap(users => this.identityApiResourcesStore.set(users))
         ).subscribe();
     }
@@ -275,15 +275,15 @@ export class IDPService {
     }
 
     GetApiResource(id: string) {
-        return this.http.get<IMApiResourceDto>(`api/identity/api-resources/${id}`)
+        return this.http.get<IMApiResourceDto>(`api/idp/api-resources/${id}`)
     }
 
     CreateApiResource(dtoModel: IMApiResourceDto) {
-        return this.http.post(`api/identity/api-resources`, dtoModel);
+        return this.http.post(`api/idp/api-resources`, dtoModel);
     }
 
     UpdateApiResource(dtoModel: IMApiResourceDto) {
-        return this.http.put(`api/identity/api-resources`, dtoModel);
+        return this.http.put(`api/idp/api-resources`, dtoModel);
     }
 
     DeleteApiResource(...ids: string[]) {
@@ -292,12 +292,12 @@ export class IDPService {
             body: ids
         }
 
-        return this.http.request("delete", `api/identity/api-resources`, options);
+        return this.http.request("delete", `api/idp/api-resources`, options);
     }
 
     //#endregion
 
-    //#region ApiResources
+    //#region IdentityResources
 
     SubscribeIdentityResourcesEvents() {
         this.message.Stream<DataEvent<IMIdentityResourceListDto>>("IDPIdentityResources.Subscribe").pipe(
@@ -324,7 +324,7 @@ export class IDPService {
         ).subscribe()
     }
     ReLoadIdentityResources() {
-        this.http.get<Array<IMIdentityResourceListDto>>(`api/identity/identity-resources`).pipe(
+        this.http.get<Array<IMIdentityResourceListDto>>(`api/idp/identity-resources`).pipe(
             tap(users => this.identityResourcesStore.set(users))
         ).subscribe();
     }
@@ -338,15 +338,15 @@ export class IDPService {
     }
 
     GetIdentityResource(id: string) {
-        return this.http.get<IMIdentityResourceDto>(`api/identity/identity-resources/${id}`)
+        return this.http.get<IMIdentityResourceDto>(`api/idp/identity-resources/${id}`)
     }
 
     CreateIdentityResource(dtoModel: IMIdentityResourceDto) {
-        return this.http.post(`api/identity/identity-resources`, dtoModel);
+        return this.http.post(`api/idp/identity-resources`, dtoModel);
     }
 
     UpdateIdentityResource(dtoModel: IMIdentityResourceDto) {
-        return this.http.put(`api/identity/identity-resources`, dtoModel);
+        return this.http.put(`api/idp/identity-resources`, dtoModel);
     }
 
     DeleteIdentityResource(...ids: string[]) {
@@ -355,7 +355,7 @@ export class IDPService {
             body: ids
         }
 
-        return this.http.request("delete", `api/identity/identity-resources`, options);
+        return this.http.request("delete", `api/idp/identity-resources`, options);
     }
 
     //#endregion

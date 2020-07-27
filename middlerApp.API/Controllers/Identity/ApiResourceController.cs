@@ -19,7 +19,7 @@ using Reflectensions.ExtensionMethods;
 namespace middlerApp.API.Controllers.Identity
 {
     [ApiController]
-    [Route("api/identity/api-resources")]
+    [Route("api/idp/api-resources")]
     [AdminController]
     public class ApiResourceController : Controller
     {

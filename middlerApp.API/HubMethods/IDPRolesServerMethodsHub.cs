@@ -12,36 +12,32 @@ using SignalARRR.Server;
 
 namespace middlerApp.API.HubMethods
 {
-    [MessageName("IdentityUsers")]
-    public class IdentityUsersServerMethodsHub : ServerMethods<UIHub>
+    [MessageName("IDPRoles")]
+    public class IDPRolesServerMethodsHub : ServerMethods<UIHub>
     {
-        public IUsersService UserService { get; }
+        public IRolesService RolesService { get; }
         public DataEventDispatcher EventDispatcher { get; }
         private readonly IMapper _mapper;
 
 
-        public IdentityUsersServerMethodsHub(IUsersService userService, IMapper mapper, DataEventDispatcher eventDispatcher)
+        public IDPRolesServerMethodsHub(IRolesService rolesService, IMapper mapper, DataEventDispatcher eventDispatcher)
         {
-            UserService = userService;
+            RolesService = rolesService;
             EventDispatcher = eventDispatcher;
             _mapper = mapper;
 
         }
 
 
-        public async Task<List<MUserListDto>> GetUsersList()
+        public async Task<List<MRoleListDto>> GetRolesList()
         {
-            var roles = await UserService.GetAllUserListDtosAsync();
+            var roles = await RolesService.GetAllRoleListDtosAsync();
             return roles;
         }
 
         public IObservable<DataEvent> Subscribe()
         {
-            return EventDispatcher.Notifications.Select(ev =>
-            {
-                var z = ev;
-                return z;
-            }).Where(ev => ev.Subject == "IdentityUsers");
+            return EventDispatcher.Notifications.Where(ev => ev.Subject == "IDPRoles");
         }
     }
 }

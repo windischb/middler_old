@@ -1,23 +1,23 @@
-import { Component, OnInit, ViewContainerRef, ViewChild, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ViewChild, TemplateRef, ViewContainerRef } from "@angular/core";
 import { AppUIService } from '@services';
-import { Router, ActivatedRoute } from '@angular/router';
-import { IDPService } from '../identity.service';
-import { MUserDto } from '../models/m-user-dto';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { tap } from 'rxjs/operators';
-import { MUserListDto } from '../models/m-user-list-dto';
+import { IDPService } from '../idp.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MRoleDto } from '../models/m-role-dto';
+import { tap, takeUntil } from 'rxjs/operators';
+import { IdentityRolesQuery } from 'src/app/identity-roles.store';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 @Component({
-    templateUrl: './users.component.html',
-    styleUrls: ['./users.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './roles.component.html',
+    styleUrls: ['./roles.component.scss']
 })
-export class UsersComponent {
+export class RolesComponent {
 
     @ViewChild('itemsContextMenu') itemsContextMenu: TemplateRef<any>
-
-    grid = new GridBuilder<MUserListDto>()
+   
+    grid = new GridBuilder<MRoleDto>()
         .SetColumns(
             c => c.Default("")
                 .SetMaxWidth(40)
@@ -26,14 +26,13 @@ export class UsersComponent {
                 .Set(cl => {
                     cl.headerCheckboxSelection = true;
                     cl.checkboxSelection = true;
+                    cl.headerCheckboxSelectionFilteredOnly = true
                 }),
-            c => c.Default("UserName")
-                .SetInitialWidth(200, true),
-            c => c.Default("FirstName").SetInitialWidth(200, true),
-            c => c.Default("LastName").SetInitialWidth(200, true),
-            c => c.Default("Email")
+            c => c.Default("Name"),
+            c => c.Default("DisplayName"),
+            c => c.Default("Description")
         )
-        .SetData(this.idService.GetAllUsers())
+        .SetData(this.idService.GetAllRoles())
         .WithRowSelection("multiple")
         .WithFullRowEditType()
         .WithShiftResizeMode()
@@ -51,7 +50,7 @@ export class UsersComponent {
             this.contextMenu = this.overlay.OpenContextMenu(ev, this.itemsContextMenu, this.viewContainerRef, vContext)
         })
         .OnRowDoubleClicked(el => {
-            this.EditUser(el.node.data);
+            this.EditRole(el.node.data);
             //console.log("double Clicked", el)
 
         })
@@ -60,8 +59,13 @@ export class UsersComponent {
         .OnViewPortClick((ev, api) => {
             api.deselectAll();
         })
+        .SetRowClassRules({
+            'deleted': 'data.Deleted'
+        })
         .SetDataImmutable(data => data.Id);
+        
 
+    
     private contextMenu: IOverlayHandle;
 
     constructor(
@@ -70,28 +74,36 @@ export class UsersComponent {
         private router: Router,
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,
-        public viewContainerRef: ViewContainerRef) {
+        public viewContainerRef: ViewContainerRef,
+        private identityRolesQuery: IdentityRolesQuery
+    ) {
         uiService.Set(ui => {
-            ui.Header.Title = "Identity / Users"
+            ui.Header.Title = "IDP / Roles"
             ui.Content.Scrollable = false;
-            ui.Header.Icon = "fa#user"
+            ui.Header.Icon = "fa#user-tag"
         })
+
+        // idService.GetAllRoles().subscribe(roles => {
+        //     this.grid.SetData(roles);
+        // });
     }
 
-
-    AddUser() {
-        this.router.navigate(["create"], { relativeTo: this.route })
+    AddRole() {
+        this.router.navigate(["create"], { relativeTo: this.route });
+        this.contextMenu?.Close();
     }
 
-    EditUser(user: MUserDto) {
-        this.router.navigate([user.Id], { relativeTo: this.route })
+    EditRole(role: MRoleDto) {
+        this.router.navigate([role.Id], { relativeTo: this.route });
+        this.contextMenu?.Close();
     }
 
-    RemoveUser(users: Array<MUserDto>) {
-        this.idService.DeleteUser(...users.map(u => u.Id)).subscribe()
+    RemoveRole(roles: Array<MRoleDto>) {
+        this.idService.DeleteRole(...roles.map(r => r.Id)).subscribe();
+        this.contextMenu?.Close();
     }
 
-    ReloadUsersList() {
-        this.idService.ReLoadUsers();
+    ReloadRolesList() {
+        this.idService.ReLoadRoles();
     }
 }

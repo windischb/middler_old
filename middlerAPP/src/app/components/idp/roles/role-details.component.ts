@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { IDPService } from '../identity.service';
+import { IDPService } from '../idp.service';
 import { MRoleDto } from '../models/m-role-dto';
 
 @Component({

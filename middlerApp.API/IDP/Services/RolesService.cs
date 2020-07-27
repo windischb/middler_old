@@ -49,7 +49,7 @@ namespace middlerApp.API.IDP.Services
             await DbContext.Roles.AddAsync(role);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchCreatedEvent("IdentityRoles", _mapper.Map<MRoleListDto>(role));
+            EventDispatcher.DispatchCreatedEvent("IDPRoles", _mapper.Map<MRoleListDto>(role));
         }
 
 
@@ -59,7 +59,7 @@ namespace middlerApp.API.IDP.Services
             DbContext.Roles.RemoveRange(roles);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchDeletedEvent("IdentityRoles", roles.Select(r => r.Id));
+            EventDispatcher.DispatchDeletedEvent("IDPRoles", roles.Select(r => r.Id));
         }
 
         public async Task UpdateRoleAsync(MRole updated)
@@ -72,7 +72,7 @@ namespace middlerApp.API.IDP.Services
 
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchUpdatedEvent("IdentityRoles", _mapper.Map<MRoleListDto>(updated));
+            EventDispatcher.DispatchUpdatedEvent("IDPRoles", _mapper.Map<MRoleListDto>(updated));
         }
 
     }

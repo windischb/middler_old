@@ -1,20 +1,23 @@
-import { Component, ViewChild, TemplateRef, ViewContainerRef } from "@angular/core";
+import { Component, OnInit, ViewContainerRef, ViewChild, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 import { AppUIService } from '@services';
-import { IMClientDto } from '../models/m-client-dto';
+import { Router, ActivatedRoute } from '@angular/router';
+import { IDPService } from '../idp.service';
+import { MUserDto } from '../models/m-user-dto';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { IDPService } from '../identity.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { tap } from 'rxjs/operators';
+import { MUserListDto } from '../models/m-user-list-dto';
 
 @Component({
-    templateUrl: './clients.component.html',
-    styleUrls: ['./clients.component.scss']
+    templateUrl: './users.component.html',
+    styleUrls: ['./users.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClientsComponent {
+export class UsersComponent {
 
     @ViewChild('itemsContextMenu') itemsContextMenu: TemplateRef<any>
 
-    grid = new GridBuilder()
+    grid = new GridBuilder<MUserListDto>()
         .SetColumns(
             c => c.Default("")
                 .SetMaxWidth(40)
@@ -24,10 +27,13 @@ export class ClientsComponent {
                     cl.headerCheckboxSelection = true;
                     cl.checkboxSelection = true;
                 }),
-            c => c.Default("ClientId"),
-            c => c.Default("ClientName")
+            c => c.Default("UserName")
+                .SetInitialWidth(200, true),
+            c => c.Default("FirstName").SetInitialWidth(200, true),
+            c => c.Default("LastName").SetInitialWidth(200, true),
+            c => c.Default("Email")
         )
-        .SetData(this.idService.GetAllClients())
+        .SetData(this.idService.GetAllUsers())
         .WithRowSelection("multiple")
         .WithFullRowEditType()
         .WithShiftResizeMode()
@@ -45,7 +51,7 @@ export class ClientsComponent {
             this.contextMenu = this.overlay.OpenContextMenu(ev, this.itemsContextMenu, this.viewContainerRef, vContext)
         })
         .OnRowDoubleClicked(el => {
-            this.EditClient(el.node.data);
+            this.EditUser(el.node.data);
             //console.log("double Clicked", el)
 
         })
@@ -53,10 +59,10 @@ export class ClientsComponent {
         .OnGridSizeChange(ev => ev.api.sizeColumnsToFit())
         .OnViewPortClick((ev, api) => {
             api.deselectAll();
-        });
+        })
+        .SetDataImmutable(data => data.Id);
 
     private contextMenu: IOverlayHandle;
-
 
     constructor(
         private uiService: AppUIService,
@@ -64,28 +70,28 @@ export class ClientsComponent {
         private router: Router,
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,
-        public viewContainerRef: ViewContainerRef
-    ) {
+        public viewContainerRef: ViewContainerRef) {
         uiService.Set(ui => {
-            ui.Header.Title = "Identity / Clients"
+            ui.Header.Title = "IDP / Users"
             ui.Content.Scrollable = false;
-            ui.Header.Icon = "fa#desktop"
+            ui.Header.Icon = "fa#user"
         })
     }
 
-    AddClient() {
+
+    AddUser() {
         this.router.navigate(["create"], { relativeTo: this.route })
     }
 
-    EditClient(role: IMClientDto) {
-        this.router.navigate([role.Id], { relativeTo: this.route })
+    EditUser(user: MUserDto) {
+        this.router.navigate([user.Id], { relativeTo: this.route })
     }
 
-    RemoveClient(roles: Array<IMClientDto>) {
-
+    RemoveUser(users: Array<MUserDto>) {
+        this.idService.DeleteUser(...users.map(u => u.Id)).subscribe()
     }
 
-    ReloadClientsList() {
-        this.idService.ReLoadClients();
+    ReloadUsersList() {
+        this.idService.ReLoadUsers();
     }
 }

@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "~9.1.7",
     "@angular/router": "~9.1.7",
     "@datorama/akita": "^5.2.1",
-    "@doob-ng/antd-extensions": "^0.2.1",
+    "@doob-ng/antd-extensions": "^0.2.2",
     "@doob-ng/cdk-helper": "^0.2.10",
     "@doob-ng/core": "^1.2.6",
     "@doob-ng/editor": "^1.0.4",

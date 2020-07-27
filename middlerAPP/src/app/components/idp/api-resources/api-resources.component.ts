@@ -2,7 +2,7 @@ import { Component, ViewChild, TemplateRef, ViewContainerRef } from "@angular/co
 import { AppUIService } from '@services';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { IDPService } from '../identity.service';
+import { IDPService } from '../idp.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { tap, takeUntil } from 'rxjs/operators';
 
@@ -79,7 +79,7 @@ export class ApiResourcesComponent {
         private apiResourcesQuery: ApiResourcesQuery
     ) {
         uiService.Set(ui => {
-            ui.Header.Title = "Identity / ApiResources"
+            ui.Header.Title = "IDP / Api-Resources"
             ui.Content.Scrollable = false;
             ui.Header.Icon = "fa#cubes"
         })

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { IdentityRoutingModule, RoutingComponents } from './identity-routing.module';
+import { IDPRoutingModule, RoutingComponents } from './idp-routing.module';
 import { ClaimsManagerComponent } from './claims-manager/claims-manager.component';
 import { DoobCdkHelperModule } from '@doob-ng/cdk-helper';
 import { DoobGridModule } from '@doob-ng/grid';
@@ -19,7 +19,7 @@ import { SecretModalComponent } from './secrets-manager/secret-modal.component';
         CommonModule,
         ReactiveFormsModule,
         FormsModule,
-        IdentityRoutingModule,
+        IDPRoutingModule,
         DoobCdkHelperModule,
         DoobGridModule,
         GlobalImportsModule
@@ -39,6 +39,6 @@ import { SecretModalComponent } from './secrets-manager/secret-modal.component';
         SecretModalComponent
     ]
 })
-export class IdentityModule {
+export class IDPModule {
     
 }

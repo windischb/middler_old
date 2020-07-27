@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'idp',
-    loadChildren: () => import('./components/identity/identity.module').then(m => m.IdentityModule)
+    loadChildren: () => import('./components/idp/idp.module').then(m => m.IDPModule)
   }
 ];
 

@@ -42,4 +42,4 @@ export const RoutingComponents = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class IdentityRoutingModule { }
+export class IDPRoutingModule { }

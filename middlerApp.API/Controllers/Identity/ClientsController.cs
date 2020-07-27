@@ -15,7 +15,7 @@ using middlerApp.API.IDP.Storage.Entities;
 namespace middlerApp.API.Controllers.Identity
 {
     [ApiController]
-    [Route("api/identity/clients")]
+    [Route("api/idp/clients")]
     [AdminController]
     public class ClientsController: Controller
     {

@@ -6,7 +6,7 @@ import { combineLatest, from, Observable, of } from 'rxjs';
 import { map, mergeAll, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { MUserDto } from '../models/m-user-dto';
-import { IDPService } from '../identity.service';
+import { IDPService } from '../idp.service';
 import { IMClientDto } from '../models/m-client-dto';
 
 @Component({

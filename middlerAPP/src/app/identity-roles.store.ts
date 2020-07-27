@@ -1,8 +1,8 @@
 import { Store, StoreConfig, EntityState, EntityStore, QueryEntity } from '@datorama/akita';
-import { MRoleDto } from './components/identity/models/m-role-dto';
+import { MRoleDto } from './components/idp/models/m-role-dto';
 import { AppUIHeader } from './shared/models/app-ui-context';
 import { Injectable } from '@angular/core';
-import { MUserDto } from './components/identity/models/m-user-dto';
+import { MUserDto } from './components/idp/models/m-user-dto';
 
 
 export interface IdentityRolesState extends EntityState<MRoleDto, string> { }

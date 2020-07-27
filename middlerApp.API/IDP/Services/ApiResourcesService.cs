@@ -54,13 +54,13 @@ namespace middlerApp.API.IDP.Services
             await DbContext.ApiResources.AddAsync(resource);
             await DbContext.SaveChangesAsync();
 
-            EventDispatcher.DispatchCreatedEvent("IdentityApiResources", _mapper.Map<MApiResourceListDto>(resource));
+            EventDispatcher.DispatchCreatedEvent("IDPApiResources", _mapper.Map<MApiResourceListDto>(resource));
         }
 
         public async Task UpdateApiResourceAsync(ApiResource updated)
         {
             await DbContext.SaveChangesAsync();
-            EventDispatcher.DispatchUpdatedEvent("IdentityApiResources", _mapper.Map<MApiResourceListDto>(updated));
+            EventDispatcher.DispatchUpdatedEvent("IDPApiResources", _mapper.Map<MApiResourceListDto>(updated));
         }
 
         public async Task DeleteApiResourceAsync(params Guid[] id)
@@ -68,7 +68,7 @@ namespace middlerApp.API.IDP.Services
             var resources = await DbContext.ApiResources.Where(u => id.Contains(u.Id)).ToListAsync();
             DbContext.ApiResources.RemoveRange(resources);
             await DbContext.SaveChangesAsync();
-            EventDispatcher.DispatchDeletedEvent("IdentityApiResources", resources.Select(r => r.Id));
+            EventDispatcher.DispatchDeletedEvent("IDPApiResources", resources.Select(r => r.Id));
         }
     }
 }

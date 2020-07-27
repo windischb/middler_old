@@ -3,7 +3,6 @@ import { SimpleClaim } from './simple-claim';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
-import { GridApi, GridSizeChangedEvent } from '@ag-grid-community/all-modules';
 
 @Component({
     selector: 'claims-manager',

@@ -60,7 +60,7 @@ namespace middlerApp.API.IDP.Services
             userModel.UserRoles = userModel.UserRoles.Where(ur => availableRoles.Contains(ur.RoleId)).ToList();
 
             await DbContext.SaveChangesAsync();
-            EventDispatcher.DispatchUpdatedEvent("IdentityUser", _mapper.Map<MUserDto>(userModel));
+            EventDispatcher.DispatchUpdatedEvent("IDPUsers", _mapper.Map<MUserDto>(userModel));
         }
 
         public async Task DeleteUser(params Guid[] id)
@@ -68,7 +68,7 @@ namespace middlerApp.API.IDP.Services
             var users = await DbContext.Users.Where(u => id.Contains(u.Id)).ToListAsync();
             DbContext.Users.RemoveRange(users);
             await DbContext.SaveChangesAsync();
-            EventDispatcher.DispatchDeletedEvent("IdentityUser", users.Select(r => r.Id));
+            EventDispatcher.DispatchDeletedEvent("IDPUsers", users.Select(r => r.Id));
         }
 
 

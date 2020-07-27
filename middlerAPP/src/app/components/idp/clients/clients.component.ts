@@ -1,23 +1,20 @@
 import { Component, ViewChild, TemplateRef, ViewContainerRef } from "@angular/core";
 import { AppUIService } from '@services';
+import { IMClientDto } from '../models/m-client-dto';
 import { GridBuilder, DefaultContextMenuContext } from '@doob-ng/grid';
 import { IOverlayHandle, DoobOverlayService } from '@doob-ng/cdk-helper';
-import { IDPService } from '../identity.service';
+import { IDPService } from '../idp.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MRoleDto } from '../models/m-role-dto';
-import { tap, takeUntil } from 'rxjs/operators';
-import { IdentityRolesQuery } from 'src/app/identity-roles.store';
-import { Subject, BehaviorSubject } from 'rxjs';
 
 @Component({
-    templateUrl: './roles.component.html',
-    styleUrls: ['./roles.component.scss']
+    templateUrl: './clients.component.html',
+    styleUrls: ['./clients.component.scss']
 })
-export class RolesComponent {
+export class ClientsComponent {
 
     @ViewChild('itemsContextMenu') itemsContextMenu: TemplateRef<any>
-   
-    grid = new GridBuilder<MRoleDto>()
+
+    grid = new GridBuilder()
         .SetColumns(
             c => c.Default("")
                 .SetMaxWidth(40)
@@ -26,13 +23,11 @@ export class RolesComponent {
                 .Set(cl => {
                     cl.headerCheckboxSelection = true;
                     cl.checkboxSelection = true;
-                    cl.headerCheckboxSelectionFilteredOnly = true
                 }),
-            c => c.Default("Name"),
-            c => c.Default("DisplayName"),
-            c => c.Default("Description")
+            c => c.Default("ClientId"),
+            c => c.Default("ClientName")
         )
-        .SetData(this.idService.GetAllRoles())
+        .SetData(this.idService.GetAllClients())
         .WithRowSelection("multiple")
         .WithFullRowEditType()
         .WithShiftResizeMode()
@@ -50,7 +45,7 @@ export class RolesComponent {
             this.contextMenu = this.overlay.OpenContextMenu(ev, this.itemsContextMenu, this.viewContainerRef, vContext)
         })
         .OnRowDoubleClicked(el => {
-            this.EditRole(el.node.data);
+            this.EditClient(el.node.data);
             //console.log("double Clicked", el)
 
         })
@@ -58,15 +53,10 @@ export class RolesComponent {
         .OnGridSizeChange(ev => ev.api.sizeColumnsToFit())
         .OnViewPortClick((ev, api) => {
             api.deselectAll();
-        })
-        .SetRowClassRules({
-            'deleted': 'data.Deleted'
-        })
-        .SetDataImmutable(data => data.Id);
-        
+        });
 
-    
     private contextMenu: IOverlayHandle;
+
 
     constructor(
         private uiService: AppUIService,
@@ -74,36 +64,28 @@ export class RolesComponent {
         private router: Router,
         private route: ActivatedRoute,
         public overlay: DoobOverlayService,
-        public viewContainerRef: ViewContainerRef,
-        private identityRolesQuery: IdentityRolesQuery
+        public viewContainerRef: ViewContainerRef
     ) {
         uiService.Set(ui => {
-            ui.Header.Title = "Identity / Roles"
+            ui.Header.Title = "IDP / Clients"
             ui.Content.Scrollable = false;
-            ui.Header.Icon = "fa#user-tag"
+            ui.Header.Icon = "fa#desktop"
         })
-
-        // idService.GetAllRoles().subscribe(roles => {
-        //     this.grid.SetData(roles);
-        // });
     }
 
-    AddRole() {
-        this.router.navigate(["create"], { relativeTo: this.route });
-        this.contextMenu?.Close();
+    AddClient() {
+        this.router.navigate(["create"], { relativeTo: this.route })
     }
 
-    EditRole(role: MRoleDto) {
-        this.router.navigate([role.Id], { relativeTo: this.route });
-        this.contextMenu?.Close();
+    EditClient(role: IMClientDto) {
+        this.router.navigate([role.Id], { relativeTo: this.route })
     }
 
-    RemoveRole(roles: Array<MRoleDto>) {
-        this.idService.DeleteRole(...roles.map(r => r.Id)).subscribe();
-        this.contextMenu?.Close();
+    RemoveClient(roles: Array<IMClientDto>) {
+
     }
 
-    ReloadRolesList() {
-        this.idService.ReLoadRoles();
+    ReloadClientsList() {
+        this.idService.ReLoadClients();
     }
 }
