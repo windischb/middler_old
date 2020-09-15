@@ -5,7 +5,7 @@
 using AutoMapper;
 using middlerApp.API.IDP.Storage.Entities;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Extension methods to map to/from entity/model for scopes.
@@ -25,7 +25,7 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        public static IdentityServer4.Models.ApiScope ToModel(this ApiScope entity)
+        public static IdentityServer4.Models.ApiScope ToApiScopeModel(this Scope entity)
         {
             return entity == null ? null : Mapper.Map<IdentityServer4.Models.ApiScope>(entity);
         }
@@ -35,9 +35,9 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public static ApiScope ToEntity(this IdentityServer4.Models.ApiScope model)
+        public static Scope ToEntity(this IdentityServer4.Models.ApiScope model)
         {
-            return model == null ? null : Mapper.Map<ApiScope>(model);
+            return model == null ? null : Mapper.Map<Scope>(model);
         }
     }
 }

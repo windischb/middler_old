@@ -1,0 +1,15 @@
+
+<action-basic-modal (ok)="ok()" (cancel)="cancel()" [form]="form">
+    <form nz-form [formGroup]="form" style="width: 100%;" >
+
+        <nz-form-label nzRequired nzFor="RewriteTo">RewriteTo</nz-form-label>
+        <nz-form-control>
+            <input nz-input formControlName="RewriteTo" id="RewriteTo" style="width: 100%;" />
+        </nz-form-control>
+
+        <ng-template dbPortalTemplate="ActionModalHeader-Left">
+            Url - Rewrite
+        </ng-template>
+
+    </form>
+</action-basic-modal>

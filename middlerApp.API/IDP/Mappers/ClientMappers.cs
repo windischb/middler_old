@@ -4,7 +4,7 @@
 
 using AutoMapper;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Extension methods to map to/from entity/model for clients.
@@ -24,7 +24,7 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        public static IdentityServer4.Models.Client ToModel(this Entities.Client entity)
+        public static IdentityServer4.Models.Client ToModel(this Storage.Entities.Client entity)
         {
             return Mapper.Map<IdentityServer4.Models.Client>(entity);
         }
@@ -34,9 +34,9 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public static Entities.Client ToEntity(this IdentityServer4.Models.Client model)
+        public static Storage.Entities.Client ToEntity(this IdentityServer4.Models.Client model)
         {
-            return Mapper.Map<Entities.Client>(model);
+            return Mapper.Map<Storage.Entities.Client>(model);
         }
 
 

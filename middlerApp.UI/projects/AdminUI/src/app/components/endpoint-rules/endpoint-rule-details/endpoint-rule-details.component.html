@@ -1,0 +1,82 @@
+<ng-container *ngIf="(rule$ | async); let rule">
+
+    <form nz-form [formGroup]="form" style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}" (nzSelectChange)="tabChanged($event)">
+            <nz-tab [nzTitle]="BasicTitle">
+                <ng-template #BasicTitle>
+                    <i nz-icon nzType="container"></i>Basic
+                </ng-template>
+                <div style="display: flex; flex-direction: row; padding:3px">
+                    <div style="flex-grow: 1;">
+
+                        <nz-form-label nzRequired nzFor="Name">Name</nz-form-label>
+                        <nz-form-control>
+                            <input nz-input formControlName="Name" id="Name" style="width: 100%;" />
+                        </nz-form-control>
+
+
+                        <nz-form-label nzRequired nzFor="Path">Path</nz-form-label>
+                        <nz-form-control>
+                            <input nz-input formControlName="Path" id="Path" style="width: 100%;" />
+                        </nz-form-control>
+
+                        <nz-form-label nzFor="Hostname">Hostname</nz-form-label>
+                        <nz-form-control>
+                            <input nz-input formControlName="Hostname" id="Hostname" style="width: 100%;"
+                                placeHolder="*" />
+                        </nz-form-control>
+
+
+                    </div>
+                    <div style="width: 10px;margin-right: 10px;">
+
+                    </div>
+                    <div style="width: 30%;">
+                        <nz-collapse [nzBordered]="true" nzAccordion>
+                            <nz-collapse-panel nzHeader="Options" [nzActive]="true">
+                                <label nz-checkbox formControlName="Enabled">
+                                    <span *ngIf="!!form.value.Enabled">Enabled</span>
+                                    <span *ngIf="!form.value.Enabled">Disabled</span>
+                                </label>
+
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="Schemes">
+                                <nz-select nzMode="multiple" nzPlaceHolder="all Schemes allowed" formControlName="Scheme"
+                                    style="width: 100%;" nzMode="tags">
+                                    <nz-option nzLabel="Http" nzValue="http"></nz-option>
+                                    <nz-option nzLabel="Https" nzValue="https"></nz-option>
+                                </nz-select>
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="Http Methods">
+                                <nz-form-control>
+                                    <nz-select nzMode="multiple" nzPlaceHolder="all Methods allowed"
+                                        formControlName="HttpMethods" style="width: 100%;" nzMode="tags"
+                                        [nzTokenSeparators]="[',']">
+                                        <nz-option nzLabel="Get" nzValue="Get"></nz-option>
+                                        <nz-option nzLabel="Post" nzValue="Post"></nz-option>
+                                        <nz-option nzLabel="Put" nzValue="Put"></nz-option>
+                                        <nz-option nzLabel="Delete" nzValue="Delete"></nz-option>
+                                        <nz-option nzLabel="Patch" nzValue="Patch"></nz-option>
+                                    </nz-select>
+
+                                </nz-form-control>
+
+                            </nz-collapse-panel>
+                        </nz-collapse>
+                    </div>
+                </div>
+            </nz-tab>
+            <nz-tab [nzTitle]="ActionsTitle">
+                <ng-template #ActionsTitle> <i nz-icon nzType="ordered-list"></i>Actions</ng-template>
+                <endpoint-actions-list formControlName="Actions"></endpoint-actions-list>
+            </nz-tab>
+            <nz-tab [nzTitle]="DebugTitle" *ngIf="showDebugInformations$ | async">
+                <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>
+                <div style="height: 100%;">
+                    <pre>{{form.value | json}}</pre>
+                </div>
+            </nz-tab>
+        </nz-tabset>
+    </form>
+
+</ng-container>

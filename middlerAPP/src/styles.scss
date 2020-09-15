@@ -271,3 +271,20 @@ nz-tabset {
   margin-bottom: 0px!important;
   margin-top: 0px!important;
 }
+
+
+.small-padding .ant-collapse-content > .ant-collapse-content-box {
+  padding: 4px !important;
+}
+
+.ant-collapse-header:hover {
+  font-weight: bold;
+}
+
+.ant-collapse-item-active .ant-collapse-header {
+  font-weight: bold;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  transition: all 0.1s;
+}

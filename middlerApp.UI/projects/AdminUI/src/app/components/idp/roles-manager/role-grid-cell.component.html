@@ -1,0 +1,10 @@
+<div class="role" *ngIf="role$ | async; let role">
+
+        <div class="first-row">
+            <div class="displayname">{{role.DisplayName}}</div>
+            <div class="name">({{role.Name}})</div>
+        </div>
+
+        <div class="description">{{role.Description}}</div>
+
+</div>

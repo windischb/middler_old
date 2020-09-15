@@ -56,12 +56,28 @@ namespace middler.Scripting.HttpCommand
 
             }
 
+           
+
             var message = new HttpRequestMessage(httpMethod, requestUri);
 
             if (content != null)
             {
                 message.Content = await CreateHttpContent(content);
             }
+
+            if (Headers.Any())
+            {
+                foreach (var (key, value) in Headers)
+                {
+                    if (message.Headers.Contains(key))
+                    {
+                        message.Headers.Remove(key);
+                    }
+                    message.Headers.Add(key, value);
+
+                }
+            }
+
 
             if (!String.IsNullOrWhiteSpace(ContentType))
             {

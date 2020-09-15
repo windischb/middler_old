@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using middlerApp.API.DataAccess;
 using middlerApp.API.Helper;
+using middlerApp.API.IDP.Services;
 using SignalARRR.Attributes;
 using SignalARRR.Server;
 
@@ -14,10 +16,13 @@ namespace middlerApp.API.HubMethods {
     public class MiddlerRuleHubMethods: ServerMethods<UIHub> {
         
         private readonly EndpointRuleRepository _endpointRuleRepository;
-        
-        public MiddlerRuleHubMethods(IServiceProvider serviceProvider, EndpointRuleRepository endpointRuleRepository)
+
+        public DataEventDispatcher EventDispatcher { get; }
+
+        public MiddlerRuleHubMethods(IServiceProvider serviceProvider, EndpointRuleRepository endpointRuleRepository, DataEventDispatcher eventDispatcher)
         {
             _endpointRuleRepository = endpointRuleRepository;
+            EventDispatcher = eventDispatcher;
         }
 
 
@@ -49,8 +54,9 @@ namespace middlerApp.API.HubMethods {
 
 
         public IObservable<object> Subscribe() {
-            //return _endpointRuleRepository.EventObservable.Select(ev => new MiddlerStorageEventDto(ev.Action, ToDto(ev.Entity)));
-            return null;
+
+            return EventDispatcher.Notifications.Where(ev => ev.Subject == "EndpointRule");
+
         }
 
     }

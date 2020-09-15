@@ -107,7 +107,7 @@ namespace middler.Action.Scripting.Powershell
             //    Character = keyInfo.KeyChar,
             //    ControlKeyState = ctrlKeyState,
             //    KeyDown = false,
-            //    //TODO: Verify this is correct
+            
             //    VirtualKeyCode = (int)keyInfo.Key
             //};
             throw new NotImplementedException();

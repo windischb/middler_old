@@ -8,9 +8,9 @@ using System;
 
 namespace middlerApp.API.IDP.Storage.Entities
 {
-    public class IdentityResourceClaim : UserClaim
-    {
-        public Guid IdentityResourceId { get; set; }
-        public IdentityResource IdentityResource { get; set; }
-    }
+    //public class IdentityResourceClaim : UserClaim
+    //{
+    //    public Guid IdentityResourceId { get; set; }
+    //    public IdentityResource IdentityResource { get; set; }
+    //}
 }

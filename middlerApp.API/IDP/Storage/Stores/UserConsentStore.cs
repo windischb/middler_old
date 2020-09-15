@@ -2,7 +2,7 @@
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
-using middlerApp.API.IDP.Storage.Mappers;
+using middlerApp.API.IDP.Mappers;
 
 namespace middlerApp.API.IDP.Storage.Stores
 {

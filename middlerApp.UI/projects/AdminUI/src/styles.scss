@@ -1,0 +1,62 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin&display=swap");
+
+@import "~@angular/cdk/overlay-prebuilt.css";
+@import "~angular-tree-component/dist/angular-tree-component.css";
+@import "~@doob-ng/grid/style.scss";
+
+@import "../../../shared/styles.scss";
+
+
+ag-grid-angular.no-header .ag-header {
+  display: none!important;
+}
+
+ag-grid-angular.no-scrollbar .ag-center-cols-viewport {
+  overflow-x: hidden!important;
+}
+
+.ag-row-selected .action-column .center db-icon {
+  transform: scale(1.5);
+  transition: .2s;
+}
+
+.action-column:hover i {
+  transform: scale(1.5);
+  transition: .2s;
+}
+
+.action-column {
+  background-color: #525e7614;
+}
+
+.scope-type db-icon {
+  font-size: x-large;
+}
+
+.menu-sidebar li a db-icon {
+  float: right;
+  display: block;
+}
+
+.menu-sidebar li {
+  padding: 0px 8px 0px 16px!important;
+}
+
+.not-confirmed .ag-cell  {
+  opacity: 0.5;
+}
+
+.confirmed {
+  color: darkgreen;
+}
+
+.pValue {
+  text-shadow: 0 0 1px black;
+  background-color: #ecf0f1;
+}
+
+.ag-row-selected .pValue {
+  background-color: inherit;
+}

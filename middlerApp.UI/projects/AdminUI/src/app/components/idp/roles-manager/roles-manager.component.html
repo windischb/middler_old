@@ -1,0 +1,67 @@
+
+
+<div style="display: flex; flex-direction: row; padding:3px; height: 100%;width: 100%;">
+    <div style="flex-grow: 1; display: flex; flex-direction: column;">
+        <h3 style="text-align: center;">Assigned Roles</h3>
+        <ag-grid-angular [dbGrid]="grid" class="ag-theme-balham no-header no-scrollbar"></ag-grid-angular>
+    </div>
+    <div style="width: 30px;">
+
+    </div>
+    <div style="flex-grow: 1; display: flex; flex-direction: column;">
+        <h3 style="text-align: center;">Available Roles</h3>
+        <ag-grid-angular [dbGrid]="availablegrid" class="ag-theme-balham no-header no-scrollbar" ></ag-grid-angular>
+    </div>
+</div>
+
+
+<ng-template #itemsContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="Remove(context.SelectedData)" *ngIf="context.Any">
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            Remove
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #availableContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="Add(context.SelectedData)" *ngIf="context.Any">
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            Add
+        </li>
+    </ul>
+</ng-template>
+
+<!-- <div style="flex-grow: 1; display: flex; position: relative">
+    <ag-grid-angular [dbGrid]="grid" class="ag-theme-balham" cdkDropList></ag-grid-angular>
+    <div class="roles-manager-sidebar" [class.open]="sideBarOpen">
+        <div style="height: 100%; background-color: white;">
+            <add-roles-list [selectedRoles]="roles" (selectedRolesChanged)="RolesChanged($event)" (closeSidebar)="this.sideBarOpen = false"></add-roles-list>
+        </div>
+        
+    </div>
+</div>
+
+<ng-template #viewportContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="AddRole()">
+            <fa-icon nz-icon [icon]="['far', 'plus-square']"></fa-icon>
+            Add Role
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #itemsContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="AddRole()">
+            <fa-icon nz-icon [icon]="['far', 'plus-square']"></fa-icon>
+            Add Role
+        </li>
+        <li nz-menu-item (click)="RemoveRole(context.SelectedData)" *ngIf="context.Any">
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            Delete
+        </li>
+    </ul>
+</ng-template> -->
+

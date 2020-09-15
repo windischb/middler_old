@@ -13,7 +13,7 @@ namespace middlerApp.API.IDP.Storage.Entities
 
         public string ClientId { get; set; }
 
-        public IEnumerable<string> Scopes { get; set; }
+        public string Scopes { get; set; }
 
         public DateTime CreationTime { get; set; }
 

@@ -1,16 +1,24 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using middler.Action.Scripting;
 using middler.Action.Scripting.Powershell;
@@ -23,11 +31,14 @@ using middlerApp.API.DataAccess;
 using middlerApp.API.ExtensionMethods;
 using middlerApp.API.Helper;
 using middlerApp.API.IDP;
+using middlerApp.API.IDP.Services;
 using middlerApp.API.JsonConverters;
+using middlerApp.API.Middleware;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using SignalARRR.Server;
 using SignalARRR.Server.ExtensionMethods;
 
 
@@ -50,7 +61,8 @@ namespace middlerApp.API
             var sConfig = Configuration.Get<StartUpConfiguration>();
             sConfig.SetDefaultSettings();
 
-            services.AddControllers(options =>
+           
+            services.AddMvc(options =>
             {
 
 
@@ -65,8 +77,10 @@ namespace middlerApp.API
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
+            //services.AddSingleton<PartialViewResultExecutor>();
+
             services.AddResponseCompression();
-            services.AddSpaStaticFiles(conf => conf.RootPath = PathHelper.GetFullPath(sConfig.AdminSettings.WebRoot));
+            services.AddSpaStaticFiles();
 
 
 
@@ -76,9 +90,26 @@ namespace middlerApp.API
                 options.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
                 options.PayloadSerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
+
+
+            //services.AddScoped<IAuthenticator, OAuthAuthenticator>();
             services.AddSignalARRR();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+           
+
+            services.AddMiddlerIdentityServer(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp", sql => sql.MigrationsAssembly(this.GetType().Assembly.FullName)));
+            //services.AddAuthentication();
+
+            //services.AddSingleton<ICorsPolicyService>((container) => {
+            //    var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
+            //    return new DefaultCorsPolicyService(logger)
+            //    {
+            //        AllowAll = true
+                    
+            //    };
+            //});
 
             services.AddMiddler(options =>
                 options
@@ -88,9 +119,9 @@ namespace middlerApp.API
 
             );
 
-            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp"));
+            services.AddDbContext<APPDbContext>(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp"));
 
-            //services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Filename=MyDatabase.db"), ServiceLifetime.Scoped);
+            
 
             services.AddScoped<EndpointRuleRepository>();
 
@@ -99,28 +130,29 @@ namespace middlerApp.API
             services.AddScoped<IVariablesRepository, VariablesRepository>();
 
 
-            services.AddMiddlerIdentityServer(opt => opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = MiddlerApp", sql => sql.MigrationsAssembly(this.GetType().Assembly.FullName)));
+           
 
-            //services.AddNamedMiddlerRepo("litedb", sp =>
-            //{
-            //    var path = PathHelper.GetFullPath(sConfig.EndpointRulesSettings.DbFilePath);
-            //    return new LiteDBRuleRepository($"Filename={path}");
-            //});
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
 
-            //services.AddSingleton(sp =>
-            //{
-            //    var path = PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.DbFilePath);
-            //    return new VariableStore($"Filename={path}");
-            //    StoreConfig b = new StoreConfigBuilder().UseRootPath(PathHelper.GetFullPath(sConfig.GlobalVariablesSettings.RootPath));
-            //    return new VariablesStore(b);
-            //});
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                //options.ForwardLimit = 4;
+                //options.KnownProxies.Add(IPAddress.Parse("127.0.10.1"));
+                //options.ForwardedForHeaderName = "X-Forwarded-For-My-Custom-Header-Name";
+                options.ForwardedHeaders =  ForwardedHeaders.All;
+            });
+
+
+           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> _logger)
         {
 
-
+            app.UseForwardedHeaders();
             app.UseResponseCompression();
 
 
@@ -133,70 +165,11 @@ namespace middlerApp.API
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseWhen(context => context.IsIdpAreaRequest(), ConfigureIDP);
 
-           
+            app.UseWhen(context => context.IsAdminAreaRequest(), ConfigureAdministration);
 
-            app.UseSerilogRequestLogging(options =>
-            {
-                options.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
-                options.MessageTemplate =
-                    "[{RequestMethod}] {RequestPath} | {User} | {StatusCode} in {Elapsed:0.0000} ms";
-            });
-
-            app.UseMiddlerIdentityServer();
-
-            app.UseWhen(context => context.IsAdminAreaRequest(), builder =>
-            {
-
-
-
-                builder.UseRouting();
-
-                builder.UseEndpoints(endpoints =>
-                {
-
-                    endpoints.MapControllersWithAttribute<AdminControllerAttribute>();
-                    endpoints.MapHub<UIHub>("/signalr/ui");
-
-                });
-
-
-                //builder.UseDefaultFiles();
-                builder.UseStaticFiles(new StaticFileOptions()
-                {
-                    OnPrepareResponse = ctx =>
-                    {
-                        if (ctx.Context.Request.Path.ToString() == "/index.html")
-                        {
-                            var headers = ctx.Context.Response.GetTypedHeaders();
-                            headers.CacheControl = new CacheControlHeaderValue
-                            {
-                                Public = true,
-                                MaxAge = TimeSpan.FromDays(0)
-                            };
-                        }
-                    }
-                });
-
-                builder.UseSpa(spa =>
-                {
-
-                });
-
-            });
-
-
-            app.UseWhen(context => !context.IsAdminAreaRequest(), builder =>
-            {
-                builder.UseRouting();
-                builder.UseMiddler(map =>
-                {
-                    map.AddRepo<EFCoreMiddlerRepository>();
-                    //map.AddNamedRepo("litedb");
-                });
-
-            });
-
+            app.UseWhen(context => !context.IsAdminAreaRequest() && !context.IsIdpAreaRequest(),ConfigureMiddler);
 
             app.Run(async context =>
             {
@@ -205,6 +178,62 @@ namespace middlerApp.API
 
 
 
+        }
+
+      
+        public void ConfigureIDP(IApplicationBuilder app)
+        {
+            app.AddLogging();
+
+            app.UseRouting();
+
+            app.UseIdentityServer();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllersWithAttribute<IdPControllerAttribute>();
+
+            });
+
+            app.UseMiddlerSpaUI(Static.StartUpConfiguration.IdpSettings.WebRoot);
+        }
+
+        public void ConfigureAdministration(IApplicationBuilder app)
+        {
+            app.AddLogging();
+            
+            app.UseRouting();
+            app.UseSignalARRRAccessTokenValidation();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            
+            app.UseMiddleware<LogClaimsMiddleware>();
+
+
+            app.UseEndpoints(endpoints =>
+            {
+
+                endpoints.MapControllersWithAttribute<AdminControllerAttribute>();
+                endpoints.MapHub<UIHub>("/signalr/ui");
+
+            });
+
+            app.UseMiddlerSpaUI(Static.StartUpConfiguration.AdminSettings.WebRoot);
+        }
+
+        public void ConfigureMiddler(IApplicationBuilder app)
+        {
+            app.AddLogging();
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseMiddler(map =>
+            {
+                map.AddRepo<EFCoreMiddlerRepository>();
+            });
         }
     }
 }

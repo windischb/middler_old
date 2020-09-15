@@ -5,7 +5,7 @@
 using AutoMapper;
 using middlerApp.API.IDP.Storage.Entities;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
 
     public static class AuthorizationCodeMapper
@@ -19,7 +19,7 @@ namespace middlerApp.API.IDP.Storage.Mappers
         internal static IMapper Mapper { get; }
 
 
-        public static IdentityServer4.Models.AuthorizationCode ToModel(this Entities.AuthorizationCode entity)
+        public static IdentityServer4.Models.AuthorizationCode ToModel(this Storage.Entities.AuthorizationCode entity)
         {
             return entity == null ? null : Mapper.Map<IdentityServer4.Models.AuthorizationCode>(entity);
         }

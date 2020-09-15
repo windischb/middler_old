@@ -1,0 +1,10 @@
+<div class="scope" *ngIf="scope$ | async; let scope">
+
+        <div class="first-row">
+            <div class="displayname">{{scope.DisplayName}}</div>
+            <div class="name">({{scope.Name}})</div>
+        </div>
+
+        <div class="description">{{scope.Description}}</div>
+
+</div>

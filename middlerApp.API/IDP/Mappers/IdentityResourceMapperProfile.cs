@@ -3,10 +3,11 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using middlerApp.API.IDP.DtoModels;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Defines entity/model mapping for identity resources.
@@ -19,23 +20,24 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         public IdentityResourceMapperProfile()
         {
-            CreateMap<Entities.IdentityResourceProperty, KeyValuePair<string, string>>()
-                .ReverseMap();
+            //CreateMap<Storage.Entities.IdentityResourceProperty, KeyValuePair<string, string>>()
+            //    .ReverseMap();
 
-            CreateMap<Entities.IdentityResource, IdentityServer4.Models.IdentityResource>(MemberList.Destination)
+            CreateMap<Storage.Entities.Scope, IdentityServer4.Models.IdentityResource>(MemberList.Destination)
+                .ForMember(dest => dest.UserClaims, opts => opts.MapFrom(x => x.UserClaims.Select(u => u.Type)))
                 .ConstructUsing(src => new IdentityServer4.Models.IdentityResource())
                 .ReverseMap();
 
-            CreateMap<Entities.IdentityResourceClaim, string>()
-               .ConstructUsing(x => x.Type)
-               .ReverseMap()
-               .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src));
+            //CreateMap<Storage.Entities.IdentityResourceClaim, string>()
+            //   .ConstructUsing(x => x.Type)
+            //   .ReverseMap()
+            //   .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.IdentityResource, MIdentityResourceListDto>();
+            CreateMap<Storage.Entities.Scope, MScopeListDto>();
 
-            CreateMap<Entities.IdentityResource, MIdentityResourceDto>();
+            CreateMap<Storage.Entities.Scope, MScopeDto>();
 
-            CreateMap<MIdentityResourceDto, Entities.IdentityResource>();
+            CreateMap<MScopeDto, Storage.Entities.Scope>();
         }
     }
 }

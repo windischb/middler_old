@@ -28,6 +28,7 @@ namespace middlerApp.API.IDP.DtoModels
 
         public DateTime? ExpiresOn { get; set; }
 
+        public bool HasPassword { get; set; }
 
         public bool Active { get; set; }
 

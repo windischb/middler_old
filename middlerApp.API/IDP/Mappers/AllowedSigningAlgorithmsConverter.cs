@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     class AllowedSigningAlgorithmsConverter : 
         IValueConverter<ICollection<string>, string>,

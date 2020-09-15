@@ -1,0 +1,25 @@
+
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham" [class.no-header]="!header" [class.no-scrollbar]="noScrollbar"></ag-grid-angular>
+
+
+<ng-template #viewportContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="AddEntry()">
+            <fa-icon nz-icon [icon]="['far', 'plus-square']"></fa-icon>
+            Add Entry
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #itemsContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="AddEntry()">
+            <fa-icon nz-icon [icon]="['far', 'plus-square']"></fa-icon>
+            Add Entry
+        </li>
+        <li nz-menu-item (click)="RemoveEntry(context.SelectedData)" *ngIf="context.Any">
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            Delete
+        </li>
+    </ul>
+</ng-template>

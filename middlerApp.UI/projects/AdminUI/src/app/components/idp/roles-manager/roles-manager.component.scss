@@ -1,0 +1,13 @@
+:host {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+}
+
+.ag-theme-balham .scopes-manager-list {
+  height: 100%;
+}
+
+.ag-center-cols-viewport::ng-deep {
+  overflow-x: hidden!important;
+}

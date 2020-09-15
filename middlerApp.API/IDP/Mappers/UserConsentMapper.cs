@@ -5,7 +5,7 @@
 using AutoMapper;
 using middlerApp.API.IDP.Storage.Entities;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
 
     public static class UserConsentMapper

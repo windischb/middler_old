@@ -1,0 +1,116 @@
+<div *ngIf="form; else loading">
+
+    <div style="padding: 48px 32px;">
+        <div class="ant-result-title"> middler Admin UI </div>
+        <div class="ant-result-subtitle">
+            <div style="font-size: small; color: grey;">is requesting your permission</div>
+        </div>
+    </div>
+
+    <form [formGroup]="form" novalidate class="ui form container maxwidth-800">
+
+        <div dbCheckboxGroup formControlName="ScopesConsented" returnType="array">
+
+
+
+            <div *ngIf="viewModel.IdentityScopes?.length > 0" style="padding-bottom: 20px;">
+                <nz-card nzType="inner" [nzTitle]="pTitle" [nzExtra]="pExtra">
+                    <ng-template #pTitle>
+                        <div>
+                            Personal Information
+                        </div>
+
+                    </ng-template>
+                    <ng-template #pExtra>
+                        <db-icon icon="fa#address-card" theme="far"></db-icon>
+                    </ng-template>
+
+
+                    <div *ngFor="let scope of viewModel.IdentityScopes">
+
+                        <div class="header">
+                            <label nz-checkbox [nzValue]="scope.Value" [nzDisabled]="scope.Required">
+                                {{scope.DisplayName || scope.Value}}<span *ngIf="scope.Required"
+                                    style="font-size: x-small; padding-left: 5px">(required)</span>
+                            </label>
+                        </div>
+                        <div class="description cursor-default" *ngIf="scope.Description">
+                            {{scope.Description}}
+                        </div>
+
+                    </div>
+
+
+
+                </nz-card>
+
+
+            </div>
+
+
+            <div *ngIf="viewModel.ApiScopes?.length > 0" style="padding-bottom: 20px;">
+                <nz-card nzType="inner" [nzTitle]="pTitle" [nzExtra]="pExtra">
+                    <ng-template #pTitle>
+                        <div>
+                            Application Access
+                        </div>
+
+                    </ng-template>
+                    <ng-template #pExtra>
+                        <db-icon icon="fa#desktop"></db-icon>
+                    </ng-template>
+                    <div *ngFor="let scope of viewModel.ApiScopes">
+
+                        <div class="header">
+                            <label nz-checkbox [nzValue]="scope.Value" [nzDisabled]="scope.Required">
+                                {{scope.DisplayName || scope.Value}}<span *ngIf="scope.Required"
+                                    style="font-size: x-small; padding-left: 5px">(required)</span>
+                            </label>
+                        </div>
+                        <div class="description cursor-default" *ngIf="scope.Description">
+                            {{scope.Description}}
+                        </div>
+
+                    </div>
+                </nz-card>
+            </div>
+        </div>
+
+
+
+        <div style="display: flex; padding:0px 10px">
+
+            <!-- <div class="ui checkbox cursor-pointer" style="float: left; margin-top: 10px" *ngIf="viewModel.AllowRememberConsent">
+                <label nz-checkbox> {{scope.DisplayName || scope.Value}} </label>
+
+                <input type="checkbox">
+                <label class="cursor-pointer">Remember My Decision</label>
+            </div> -->
+
+            <!-- <xa-switch style="float: left; margin-top: 10px" formControlName="RememberConsent">Remember My Decision</xa-switch> -->
+
+            <nz-switch nzSize="small" formControlName="RememberConsent"></nz-switch>
+            <div class="cursor-pointer" style="padding-left:10px" (click)="toggleRemember()">Remember My Decision</div>
+            <div style="flex-grow: 1;"></div>
+            <button nz-button nzType="primary" (click)="Submit('yes')">
+                Yes, allow
+            </button>
+
+            <button nz-button (click)="Submit('no')">
+                No, do not allow
+            </button>
+        </div>
+
+
+    </form>
+    <!-- <pre *xaIfDebug>{{form.value | json}}</pre>
+    <pre *xaIfDebug>{{viewModel | json}}</pre> -->
+</div>
+
+
+
+<ng-template #loading>
+    <div class="ui active inverted dimmer">
+        <div class="ui massive text loader">Loading</div>
+    </div>
+</ng-template>

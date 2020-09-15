@@ -42,9 +42,10 @@ namespace middler.Action.Scripting.Powershell
             return Converter.Json.ToJson(value);
         }
 
-        public async Task Execute(string script)
+        public Task Execute(string script)
         {
             _psEngine.Invoke(script);
+            return Task.CompletedTask;
         }
 
         public string Invoke(string script)

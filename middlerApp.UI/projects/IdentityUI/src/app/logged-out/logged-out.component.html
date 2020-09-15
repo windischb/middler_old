@@ -1,0 +1,9 @@
+<nz-result nzStatus="success" nzTitle="You are logged out.">
+  <div nz-result-subtitle>
+    <div *ngIf="logOutModel.PostLogoutRedirectUri" class="">
+      Click <a [href]="logOutModel.PostLogoutRedirectUri">here</a> to return to the
+      <a [href]="logOutModel.PostLogoutRedirectUri">{{logOutModel.ClientName}}</a> application.
+    </div>
+
+  </div>
+</nz-result>

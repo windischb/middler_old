@@ -5,7 +5,7 @@
 using AutoMapper;
 using middlerApp.API.IDP.Storage.Entities;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Extension methods to map to/from entity/model for API resources.

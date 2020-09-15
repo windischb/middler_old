@@ -17,6 +17,16 @@ namespace middlerApp.API.ExtensionMethods
 
         }
 
-        
+        public static bool IsIdpAreaRequest(this HttpContext httpContext)
+        {
+
+            var config = httpContext.RequestServices.GetRequiredService<IConfiguration>().Get<StartUpConfiguration>();
+
+            var isAdmin = httpContext.Connection.LocalPort == config.IdpSettings.HttpsPort;
+            return isAdmin;
+
+        }
+
+
     }
 }

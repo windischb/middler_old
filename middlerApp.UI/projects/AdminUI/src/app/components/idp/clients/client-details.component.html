@@ -1,0 +1,376 @@
+<ng-container *ngIf="(user$ | async); let user">
+
+
+    <form nzNoColon nz-form [formGroup]="form"
+        style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}">
+            <nz-tab [nzTitle]="BasicTitle">
+                <ng-template #BasicTitle>
+                    <i nz-icon nzType="container"></i>Basic Configuration
+                </ng-template>
+                <div style="display: flex; flex-direction: row; padding:3px">
+                    <div style="flex-grow: 1;">
+
+                        <div nz-row [nzGutter]="8">
+
+                            <div nz-col nzSpan="7">
+                                <nz-form-label nzRequired nzFor="ClientId">ClientId</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="ClientId" id="ClientId" style="flex-grow: 1;" />
+                                </nz-form-control>
+                            </div>
+
+                            <div nz-col nzSpan="17">
+                                <nz-form-label nzRequired nzFor="ClientName">ClientName</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="ClientName" id="ClientName" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+
+                        </div>
+
+                        <!-- <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzRequired nzFor="ClientName">ClientName</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="ClientName" id="ClientName" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                        </div> -->
+
+
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzFor="Description">Description</nz-form-label>
+                                <nz-form-control>
+                                    <textarea nz-input formControlName="Description" id="Description"
+                                        [nzAutosize]="{ minRows: 4, maxRows: 12 }"></textarea>
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzFor="Description">Client Secrets</nz-form-label>
+                                <nz-form-control>
+                                    <secrets-manager formControlName="ClientSecrets" style="height: 200px;">
+                                    </secrets-manager>
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="width: 10px;margin-right: 10px;">
+
+                    </div>
+                    <div style="width: 30%;">
+                        <nz-collapse [nzBordered]="true" nzAccordion>
+                            <nz-collapse-panel nzHeader="Options" [nzActive]="true">
+                                <label nz-checkbox formControlName="Enabled">
+                                    Enabled
+                                </label>
+                                <br />
+                                <label nz-checkbox formControlName="RequireClientSecret">
+                                    Require Client Secret
+                                </label>
+                                <br />
+                                <label nz-checkbox formControlName="RequirePkce">
+                                    Require Pkce
+                                </label>
+                                <br />
+                                <label nz-checkbox formControlName="AllowPlainTextPkce">
+                                    Allow PlainText Pkce
+                                </label>
+                                <br />
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="AllowedGrantTypes" dbCheckboxGroup
+                                formControlName="AllowedGrantTypes" returnType="array">
+                                <label nz-checkbox nzValue="implicit">
+                                    Implicit
+                                </label>
+                                <br />
+                                <label nz-checkbox nzValue="hybrid">
+                                    Hybrid
+                                </label>
+                                <br />
+                                <label nz-checkbox nzValue="authorization_code">
+                                    Authorization Code
+                                </label>
+                                <br />
+                                <label nz-checkbox nzValue="client_credentials">
+                                    Client Credentials
+                                </label>
+                                <br />
+                                <label nz-checkbox nzValue="password">
+                                    Resource Owner Password
+                                </label>
+                                <br />
+                                <label nz-checkbox nzValue="urn:ietf:params:oauth:grant-type:device_code">
+                                    Device Flow
+                                </label>
+                                <br />
+
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="Token Options" class="tokenOptionsPanel">
+
+                                <nz-form-label>AccessTokenType</nz-form-label>
+                                <nz-form-control>
+                                    <nz-select formControlName="AccessTokenType">
+                                        <nz-option nzValue="Reference" nzLabel="Reference"></nz-option>
+                                        <nz-option nzValue="Jwt" nzLabel="JWT"></nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                                <nz-form-label>RefreshTokenUsage</nz-form-label>
+                                <nz-form-control>
+                                    <nz-select formControlName="RefreshTokenUsage">
+                                        <nz-option nzValue="OneTimeOnly" nzLabel="OneTimeOnly"></nz-option>
+                                        <nz-option nzValue="ReUse" nzLabel="ReUse"></nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                                <nz-form-label>RefreshTokenExpiration</nz-form-label>
+                                <nz-form-control>
+                                    <nz-select formControlName="RefreshTokenExpiration">
+                                        <nz-option nzValue="Absolute" nzLabel="Absolute"></nz-option>
+                                        <nz-option nzValue="Sliding" nzLabel="Sliding"></nz-option>
+                                    </nz-select>
+                                </nz-form-control>
+                                <br />
+                                <label nz-checkbox formControlName="AllowAccessTokensViaBrowser">
+                                    Allow AccessTokens via Browser
+                                </label>
+                                <br />
+
+                            </nz-collapse-panel>
+                        </nz-collapse>
+                    </div>
+                </div>
+            </nz-tab>
+
+            <nz-tab [nzTitle]="ConsentTitle">
+                <ng-template #ConsentTitle>
+                    <i nz-icon nzType="container"></i>Consent Settings
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: row; padding:3px">
+                        <div style="flex-grow: 1;">
+
+                            <div nz-row [nzGutter]="8">
+                                <div nz-col nzSpan="24">
+                                    <nz-form-label nzFor="ClientUri">ClientUri</nz-form-label>
+                                    <nz-form-control>
+                                        <input nz-input formControlName="ClientUri" id="ClientUri"
+                                            style="width: 100%;" />
+                                    </nz-form-control>
+                                </div>
+                            </div>
+
+                            <div nz-row [nzGutter]="8">
+                                <div nz-col nzSpan="24">
+                                    <nz-form-label nzFor="LogoUri">LogoUri</nz-form-label>
+                                    <nz-form-control>
+                                        <input nz-input formControlName="LogoUri" id="LogoUri" style="width: 100%;" />
+                                    </nz-form-control>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 10px;margin-right: 10px;">
+
+                        </div>
+                        <div style="width: 30%;">
+                            <nz-collapse [nzBordered]="true">
+                                <nz-collapse-panel nzHeader="Options" [nzActive]="true">
+                                    <label nz-checkbox formControlName="RequireConsent">
+                                        Require Consent
+                                    </label>
+                                    <br />
+                                    <label nz-checkbox formControlName="AllowRememberConsent">
+                                        Allow Remember Consent
+                                    </label>
+                                    <br />
+                                </nz-collapse-panel>
+                                <nz-collapse-panel nzHeader="Consent Lifetime" [nzActive]="true">
+                                    <nz-input-number formControlName="ConsentLifetime" [nzStep]="1"
+                                        style="width: 100%;"></nz-input-number>
+                                    <span>Lifetime of a user consent in seconds. Defaults to null (no
+                                        expiration).</span>
+                                </nz-collapse-panel>
+                            </nz-collapse>
+                        </div>
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="ScopesTitle">
+                <ng-template #ScopesTitle>
+                    <i nz-icon nzType="container"></i>AllowedScopes
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: row; padding:3px; height: 100%;width: 100%;">
+
+                        <scopes-manager formControlName="AllowedScopes">
+                        </scopes-manager>
+
+                    </div>
+
+
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="UrisTitle">
+                <ng-template #UrisTitle>
+                    <i nz-icon nzType="container"></i>Configure URIs
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: column; flex-grow:1; padding-bottom: 3px;">
+
+
+                        <simple-list style="height: 100%; padding-top:3px; flex-grow:1; min-height: 200px;" header="Redirect Uri's"
+                            formControlName="RedirectUris" no-scrollbar>
+                        </simple-list>
+
+
+
+                        <simple-list style="height: 100%; padding-top:3px; flex-grow:1; min-height: 200px;" header="Post Logout Redirect Uri's"
+                            formControlName="PostLogoutRedirectUris" no-scrollbar>
+                        </simple-list>
+
+
+
+                        <simple-list style="height: 100%; padding-top:3px; flex-grow:1; min-height: 200px;" header="Allowed Cors Origins"
+                            formControlName="AllowedCorsOrigins" no-scrollbar>
+                        </simple-list>
+
+
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="ClaimsTitle">
+                <ng-template #ClaimsTitle>
+                    <i nz-icon nzType="container"></i>Claims
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: row; padding:3px; flex-grow:1">
+
+                        <div style="display: flex; flex-direction: row; flex-grow:1">
+                            <claims-manager formControlName="Claims"></claims-manager>
+                        </div>
+                        <div style="width: 10px;margin-right: 10px;">
+
+                        </div>
+                        <div style="width: 25%;">
+                            <nz-collapse [nzBordered]="true">
+                                <nz-collapse-panel nzHeader="Options" [nzActive]="true">
+
+                                    <label nz-checkbox formControlName="AlwaysSendClientClaims">
+                                        Always Send Client Claims
+                                    </label>
+                                    <br />
+                                    <label nz-checkbox formControlName="AlwaysIncludeUserClaimsInIdToken">
+                                        Always Include User Claims In IdToken
+                                    </label>
+                                    <br />
+                                    <label nz-checkbox formControlName="UpdateAccessTokenClaimsOnRefresh">
+                                        Update AccessToken Claims On Refresh
+                                    </label>
+                                    <br />
+                                </nz-collapse-panel>
+                                <nz-collapse-panel nzHeader="Client Claims Prefix">
+                                    <nz-form-control>
+                                        <input nz-input formControlName="ClientClaimsPrefix" id="ClientClaimsPrefix"
+                                            style="width: 100%;" />
+                                    </nz-form-control>
+                                </nz-collapse-panel>
+                            </nz-collapse>
+                        </div>
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="AdvancedTitle">
+                <ng-template #AdvancedTitle>
+                    <i nz-icon nzType="container"></i>Advanced Settings
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: column; padding:3px 0px; flex-grow:1">
+                        <nz-collapse [nzBordered]="true" class="bold-header">
+
+                            <nz-collapse-panel nzHeader="Lifetime Options (in seconds)" [nzActive]="true">
+                                <table class="ui table compact">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 200px">
+
+                                            </th>
+                                            <th style="width: 300px"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>IdentityToken</td>
+                                            <td>
+                                                <nz-input-number formControlName="IdentityTokenLifetime" [nzStep]="1"
+                                                    style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>AccessToken</td>
+                                            <td>
+                                                <nz-input-number formControlName="AccessTokenLifetime" [nzStep]="1"
+                                                    style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>AuthorizationCode</td>
+                                            <td>
+                                                <nz-input-number formControlName="AuthorizationCodeLifetime"
+                                                    [nzStep]="1" style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>AbsoluteRefreshToken</td>
+                                            <td>
+                                                <nz-input-number formControlName="AbsoluteRefreshTokenLifetime"
+                                                    [nzStep]="1" style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SlidingRefreshToken</td>
+                                            <td>
+                                                <nz-input-number formControlName="SlidingRefreshTokenLifetime"
+                                                    [nzStep]="1" style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>UserSsoLifetime</td>
+                                            <td>
+                                                <nz-input-number formControlName="UserSsoLifetime" [nzStep]="1"
+                                                    style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>DeviceCodeLifetime</td>
+                                            <td>
+                                                <nz-input-number formControlName="DeviceCodeLifetime" [nzStep]="1"
+                                                    style="width: 100%;"></nz-input-number>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </nz-collapse-panel>
+                        </nz-collapse>
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="DebugTitle" *ngIf="showDebugInformations$ | async">
+                <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>
+                <div style="height: 100%;">
+                    <pre>{{form.value | json}}</pre>
+                </div>
+            </nz-tab>
+        </nz-tabset>
+
+    </form>
+
+</ng-container>
+
+<ng-template dbPortalTemplate="Header-Outlet-Right">
+    <button nz-button (click)="Reload()"><i nz-icon nzType="sync"></i>Reload</button>
+</ng-template>

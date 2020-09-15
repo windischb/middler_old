@@ -29,7 +29,7 @@ namespace middlerApp.API.HubMethods
         }
 
 
-        public async Task<List<MIdentityResourceListDto>> GetIdentityResourcesList()
+        public async Task<List<MScopeListDto>> GetIdentityResourcesList()
         {
             var resources = await IdentityResourcesService.GetAllIdentityResourceDtosAsync();
             return resources;

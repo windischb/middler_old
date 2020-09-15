@@ -1,0 +1,83 @@
+<!-- Das gibts hier
+<table class="ui selectable celled table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Extension</th>
+            <th>CreatedAt</th>
+            <th>UpdatedAt</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of Items">
+            <td>{{item.Name}}</td>
+            <td>{{item.Extension}}</td>
+            <td>{{item.CreatedAt | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            <td>{{item.UpdatedAt | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+        </tr>
+    </tbody>
+</table> -->
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham"></ag-grid-angular>
+
+<ng-template #itemsContextMenu let-context>
+
+    <!-- <db-menu class="secondary context-menu">
+        <db-header *ngIf="context.Single">{{context.First.Name}}</db-header>
+        <a db-item *ngIf="context.Single" icon="edit" (click)="OpenEditVariableModal(context.First)" >Edit</a>
+        <a db-item *ngIf="context.Any" icon="trash alternate outline" (click)="RemoveVariable(context.SelectedData)">Delete</a>
+        <db-subitem name="New" on='hover'>
+            <db-item (click)="createVariable('string')">String</db-item>
+            <db-item (click)="createVariable('number')">Number</db-item>
+            <db-item (click)="createVariable('boolean')">Boolean</db-item>
+            <db-item (click)="createVariable('credential')">Credential</db-item>
+            <db-item (click)="createVariable('raw')">Raw</db-item>
+        </db-subitem>
+        <a db-item *ngIf="context.Single" icon="edit" (click)="OpenEditVariableModal(context.First, true)" >EditRaw</a>
+    </db-menu> -->
+
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <div class="context-menu-header" *ngIf="context.Single">
+            {{context.First.Name}}
+        </div>
+        <li nz-menu-item (click)="OpenEditVariableModal(context.First)" *ngIf="context.Single">
+            <!-- <i nz-icon nzType="edit" nzTheme="outline"></i> -->
+            <db-icon icon="edit"></db-icon>
+            Edit
+        </li>
+        <li nz-menu-item (click)="RemoveVariable(context.SelectedData)" *ngIf="context.Any">
+            <!-- <i nz-icon nzType="delete" nzTheme="outline"></i> -->
+            <db-icon icon="delete"></db-icon>
+            Delete
+        </li>
+        <li nz-menu-divider></li>
+        <li nz-submenu nzTitle="New Variable" nzIcon="field-binary">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="createVariable('string')">String</li>
+                <li nz-menu-item (click)="createVariable('number')">Number</li>
+                <li nz-menu-item (click)="createVariable('boolean')">Boolean</li>
+                <li nz-menu-item (click)="createVariable('credential')">Credential</li>
+                <li nz-menu-item (click)="createVariable('raw')">Raw</li>
+            </ul>
+        </li>
+        <li nz-menu-divider *ngIf="context.Single && context.IsShiftPressed"></li>
+        <li nz-menu-item (click)="OpenEditVariableModal(context.First, true)" *ngIf="context.Single && context.IsShiftPressed">
+            Edit Raw
+        </li>
+    </ul>
+</ng-template>
+
+
+<ng-template #viewportContextMenu let-context>
+
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-submenu nzTitle="New Variable" nzIcon="field-binary">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="createVariable('string')">String</li>
+                <li nz-menu-item (click)="createVariable('number')">Number</li>
+                <li nz-menu-item (click)="createVariable('boolean')">Boolean</li>
+                <li nz-menu-item (click)="createVariable('credential')">Credential</li>
+                <li nz-menu-item (click)="createVariable('raw')">Raw</li>
+            </ul>
+        </li>
+    </ul>
+</ng-template>

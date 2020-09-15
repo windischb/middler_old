@@ -10,8 +10,8 @@ namespace middlerApp.API.IDP.Storage.Entities
 {
     public class ClientScope
     {
-        public Guid Id { get; set; }
-        public string Scope { get; set; }
+        public Guid ScopeId { get; set; }
+        public Scope Scope { get; set; }
 
         public Guid ClientId { get; set; }
         public Client Client { get; set; }

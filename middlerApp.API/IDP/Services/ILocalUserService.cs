@@ -36,6 +36,9 @@ namespace middlerApp.API.IDP.Services
         Task<bool> SetPassword(
             string securityCode,
             string password);
+
+        Task<bool> SetPassword(Guid id, string password);
+
         Task<MUser> GetUserByExternalProvider(
             string provider,
             string providerIdentityKey);
@@ -57,6 +60,8 @@ namespace middlerApp.API.IDP.Services
         Task<bool> UserHasRegisteredTotpSecret(
             string subject);
 
+
+        public Task<bool> ClearPassword(Guid id);
 
         //Task<List<MUser>> GetAllUsersAsync();
         //Task<MUser> GetUserByIdAsync(Guid id);

@@ -36,7 +36,7 @@ namespace middlerApp.API.IDP.DtoModels
         public string BackChannelLogoutUri { get; set; }
         public bool BackChannelLogoutSessionRequired { get; set; } = true;
         public bool AllowOfflineAccess { get; set; }
-        public List<string> AllowedScopes { get; set; }
+        public List<MScopeDto> AllowedScopes { get; set; } = new List<MScopeDto>();
         public int IdentityTokenLifetime { get; set; } = 300;
         public string AllowedIdentityTokenSigningAlgorithms { get; set; }
         public int AccessTokenLifetime { get; set; } = 3600;

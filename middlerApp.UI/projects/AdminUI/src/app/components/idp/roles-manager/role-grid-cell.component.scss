@@ -1,0 +1,23 @@
+
+.displayname {
+    font-weight: bold;
+    padding-right: 4px;
+}
+
+.name {
+    font-size: x-small;
+}
+
+.description {
+    font-size: smaller;
+    line-height: normal;
+}
+
+.role {
+    // padding: 5px 0px;
+    height: 50px;
+}
+
+.first-row {
+    display: flex
+}

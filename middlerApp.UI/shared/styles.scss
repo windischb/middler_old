@@ -1,0 +1,284 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin&display=swap");
+
+
+.ant-menu-vertical .ant-menu-item::after,
+.ant-menu-vertical-left .ant-menu-item::after,
+.ant-menu-vertical-right .ant-menu-item::after,
+.ant-menu-inline .ant-menu-item::after {
+  border-right: none;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #c0c4cd;
+}
+
+.ant-menu-item-selected {
+  text-shadow: 0 0 1px black;
+}
+
+.ant-menu-item > a:hover {
+  text-shadow: 0 0 1px black;
+}
+
+.ant-menu-item-selected > a,
+.ant-menu-item-selected > a:hover {
+  color: #292f3b;
+}
+
+.ant-menu-submenu-selected {
+  color: #292f3b;
+}
+.ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+}
+.ant-layout {
+  overflow: hidden;
+}
+
+.inner-content > ng-component {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.inner-content.scrollable > ng-component {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scrollable {
+  overflow-y: auto;
+}
+
+.main-content > div.ui > ng-component {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.context-menu {
+  min-width: 200px;
+  box-shadow: 2px 2px 4px 1px rgba(82, 94, 118, 0.7) !important;
+  // background-color: #f5f5f5!important;
+  border: 1px solid #f5f5f5 !important;
+}
+
+.context-menu .ant-menu-item,
+.context-menu .ant-menu-submenu-title {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  font-size: 0.85rem !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+
+.context-menu .ant-menu-item:hover,
+.context-menu .ant-menu-submenu-title:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.context-menu-header {
+  background-color: #525e76 !important;
+  color: #fff !important;
+  height: 34px;
+  line-height: 34px;
+  font-size: 1.1em;
+  padding-left: 1em;
+  font-weight: bold;
+}
+
+.ui.container {
+  display: block;
+  max-width: 100%;
+}
+
+fa-icon.anticon {
+  vertical-align: 0px;
+}
+
+@media only screen and (max-width: 767.98px) {
+  .ui.ui.ui.container:not(.fluid) {
+    width: auto;
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  .ui.ui.ui.grid.container,
+  .ui.ui.ui.relaxed.grid.container,
+  .ui.ui.ui.very.relaxed.grid.container {
+    width: auto;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991.98px) {
+  .ui.ui.ui.container:not(.fluid) {
+    width: 723px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ui.ui.ui.grid.container {
+    width: calc(723px + 2rem);
+  }
+  .ui.ui.ui.relaxed.grid.container {
+    width: calc(723px + 3rem);
+  }
+  .ui.ui.ui.very.relaxed.grid.container {
+    width: calc(723px + 5rem);
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1199.98px) {
+  .ui.ui.ui.container:not(.fluid) {
+    width: 933px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ui.ui.ui.grid.container {
+    width: calc(933px + 2rem);
+  }
+  .ui.ui.ui.relaxed.grid.container {
+    width: calc(933px + 3rem);
+  }
+  .ui.ui.ui.very.relaxed.grid.container {
+    width: calc(933px + 5rem);
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .ui.ui.ui.container:not(.fluid) {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.cdk-overlay-pane ng-component {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content {
+  background-color: whitesmoke;
+}
+
+.modal-footer {
+  background-color: whitesmoke;
+}
+
+.ant-btn {
+  border-radius: 0px;
+}
+
+.ant-btn.secondary {
+  background-color: #767676;
+  color: #fff;
+  border: none;
+}
+
+.ant-btn.secondary:hover {
+  background-color: #838383;
+}
+
+.ant-btn-primary {
+  background-color: #525e76;
+  border: none;
+}
+
+.ant-btn-primary:hover {
+  background-color: #465169;
+}
+
+.ant-input:focus,
+.ant-input-focused {
+  border-color: #292f3b45;
+  border-right-width: 1px !important;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(41, 47, 59, 0.2);
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: #292f3b;
+  font-weight: 600;
+  background-color: #525e767d;
+}
+
+.ant-select-dropdown {
+  padding: 0px;
+  border-radius: 0px;
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  color: black;
+}
+
+
+nz-tabset {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+
+
+.ant-tabs-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.ant-tabs-tabpane-active {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.flex-grow-column {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-tabs-bar {
+  margin: 0px;
+  border-bottom: 1px solid #ffffff;
+  outline: none;
+}
+
+.deleted div[role='gridcell'] {
+  text-decoration: line-through;
+}
+
+.menu-sidebar .ant-menu-item {
+  margin-bottom: 0px!important;
+  margin-top: 0px!important;
+}
+
+.menu-sidebar .ant-menu-submenu-title {
+  margin-bottom: 0px!important;
+  margin-top: 0px!important;
+}
+
+.ant-menu-vertical .ant-menu-item {
+  margin-bottom: 0px!important;
+  margin-top: 0px!important;
+}
+
+
+.small-padding .ant-collapse-content > .ant-collapse-content-box {
+  padding: 4px !important;
+}
+
+.ant-collapse-header:hover {
+  font-weight: bold;
+}
+
+.ant-collapse-item-active .ant-collapse-header {
+  font-weight: bold;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  transition: all 0.1s;
+}

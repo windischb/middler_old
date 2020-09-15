@@ -10,7 +10,7 @@ namespace middlerApp.SharedModels {
         public string Hostname { get; set; }
         public string Path { get; set; }
         public List<string> HttpMethods { get; set; } = new List<string>();
-
+        public List<EndpointActionDto> Actions { get; set; } = new List<EndpointActionDto>();
         public bool Enabled { get; set; }
 
         public decimal Order { get; set; }

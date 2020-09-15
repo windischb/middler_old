@@ -24,7 +24,9 @@ namespace middlerApp.API.IDP.Services
         }
         public async Task<List<MClientDto>> GetAllClientDtosAsync()
         {
-            var clients = await DbContext.Clients.ToListAsync();
+            var clients = await DbContext.Clients
+                .Include(c => c.AllowedGrantTypes)
+                .ToListAsync();
             return _mapper.Map<List<MClientDto>>(clients);
         }
 
@@ -35,11 +37,11 @@ namespace middlerApp.API.IDP.Services
                 .Include(c => c.ClientSecrets)
                 .Include(c => c.RedirectUris)
                 .Include(c => c.PostLogoutRedirectUris)
-                .Include(c => c.AllowedScopes)
                 .Include(c => c.IdentityProviderRestrictions)
                 .Include(c => c.Claims)
                 .Include(c => c.AllowedCorsOrigins)
                 .Include(c => c.Properties)
+                .Include(c => c.AllowedScopes).ThenInclude(s => s.Scope)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

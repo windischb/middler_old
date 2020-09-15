@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using middlerApp.API.IDP.Storage.Mappers;
+using middlerApp.API.IDP.Mappers;
 
 namespace middlerApp.API.IDP.Storage.Stores
 {
@@ -43,7 +43,7 @@ namespace middlerApp.API.IDP.Storage.Stores
 
             await baseQuery.Include(x => x.AllowedCorsOrigins).SelectMany(c => c.AllowedCorsOrigins).LoadAsync();
             await baseQuery.Include(x => x.AllowedGrantTypes).SelectMany(c => c.AllowedGrantTypes).LoadAsync();
-            await baseQuery.Include(x => x.AllowedScopes).SelectMany(c => c.AllowedScopes).LoadAsync();
+            await baseQuery.Include(x => x.AllowedScopes).ThenInclude(s => s.Scope).SelectMany(c => c.AllowedScopes).LoadAsync();
             await baseQuery.Include(x => x.Claims).SelectMany(c => c.Claims).LoadAsync();
             await baseQuery.Include(x => x.ClientSecrets).SelectMany(c => c.ClientSecrets).LoadAsync();
             await baseQuery.Include(x => x.IdentityProviderRestrictions).SelectMany(c => c.IdentityProviderRestrictions).LoadAsync();

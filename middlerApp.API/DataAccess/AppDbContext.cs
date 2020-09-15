@@ -4,14 +4,14 @@ using Newtonsoft.Json.Linq;
 
 namespace middlerApp.API.DataAccess
 {
-    public class AppDbContext : DbContext
+    public class APPDbContext : DbContext
     {
         public DbSet<EndpointRuleEntity> EndpointRules { get; set; }
         public DbSet<EndpointActionEntity> EndpointActions { get; set; }
 
         public DbSet<TreeNode> Variables { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
+        public APPDbContext(DbContextOptions<APPDbContext> options): base(options)
         {
 
         }

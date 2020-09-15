@@ -15,9 +15,11 @@ namespace middlerApp.API
         
         public StartUpAdminConfiguration AdminSettings { get; } = new StartUpAdminConfiguration();
 
-        public EndpointRulesConfiguration EndpointRulesSettings { get; } = new EndpointRulesConfiguration();
+        public StartUpIdpConfiguration IdpSettings { get; } = new StartUpIdpConfiguration();
 
-        public GlobalVariablesConfiguration GlobalVariablesSettings { get; } = new GlobalVariablesConfiguration();
+        //public EndpointRulesConfiguration EndpointRulesSettings { get; } = new EndpointRulesConfiguration();
+
+        //public GlobalVariablesConfiguration GlobalVariablesSettings { get; } = new GlobalVariablesConfiguration();
 
         public StartUpConfiguration SetDefaultSettings()
         {
@@ -26,9 +28,14 @@ namespace middlerApp.API
             AdminSettings.HttpsCertPath = AdminSettings.HttpsCertPath?.Trim().ToNull() ?? HttpsCertPath;
             AdminSettings.HttpsCertPassword = AdminSettings.HttpsCertPassword?.Trim().ToNull() ?? HttpsCertPassword;
 
-            EndpointRulesSettings.DbFilePath = EndpointRulesSettings.DbFilePath?.Trim().ToNull() ?? "DefaultStorage/rules.db";
+            IdpSettings.ListeningIP = IdpSettings.ListeningIP?.Trim().ToNull() ?? ListeningIP;
+            IdpSettings.HttpsPort = IdpSettings.HttpsPort != 0 ? IdpSettings.HttpsPort : 4444;
+            IdpSettings.HttpsCertPath = IdpSettings.HttpsCertPath?.Trim().ToNull() ?? HttpsCertPath;
+            IdpSettings.HttpsCertPassword = IdpSettings.HttpsCertPassword?.Trim().ToNull() ?? HttpsCertPassword;
 
-            GlobalVariablesSettings.DbFilePath = GlobalVariablesSettings.DbFilePath?.Trim().ToNull() ?? "DefaultStorage/variables.db";
+            //EndpointRulesSettings.DbFilePath = EndpointRulesSettings.DbFilePath?.Trim().ToNull() ?? "DefaultStorage/rules.db";
+
+            //GlobalVariablesSettings.DbFilePath = GlobalVariablesSettings.DbFilePath?.Trim().ToNull() ?? "DefaultStorage/variables.db";
 
             return this;
         }
@@ -40,19 +47,29 @@ namespace middlerApp.API
         public int HttpsPort { get; set; } = 4444;
         public string HttpsCertPath { get; set; }
         public string HttpsCertPassword { get; set; }
-        public string WebRoot { get; set; } = "wwwroot";
+        public string WebRoot { get; set; } = "AdminUI";
 
     }
 
-    public class EndpointRulesConfiguration
+    public class StartUpIdpConfiguration
     {
-        public string DbFilePath { get; set; }
+        public string ListeningIP { get; set; } = "0.0.0.0";
+        public int HttpsPort { get; set; } = 4445;
+        public string HttpsCertPath { get; set; }
+        public string HttpsCertPassword { get; set; }
+        public string WebRoot { get; set; } = "IdentityUI";
+
     }
 
-    public class GlobalVariablesConfiguration
-    {
-        public string DbFilePath { get; set; }
-    }
+    //public class EndpointRulesConfiguration
+    //{
+    //    public string DbFilePath { get; set; }
+    //}
+
+    //public class GlobalVariablesConfiguration
+    //{
+    //    public string DbFilePath { get; set; }
+    //}
 
 
 

@@ -3,12 +3,13 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using AutoMapper;
 using middlerApp.API.IDP.DtoModels;
 using middlerApp.API.IDP.Storage.Entities;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Defines entity/model mapping for clients.
@@ -23,56 +24,63 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         public ClientMapperProfile()
         {
-            CreateMap<Entities.ClientProperty, KeyValuePair<string, string>>()
+            CreateMap<Storage.Entities.ClientProperty, KeyValuePair<string, string>>()
                 .ReverseMap();
 
-            CreateMap<Entities.Client, IdentityServer4.Models.Client>()
+            CreateMap<Storage.Entities.Client, IdentityServer4.Models.Client>()
                 .ForMember(dest => dest.ProtocolType, opt => opt.Condition(srs => srs != null))
+                .ForMember(dest => dest.AllowedScopes, expression => expression.MapFrom((entity, client) =>
+                {
+                    return entity.AllowedScopes.Select(r => r.Scope.Name);
+                }))
                 .ForMember(x => x.AllowedIdentityTokenSigningAlgorithms, opts => opts.ConvertUsing(AllowedSigningAlgorithmsConverter.Converter, x => x.AllowedIdentityTokenSigningAlgorithms))
                 .ReverseMap()
                 .ForMember(x => x.AllowedIdentityTokenSigningAlgorithms, opts => opts.ConvertUsing(AllowedSigningAlgorithmsConverter.Converter, x => x.AllowedIdentityTokenSigningAlgorithms));
 
-            CreateMap<Entities.ClientCorsOrigin, string>()
+            CreateMap<Storage.Entities.ClientCorsOrigin, string>()
                 .ConstructUsing(src => src.Origin)
                 .ReverseMap()
                 .ForMember(dest => dest.Origin, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ClientIdPRestriction, string>()
+            CreateMap<Storage.Entities.ClientIdPRestriction, string>()
                 .ConstructUsing(src => src.Provider)
                 .ReverseMap()
                 .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ClientClaim, IdentityServer4.Models.ClientClaim>(MemberList.None)
+            CreateMap<Storage.Entities.ClientClaim, IdentityServer4.Models.ClientClaim>(MemberList.None)
                 .ConstructUsing(src => new IdentityServer4.Models.ClientClaim(src.Type, src.Value, ClaimValueTypes.String))
                 .ReverseMap();
 
-            CreateMap<Entities.ClientScope, string>()
+            CreateMap<Storage.Entities.ClientScope, Scope>()
                 .ConstructUsing(src => src.Scope)
                 .ReverseMap()
                 .ForMember(dest => dest.Scope, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ClientPostLogoutRedirectUri, string>()
+            CreateMap<Storage.Entities.ClientPostLogoutRedirectUri, string>()
                 .ConstructUsing(src => src.PostLogoutRedirectUri)
                 .ReverseMap()
                 .ForMember(dest => dest.PostLogoutRedirectUri, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ClientRedirectUri, string>()
+            CreateMap<Storage.Entities.ClientRedirectUri, string>()
                 .ConstructUsing(src => src.RedirectUri)
                 .ReverseMap()
                 .ForMember(dest => dest.RedirectUri, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ClientGrantType, string>()
+            CreateMap<Storage.Entities.ClientGrantType, string>()
                 .ConstructUsing(src => src.GrantType)
                 .ReverseMap()
                 .ForMember(dest => dest.GrantType, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ClientSecret, IdentityServer4.Models.Secret>(MemberList.Destination)
+            CreateMap<Storage.Entities.ClientSecret, IdentityServer4.Models.Secret>(MemberList.Destination)
                 .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null))
                 .ReverseMap();
 
-            CreateMap<Client, MClientDto>();
+            CreateMap<Client, MClientDto>()
+                .ForMember(dest => dest.AllowedScopes, expression => expression.MapFrom((client, dto) => client.AllowedScopes.Select(r => r.Scope)))
+                .ForMember(dest => dest.AllowedGrantTypes, expression => expression.MapFrom((client, dto) => client.AllowedGrantTypes.Select(r => r.GrantType)));
 
-            CreateMap<MClientDto, Client>();
+            CreateMap<MClientDto, Client>()
+                .ForMember(dest => dest.AllowedScopes, expression => expression.MapFrom((dto, client) => dto.AllowedScopes.Select(r => new ClientScope() { ScopeId = r.Id })));
         }
     }
 }

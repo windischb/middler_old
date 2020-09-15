@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule, RoutingComponents } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IconsProviderModule } from './icons-provider.module';
 
@@ -17,10 +17,12 @@ import { TreeModule } from 'angular-tree-component';
 import { FontAwesomeModule, FaIconLibrary, FaConfig } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import { GlobalModules, GlobalImportsModule } from './global-imports.module';
+// import { GlobalModules, GlobalImportsModule } from './global-imports.module';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { environment } from '../environments/environment';
+import { GlobalImportsModule } from './areas/admin/global-imports.module';
+import { OverlayModule } from '@angular/cdk/overlay';
 //import { DoobCheckBoxGroup } from "./db-checkbox-group.directive";
 //import { fab } from '@fortawesome/free-brands-svg-icons';
 
@@ -30,7 +32,6 @@ registerLocaleData(en);
 @NgModule({
   declarations: [
     AppComponent,
-    ...RoutingComponents
   ],
   imports: [
     BrowserModule,
@@ -41,9 +42,9 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     TreeModule.forRoot(),
     FontAwesomeModule,
-    GlobalImportsModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
-    AkitaNgRouterStoreModule
+    AkitaNgRouterStoreModule,
+    OverlayModule
    
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],

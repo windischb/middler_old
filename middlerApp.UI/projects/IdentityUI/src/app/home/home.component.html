@@ -1,0 +1,168 @@
+<div style="display: flex; width: 100%; overflow: hidden;">
+
+    <nz-sider class="menu-sidebar" nzCollapsible nzWidth="13rem" [nzCollapsed]="sideBarCollapsed$ | async"
+      [nzTrigger]="null" nzTheme="light">
+      <div class="sidebar-logo" (click)="toggleSideBar()">
+        <div *ngIf="!(sideBarCollapsed$ | async)">
+          mIdentity
+        </div>
+        <div *ngIf="sideBarCollapsed$ | async">
+          mI
+        </div>
+        
+      </div>
+      <div>
+        <pre>{{currentUser$ | async | json}}</pre>
+    </div>
+      <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="sideBarCollapsed$ | async">
+        <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true" *ngIf="!(currentUser$ | async)">
+            <a (click)="Login()">
+              
+              <i nz-icon nzType="dashboard" nzTheme="outline"></i>
+              <ng-container *ngIf="!(sideBarCollapsed$ | async)">Login</ng-container>
+            </a>
+          </li>
+      </ul>
+      <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="sideBarCollapsed$ | async">
+        <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
+          <a routerLink="./">
+            
+            <i nz-icon nzType="dashboard" nzTheme="outline"></i>
+            <ng-container *ngIf="!(sideBarCollapsed$ | async)">Dashboard</ng-container>
+          </a>
+        </li>
+        <li nz-menu-item nzMatchRouter>
+          <a routerLink="./endpoint-rules">
+            <fa-icon nz-icon [icon]="['fas', 'stream']"></fa-icon>
+            <ng-container *ngIf="!(sideBarCollapsed$ | async)">Endpoints Rules</ng-container>
+          </a>
+        </li>
+        <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
+          <a routerLink="./global-variables">
+            <i nz-icon nzType="folder" nzTheme="outline"></i>
+            <ng-container *ngIf="!(sideBarCollapsed$ | async)">Global Variables</ng-container>
+          </a>
+        </li>
+        <li nz-submenu [(nzOpen)]="identity">
+          <span title>
+            <fa-icon nz-icon [icon]="['far', 'id-badge']"></fa-icon>
+            <span>Identity Provider</span>
+          </span>
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="./idp/users">
+                <db-icon icon="fa#user"></db-icon>
+                <ng-container>Users</ng-container>
+              </a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="./idp/roles">
+                <db-icon icon="fa#user-tag"></db-icon>
+                <ng-container>Roles</ng-container>
+              </a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="./idp/clients">
+                <db-icon icon="fa#desktop"></db-icon>
+                <ng-container>Clients</ng-container>
+              </a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="./idp/api-resources">
+                <db-icon icon="fa#cubes"></db-icon>
+                <ng-container>Api Resources</ng-container>
+              </a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="./idp/identity-resources">
+                <db-icon icon="fa#address-card" theme="far"></db-icon>
+                <ng-container>Identity Resources</ng-container>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="whitespace"></div>
+      <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="sideBarCollapsed$ | async">
+        <li nz-menu-item nzMatchRouter [nzMatchRouterExact]="true">
+          <a routerLink="./app-settings">
+            <i nz-icon nzType="setting" nzTheme="outline"></i>
+            <ng-container *ngIf="!(sideBarCollapsed$ | async)">Settings</ng-container>
+          </a>
+        </li>
+      </ul>
+      
+  
+    </nz-sider>
+
+    <div class="main">
+        <ng-container *ngIf="uiContext$ | async; let ui">
+          <div class="main-header">
+            <div class="title-container ui container">
+              <db-icon [icon]="ui.Header.Icon" style="font-size: xx-large; width: 52px; text-align: left;"></db-icon>
+              <!-- <div class="title-icon" *ngIf="prepareIcon(ui.Header.Icon); let icon"> -->
+                
+                <!-- <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
+                  [nzType]="icon.icon" nzTheme="outline"></i>
+                <fa-icon *ngIf="icon.type == 'fa'" style="font-size: xx-large; width: 42px; text-align: left;" nz-icon
+                  [icon]="icon.icon"></fa-icon> -->
+              <!-- </div> -->
+              <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.3em;">
+                <div class="title" [class.title-only]="!ui.Header.SubTitle">
+                  {{ui.Header.Title}}
+                </div>
+                <div class="subtitle" *ngIf="ui.Header.SubTitle">
+                  {{ui.Header.SubTitle}}
+                </div>
+              </div>
+    
+              <div class="whitespace">
+    
+              </div>
+    
+              <ng-container dbPortal="Header-Outlet-Right"></ng-container>
+              <!-- <div *ngIf="ui.Header.Outlet">
+                <ng-container [ngTemplateOutlet]="ui.Header.Outlet"></ng-container>
+              </div> -->
+    
+            </div>
+          </div>
+          <div class="main-content" style="overflow: hidden;">
+            <div class="ui main-container" [class.container]="ui.Content.Container" [class.scrollable]="ui.Content.Scrollable">
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+          <div class="main-footer" *ngIf="ui.Footer.Show">
+            <div class="ui container">
+              <ng-container *ngIf="ui.Footer.UseTemplate">
+                <ng-container [ngTemplateOutlet]="ui.Footer.UseTemplate"></ng-container>
+              </ng-container>
+              <ng-container *ngIf="!ui.Footer.UseTemplate">
+    
+    
+    
+                <button nz-button nzType="primary" *ngIf="ui.Footer.Button1.Visible" (click)="ui.Footer.Button1.OnClick ? ui.Footer.Button1.OnClick() : null"
+                  [class.disabled]="ui.Footer.Button1.Disabled" [nzLoading]="ui.Footer.Button1.Loading">
+                  {{ui.Footer.Button1?.Text}}</button>
+    
+                <button nz-button *ngIf="ui.Footer.Button2.Visible" (click)="ui.Footer.Button2.OnClick ? ui.Footer.Button2.OnClick() : null"
+                  [class.disabled]="ui.Footer.Button2.Disabled" [nzLoading]="ui.Footer.Button2.Loading">
+                  {{ui.Footer.Button2?.Text}}</button>
+    
+                <div class="whitespace">
+    
+                </div>
+    
+                <div *ngIf="ui.Footer.Outlet">
+                  <ng-container [ngTemplateOutlet]="ui.Footer.Outlet"></ng-container>
+                </div>
+    
+              </ng-container>
+    
+    
+            </div>
+    
+          </div>
+        </ng-container>
+      </div>
+</div>

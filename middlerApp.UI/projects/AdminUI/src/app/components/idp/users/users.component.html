@@ -1,0 +1,49 @@
+<!-- <button nz-button (click)="addUser()" nzType="primary">Add</button>
+<nz-table #basicTable [nzData]="users$ | async">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of basicTable.data">
+        <td (dblclick)="edit(user)">{{user.UserName}}</td>
+        <td>{{user.Email}}</td>
+        <td>{{user.FirstName}}</td>
+        <td>{{user.LastName}}</td>
+      </tr>
+    </tbody>
+  </nz-table> -->
+
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham"></ag-grid-angular>
+
+
+<ng-template #itemsContextMenu let-context>
+  <ul nz-menu nzMode="vertical" class="context-menu">
+    <li nz-menu-item (click)="EditUser(context.First)" *ngIf="context.Single">
+      <i nz-icon nzType="edit" nzTheme="outline"></i>
+      Edit User
+    </li>
+    <li nz-menu-item (click)="SetPassword(context.First)" *ngIf="context.Single">
+      <db-icon icon="fa#key"></db-icon>
+      <ng-container *ngIf="!context.First.HasPassword">Set Password</ng-container>
+      <ng-container *ngIf="context.First.HasPassword">Reset Password</ng-container>
+    </li>
+    <li nz-menu-divider *ngIf="context.Single"></li>
+    <li nz-menu-item (click)="AddUser()">
+      <i nz-icon nzType="user-add" nzTheme="outline"></i>
+      Add User
+    </li>
+    <li nz-menu-item (click)="RemoveUser(context.SelectedData)" *ngIf="context.Any">
+      <i nz-icon nzType="delete" nzTheme="outline"></i>
+      Delete User
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template dbPortalTemplate="Header-Outlet-Right">
+  <button nz-button (click)="ReloadUsersList()"><i nz-icon nzType="sync"></i>Reload Users</button>
+</ng-template>

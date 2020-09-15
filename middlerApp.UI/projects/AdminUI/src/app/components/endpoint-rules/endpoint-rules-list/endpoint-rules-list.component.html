@@ -1,0 +1,106 @@
+<div class="outer" style="flex-grow: 1; height:100%" cdkDropList #nullList="cdkDropList"
+    (contextmenu)="openOuterContextMenu($event, outerContextMenu)">
+    <div class=""
+        style="padding: 2px; margin-top: 8px; max-height: calc(100% - 30px); overflow-y: auto;"
+        cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
+        <div *ngIf="((rules$ | async) || []).length === 0"
+            style="text-align: center; font-size: 1.3em; font-weight: bold; color: #525e7678; line-height: 1.4em; line-height: 2em; margin: 0px 10px;">
+            <div style="font-size: 1.5em;">Currently there is nothing...</div>
+            <p>Use the ContextMenu to create your first rule!</p>
+        </div>
+        <div class="rule-item" *ngFor="let rule of (rules$ | async); let i = index;" [class.selected]="rule.Selected"
+            [class.disabled]="!rule.Item.Enabled" (click)="clickAction($event, rule)"
+            (contextmenu)="openItemContextMenu($event, itemContextMenu, rule)" cdkDrag cdkDragLockAxis="y"
+            (dblclick)="editRule(rule.Item.Id)">
+            <div style="display: flex;">
+                <div class="dragHandle" style="padding: 10px 0px 0px 5px;" cdkDragHandle>
+                    <db-icon icon="fa#ellipsis-v" style="width: 1.18em; margin: 0 .25rem 0 0;font-size: 1.2em;"></db-icon>
+                </div>
+                <div style="padding: 5px; min-width: 50%; max-width: 50%;">
+                    <div style="font-size: large; font-weight: bold; color: #292f3b;">{{rule.Item.Name}}</div>
+                    <div>{{rule.Item.Path}}</div>
+                    <!-- <div>{{rule.Item.Order}}</div> -->
+                </div>
+                <div style="padding: 5px; min-width: 200px; max-width: 200px; ">
+                    <div>{{rule.Item.Scheme}}</div>
+                    <div>{{rule.Item.Hostname}}</div>
+                </div>
+                <div style="padding: 5px;">
+                    <div>
+                        {{rule.Item.Actions?.length || 0}} Actions
+                    </div>
+                    <span *ngFor="let action of rule.Item.Actions" nz-tooltip [nzTooltipTitle]="action.ActionType">
+                        <db-icon [icon]="GetIcon(action)"></db-icon>
+                        <!-- <ng-container *ngIf="prepareIcon(GetIcon(action)); let icon" >
+                            <i *ngIf="icon.type == 'ant'" style="font-size: large; text-align: left;" nz-icon
+                                [nzType]="icon.icon" nzTheme="outline" [class.disabled]="!action.Enabled"></i>
+                            <fa-icon *ngIf="icon.type == 'fa'" style="font-size: large; text-align: left;" nz-icon
+                                [icon]="icon.icon" [class.disabled]="!action.Enabled"></fa-icon>
+                        </ng-container> -->
+                        <!-- <i class="icon" [ngClass]="GetIcon(action)"></i> -->
+                    </span>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+<ng-template #outerContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-submenu nzTitle="Add Rule" nzIcon="menu-unfold">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="CreateRuleOnTop()">
+                    <db-icon icon="double-left" rotate="90"></db-icon>
+                    Top
+                </li>
+                <li nz-menu-item (click)="CreateRuleOnBottom()">
+                    <db-icon icon="double-right" rotate="90"></db-icon>
+                    Bottom
+                </li>
+            </ul>
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #itemContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="SetRuleEnabled(context.Single, true)" *ngIf="context.Single?.Enabled === false">
+            <db-icon icon="fa#toggle-on"></db-icon>
+            Enable
+        </li>
+        <li nz-menu-item (click)="SetRuleEnabled(context.Single, false)" *ngIf="context.Single?.Enabled === true">
+            <db-icon icon="fa#toggle-off"></db-icon>
+            Disable
+        </li>
+        <li nz-submenu nzTitle="Add Rule" *ngIf="context.Single" nzIcon="menu-unfold">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="CreateRuleOnTop()">
+                    <db-icon icon="double-left" rotate="90"></db-icon>
+                    Top
+                </li>
+                <li nz-menu-item (click)="CreateRuleBefore(context.Single)">
+                    <db-icon icon="up"></db-icon>
+                    Before
+                </li>
+                <li nz-menu-item (click)="CreateRuleAfter(context.Single)">
+                    <db-icon icon="down"></db-icon>
+                    After
+                </li>
+                <li nz-menu-item (click)="CreateRuleOnBottom()">
+                    <db-icon icon="double-right" rotate="90"></db-icon>
+                    Bottom
+                </li>
+            </ul>
+        </li>
+        <li nz-menu-divider></li>
+        <li nz-menu-item (click)="RemoveRules(context.Selected)">
+            <db-icon icon="delete"></db-icon>
+            Remove
+        </li>
+    </ul>
+</ng-template>

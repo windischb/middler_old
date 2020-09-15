@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using IdentityServer4;
+using Microsoft.AspNetCore.Authorization;
 using middlerApp.API.IDP.DtoModels;
 using middlerApp.API.IDP.Models;
 using middlerApp.API.IDP.Services;
@@ -13,6 +15,7 @@ using SignalARRR.Server;
 namespace middlerApp.API.HubMethods
 {
     [MessageName("IDPRoles")]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     public class IDPRolesServerMethodsHub : ServerMethods<UIHub>
     {
         public IRolesService RolesService { get; }
@@ -27,7 +30,6 @@ namespace middlerApp.API.HubMethods
             _mapper = mapper;
 
         }
-
 
         public async Task<List<MRoleListDto>> GetRolesList()
         {

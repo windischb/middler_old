@@ -5,7 +5,7 @@
 using AutoMapper;
 using middlerApp.API.IDP.Storage.Entities;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Extension methods to map to/from entity/model for persisted grants.
@@ -35,9 +35,9 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public static Entities.PersistedGrant ToEntity(this IdentityServer4.Models.PersistedGrant model)
+        public static Storage.Entities.PersistedGrant ToEntity(this IdentityServer4.Models.PersistedGrant model)
         {
-            return model == null ? null : Mapper.Map<Entities.PersistedGrant>(model);
+            return model == null ? null : Mapper.Map<Storage.Entities.PersistedGrant>(model);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="entity">The entity.</param>
-        public static void UpdateEntity(this IdentityServer4.Models.PersistedGrant model, Entities.PersistedGrant entity)
+        public static void UpdateEntity(this IdentityServer4.Models.PersistedGrant model, Storage.Entities.PersistedGrant entity)
         {
             Mapper.Map(model, entity);
         }

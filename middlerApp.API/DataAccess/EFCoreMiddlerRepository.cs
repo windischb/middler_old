@@ -10,9 +10,9 @@ namespace middlerApp.API.DataAccess
     public class EFCoreMiddlerRepository : IMiddlerRepository
     {
         private readonly IMapper _mapper;
-        public AppDbContext AppDbContext { get; }
+        public APPDbContext AppDbContext { get; }
 
-        public EFCoreMiddlerRepository(AppDbContext appDbContext, IMapper mapper)
+        public EFCoreMiddlerRepository(APPDbContext appDbContext, IMapper mapper)
         {
             _mapper = mapper;
             AppDbContext = appDbContext;

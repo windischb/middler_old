@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using middlerApp.API.IDP.Services;
 
 namespace middlerApp.API.DataAccess
 {
     public class EndpointRuleRepository
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly APPDbContext _appDbContext;
+        public DataEventDispatcher EventDispatcher { get; }
 
-        public EndpointRuleRepository(AppDbContext appDbContext)
+        public EndpointRuleRepository(APPDbContext appDbContext, DataEventDispatcher eventDispatcher)
         {
             _appDbContext = appDbContext;
+            EventDispatcher = eventDispatcher;
             //_appDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
@@ -24,7 +27,9 @@ namespace middlerApp.API.DataAccess
 
         public async Task<EndpointRuleEntity> Find(Guid id)
         {
-            return await _appDbContext.EndpointRules.FindAsync(id);
+            return await _appDbContext.EndpointRules
+                .Include(r => r.Actions)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<EndpointRuleEntity> GetByIdAsync(Guid id)
@@ -46,6 +51,7 @@ namespace middlerApp.API.DataAccess
 
             await _appDbContext.EndpointRules.AddAsync(endpointRuleEntity);
             await _appDbContext.SaveChangesAsync();
+            EventDispatcher.DispatchCreatedEvent("EndpointRule", endpointRuleEntity);
         }
 
         public async Task RemoveAsync(Guid id)
@@ -53,6 +59,7 @@ namespace middlerApp.API.DataAccess
             var entity = await _appDbContext.EndpointRules.Include(endp => endp.Actions).FirstOrDefaultAsync(endp => endp.Id == id);
             _appDbContext.EndpointRules.Remove(entity);
             await _appDbContext.SaveChangesAsync();
+            EventDispatcher.DispatchDeletedEvent("EndpointRule", id);
         }
 
         public async Task UpdateAsync(EndpointRuleEntity endpointRuleEntity)
@@ -60,6 +67,7 @@ namespace middlerApp.API.DataAccess
             //var entity = await _appDbContext.EndpointRules.Include(endp => endp.Actions).FirstOrDefaultAsync(endp => endp.Id == endpointRuleEntity.Id);
             _appDbContext.Entry(endpointRuleEntity).State = EntityState.Modified;
             await _appDbContext.SaveChangesAsync();
+            EventDispatcher.DispatchUpdatedEvent("EndpointRule", endpointRuleEntity);
         }
 
         private async Task<string> GenerateRuleName()

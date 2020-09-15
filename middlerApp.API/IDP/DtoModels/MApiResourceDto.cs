@@ -15,7 +15,7 @@ namespace middlerApp.API.IDP.DtoModels
         public string AllowedAccessTokenSigningAlgorithms { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
         public List<SecretDto> Secrets { get; set; } = new List<SecretDto>();
-        public List<string> Scopes { get; set; }
+        public List<MScopeDto> Scopes { get; set; }
         public List<string> UserClaims { get; set; }
         public List<object> Properties { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;

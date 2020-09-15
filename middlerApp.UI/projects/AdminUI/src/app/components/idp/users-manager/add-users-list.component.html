@@ -1,0 +1,55 @@
+<div class="main-header">
+    <div class="title-container">
+        <div class="title-icon closeSidebar" style="padding-left: 8px;" (click)="Close()">
+            <fa-icon style="font-size: x-large; width: 32px; text-align: left;" nz-icon
+                [icon]="['fas', 'angle-double-right']">
+            </fa-icon>
+        </div>
+        <div class="title-icon">
+            <db-icon style="font-size: 20px; text-align: left;" icon="fa#users"></db-icon>
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.3em;">
+            <div class="title">
+                Available Users
+            </div>
+        </div>
+    </div>
+</div>
+
+<form nzNoColon nz-form [formGroup]="form" style="padding: 10px; border-bottom: 1px solid #eaeaeb;">
+    <nz-form-control>
+        <nz-input-group [nzSuffix]="inputClearTpl">
+            <input type="text" nz-input formControlName="Filter" placeholder="Filter" />
+        </nz-input-group>
+        <ng-template #inputClearTpl><i nz-icon class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+                *ngIf="form.get('Filter').valueChanges | async" (click)="form.get('Filter').patchValue('')"></i>
+        </ng-template>
+    </nz-form-control>
+
+</form>
+
+<div style="overflow-x: auto;">
+    <div style="margin:10px 5px;">
+        <div *ngFor="let user of (availableUsers$ | async); let i = index;" class="userItem"
+            [class.deleted]="user.Deleted">
+            <div style="display: flex;">
+                <div class="selector" [class.shrinked]="user.Selected">
+                    <fa-icon nz-icon [icon]="['fas', 'chevron-left']"
+                        style="width: 1.18em; margin: 0 .25rem 0 0;font-size: 1.2em;"></fa-icon>
+                </div>
+                <div class="action-item" style="padding: 5px; flex-grow: 1;" (click)="ToggleUser(user)"
+                    [class.isSelected]="user.Selected">
+                    <div style="font-size: large; font-weight: bold;">{{user.UserName}}</div>
+                    <div>{{user.FirstName}} {{user.LastName}}</div>
+                    <div>{{user.Email}}</div>
+                </div>
+                <div class="selector" [class.shrinked]="!user.Selected">
+                    <fa-icon nz-icon [icon]="['fas', 'chevron-right']"
+                        style="width: 1.18em; margin: 0 .25rem 0 0;font-size: 1.2em;"></fa-icon>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

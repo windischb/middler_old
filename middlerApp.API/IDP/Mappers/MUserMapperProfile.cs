@@ -16,11 +16,17 @@ namespace middlerApp.API.IDP.Mappers
                 .ForMember(dest => dest.UserRoles, expression => expression.MapFrom((dto, user) => dto.Roles.Select(r => new MUserRoles(){RoleId = r.Id})));
 
             CreateMap<MUser, MUserDto>()
-                .ForMember(dest => dest.Roles, expression => expression.MapFrom((user, dto) => user.UserRoles.Select(ur => ur.Role)));
+                .ForMember(dest => dest.Roles,
+                    expression => expression.MapFrom((user, dto) => user.UserRoles.Select(ur => ur.Role)))
+                .ForMember(dest => dest.HasPassword,
+                    expression => expression.MapFrom((user, dto) => !String.IsNullOrWhiteSpace(user.Password)));
 
             CreateMap<MUserClaim, MUserClaimDto>().ReverseMap();
 
-            CreateMap<MUser, MUserListDto>();
+            CreateMap<MUser, MUserListDto>()
+                .ForMember(dest => dest.HasPassword,
+                    expression => expression.MapFrom((user, dto) => !String.IsNullOrWhiteSpace(user.Password)))
+                .ForMember(dest => dest.Logins, expression => expression.MapFrom((user, dto) => user.Logins.Select(l => l.Provider)));
 
         }
     }

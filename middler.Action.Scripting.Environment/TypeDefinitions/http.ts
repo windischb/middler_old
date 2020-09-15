@@ -5,7 +5,7 @@ declare namespace Middler.Scripting.HttpCommand {
     export class Http {
 
         Client(url: string): HttpRequestBuilder;
-        Client(url: string, builder: (() => HttpOptionsBuilder)): HttpRequestBuilder;
+        Client(url: string, options: ((builder: HttpOptionsBuilder) => HttpOptionsBuilder)): HttpRequestBuilder;
     }
 
     export class HttpOptionsBuilder {
@@ -22,6 +22,8 @@ declare namespace Middler.Scripting.HttpCommand {
         SetContentType(vlue: string): HttpRequestBuilder;
         AddQueryParam(key: string, ...value: string[]): HttpRequestBuilder;
         SetQueryParam(key: string, ...value: string[]): HttpRequestBuilder;
+        SetBearerToken(token: string): HttpRequestBuilder;
+        SetBasicAuthentication(username: string, password: string): HttpRequestBuilder;
 
         Send(method: string, body?: any): HttpResponse;
         Get(): HttpResponse;

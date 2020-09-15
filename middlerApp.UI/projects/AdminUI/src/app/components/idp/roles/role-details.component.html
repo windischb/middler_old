@@ -1,0 +1,84 @@
+<ng-container *ngIf="(user$ | async); let user">
+
+
+    <form nzNoColon nz-form [formGroup]="form"
+        style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <nz-tabset [nzAnimated]="{inkBar: true, tabPane:false}">
+            <nz-tab [nzTitle]="BasicTitle">
+                <ng-template #BasicTitle>
+                    <i nz-icon nzType="container"></i>Basic
+                </ng-template>
+                <div style="display: flex; flex-direction: row; padding:3px">
+                    <div style="flex-grow: 1;">
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzRequired nzFor="Name">Name</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="Name" id="Name" style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzRequired nzFor="DisplayName">DisplayName</nz-form-label>
+                                <nz-form-control>
+                                    <input nz-input formControlName="DisplayName" id="DisplayName"
+                                        style="width: 100%;" />
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                        <div nz-row [nzGutter]="8">
+                            <div nz-col nzSpan="24">
+                                <nz-form-label nzFor="Description">Description</nz-form-label>
+                                <nz-form-control>
+                                    <textarea nz-input formControlName="Description" id="Description"
+                                        [nzAutosize]="{ minRows: 4, maxRows: 12 }"></textarea>
+                                </nz-form-control>
+                            </div>
+                        </div>
+
+                    </div>
+                   <div style="width: 10px;margin-right: 10px;">
+
+                    </div>
+                    <div style="width: 30%;">
+                        <!-- <nz-collapse [nzBordered]="true">
+                            <nz-collapse-panel nzHeader="Options" [nzActive]="true">
+
+                            </nz-collapse-panel>
+                            <nz-collapse-panel nzHeader="Expires On" [nzActive]="true">
+
+                            </nz-collapse-panel>
+                        </nz-collapse> -->
+                    </div>
+                </div>
+            </nz-tab>
+            <nz-tab [nzTitle]="UsersTitle">
+                <ng-template #UsersTitle>
+                    <db-icon icon="fa#users"></db-icon>Members
+                    <!-- <i nz-icon nzType="container"></i>Roles -->
+                </ng-template>
+                <ng-template nz-tab>
+                    <div style="display: flex; flex-direction: row; padding:3px 0px; flex-grow:1">
+                        <users-manager formControlName="Users"></users-manager>
+                    </div>
+                </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="DebugTitle" *ngIf="showDebugInformations$ | async">
+                <ng-template #DebugTitle> <i nz-icon nzType="bug"></i>Debug</ng-template>
+                <div style="height: 100%;">
+                    <pre>{{form.value | json}}</pre>
+                </div>
+            </nz-tab>
+        </nz-tabset>
+
+    </form>
+
+</ng-container>
+
+<ng-template dbPortalTemplate="Header-Outlet-Right">
+    <button nz-button (click)="Reload()" ><i nz-icon nzType="sync"></i>Reload</button>
+</ng-template>

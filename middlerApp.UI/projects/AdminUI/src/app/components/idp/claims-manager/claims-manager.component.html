@@ -1,0 +1,50 @@
+<!-- <nz-table #claimsTable nzSize="small" [nzData]="claims">
+    <thead>
+        <tr>
+            <th nzWidth="30%">Type</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody (contextmenu)="openItemContextMenu($event, tableContextMenu)">
+        <tr *ngFor="let claim of claimsTable.data" class="editable-row">
+            <td>
+                <div class="editable-cell" [hidden]="editId === claim.Id" (click)="startEdit(claim.Id)">
+                    {{ claim.Type }}
+                </div>
+                <input  type="text" nz-input [(ngModel)]="claim.Type" (blur)="stopEdit()" />
+            </td>
+            <td>
+                <div class="editable-cell" [hidden]="editId === claim.Id" (click)="startEdit(claim.Id)">
+                    {{ claim.Value }}
+                </div>
+                <input  type="text" nz-input [(ngModel)]="claim.Value" (blur)="stopEdit()" />
+            </td>
+            
+
+        </tr>
+    </tbody>
+</nz-table> -->
+
+<ag-grid-angular [dbGrid]="grid" class="ag-theme-balham no-scrollbar" ></ag-grid-angular>
+
+<ng-template #viewportContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="AddClaim()">
+            <fa-icon nz-icon [icon]="['far', 'plus-square']"></fa-icon>
+            Add Claim
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #itemsContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="AddClaim()">
+            <fa-icon nz-icon [icon]="['far', 'plus-square']"></fa-icon>
+            Add Claim
+        </li>
+        <li nz-menu-item (click)="RemoveClaim(context.SelectedData)" *ngIf="context.Any">
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            Delete
+        </li>
+    </ul>
+</ng-template>

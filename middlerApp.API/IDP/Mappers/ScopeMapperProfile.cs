@@ -3,9 +3,11 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
+using middlerApp.API.IDP.DtoModels;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Defines entity/model mapping for scopes.
@@ -18,19 +20,22 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         public ScopeMapperProfile()
         {
-            CreateMap<Entities.ApiScopeProperty, KeyValuePair<string, string>>()
+            CreateMap<Storage.Entities.ScopeProperty, KeyValuePair<string, string>>()
                 .ReverseMap();
 
-            CreateMap<Entities.ApiScopeClaim, string>()
+            CreateMap<Storage.Entities.ScopeClaim, string>()
                .ConstructUsing(x => x.Type)
                .ReverseMap()
                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src));
 
-            CreateMap<Entities.ApiScope, IdentityServer4.Models.ApiScope>(MemberList.Destination)
+            CreateMap<Storage.Entities.Scope, IdentityServer4.Models.ApiScope>(MemberList.Destination)
                 .ConstructUsing(src => new IdentityServer4.Models.ApiScope())
                 .ForMember(x => x.Properties, opts => opts.MapFrom(x => x.Properties))
-                .ForMember(x => x.UserClaims, opts => opts.MapFrom(x => x.UserClaims))
+                .ForMember(x => x.UserClaims, opts => opts.MapFrom(x => x.UserClaims.Select(u => u.Scope.Name)))
                 .ReverseMap();
+
+
+            CreateMap<Storage.Entities.Scope, MScopeDto>();
         }
     }
 }

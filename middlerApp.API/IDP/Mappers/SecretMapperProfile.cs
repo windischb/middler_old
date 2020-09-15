@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using AutoMapper;
 using middlerApp.API.IDP.DtoModels;
 using middlerApp.API.IDP.Storage.Entities;
-using middlerApp.API.IDP.Storage.Mappers;
 
 namespace middlerApp.API.IDP.Mappers
 {

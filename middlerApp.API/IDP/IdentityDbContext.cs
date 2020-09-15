@@ -27,9 +27,9 @@ namespace middlerApp.API.IDP
 
         public DbSet<Client> Clients { get; set; }
         public DbSet<ClientCorsOrigin> ClientCorsOrigins { get; set; }
-        public DbSet<IdentityResource> IdentityResources { get; set; }
+        //public DbSet<IdentityResource> IdentityResources { get; set; }
         public DbSet<ApiResource> ApiResources { get; set; }
-        public DbSet<ApiScope> ApiScopes { get; set; }
+        public DbSet<Scope> Scopes { get; set; }
 
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
         public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
@@ -107,6 +107,7 @@ namespace middlerApp.API.IDP
                 client.HasMany(x => x.IdentityProviderRestrictions).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 client.HasMany(x => x.AllowedCorsOrigins).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 client.HasMany(x => x.Properties).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                
             });
 
             modelBuilder.Entity<ClientGrantType>(grantType =>
@@ -127,11 +128,24 @@ namespace middlerApp.API.IDP
                 postLogoutRedirectUri.Property(x => x.PostLogoutRedirectUri).HasMaxLength(2000).IsRequired();
             });
 
-            modelBuilder.Entity<ClientScope>(scope =>
-            {
-                scope.ToTable("ClientScopes");
-                scope.Property(x => x.Scope).HasMaxLength(200).IsRequired();
-            });
+            //modelBuilder.Entity<ClientScope>(scope =>
+            //{
+            //    scope.ToTable("ClientScopes");
+            //    scope.Property(x => x.Scope).HasMaxLength(200).IsRequired();
+            //});
+
+            modelBuilder.Entity<ClientScope>().HasKey(e => new { e.ScopeId, e.ClientId });
+
+            modelBuilder.Entity<ClientScope>()
+                .HasOne(t => t.Client)
+                .WithMany(t => t.AllowedScopes)
+                .HasForeignKey(t => t.ClientId);
+
+            modelBuilder.Entity<ClientScope>()
+                .HasOne(t => t.Scope)
+                .WithMany(t => t.Clients)
+                .HasForeignKey(t => t.ScopeId);
+
 
             modelBuilder.Entity<ClientSecret>(secret =>
             {
@@ -173,9 +187,9 @@ namespace middlerApp.API.IDP
             //if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema))
             //    modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
 
-            modelBuilder.Entity<IdentityResource>(identityResource =>
+            modelBuilder.Entity<Scope>(identityResource =>
             {
-                identityResource.ToTable("IdentityResources").HasKey(x => x.Id);
+                //identityResource.ToTable("IdentityResources").HasKey(x => x.Id);
 
                 identityResource.Property(x => x.Name).HasMaxLength(200).IsRequired();
                 identityResource.Property(x => x.DisplayName).HasMaxLength(200);
@@ -183,20 +197,20 @@ namespace middlerApp.API.IDP
 
                 identityResource.HasIndex(x => x.Name).IsUnique();
 
-                identityResource.HasMany(x => x.UserClaims).WithOne(x => x.IdentityResource).HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                identityResource.HasMany(x => x.Properties).WithOne(x => x.IdentityResource).HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                identityResource.HasMany(x => x.UserClaims).WithOne(x => x.Scope).HasForeignKey(x => x.ScopeId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                identityResource.HasMany(x => x.Properties).WithOne(x => x.Scope).HasForeignKey(x => x.ScopeId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<IdentityResourceClaim>(claim =>
+            modelBuilder.Entity<ScopeClaim>(claim =>
             {
-                claim.ToTable("IdentityResourceClaims").HasKey(x => x.Id);
+                //claim.ToTable("IdentityResourceClaims").HasKey(x => x.Id);
 
                 claim.Property(x => x.Type).HasMaxLength(200).IsRequired();
             });
 
-            modelBuilder.Entity<IdentityResourceProperty>(property =>
+            modelBuilder.Entity<ScopeProperty>(property =>
             {
-                property.ToTable("IdentityResourceProperties");
+                //property.ToTable("IdentityResourceProperties");
                 property.Property(x => x.Key).HasMaxLength(250).IsRequired();
                 property.Property(x => x.Value).HasMaxLength(2000).IsRequired();
             });
@@ -236,12 +250,24 @@ namespace middlerApp.API.IDP
                 apiClaim.Property(x => x.Type).HasMaxLength(200).IsRequired();
             });
 
-            modelBuilder.Entity<ApiResourceScope>((System.Action<EntityTypeBuilder<ApiResourceScope>>)(apiScope =>
-            {
-                apiScope.ToTable("ApiResourceScopes").HasKey(x => x.Id);
+            //modelBuilder.Entity<ApiResourceScope>((System.Action<EntityTypeBuilder<ApiResourceScope>>)(apiScope =>
+            //{
+            //    apiScope.ToTable("ApiResourceScopes").HasKey(x => x.Id);
 
-                apiScope.Property(x => x.Scope).HasMaxLength(200).IsRequired();
-            }));
+            //    apiScope.Property(x => x.Scope).HasMaxLength(200).IsRequired();
+            //}));
+
+            modelBuilder.Entity<ApiResourceScope>().HasKey(e => new { e.ScopeId, e.ApiResourceId });
+
+            modelBuilder.Entity<ApiResourceScope>()
+                .HasOne(t => t.ApiResource)
+                .WithMany(t => t.Scopes)
+                .HasForeignKey(t => t.ApiResourceId);
+
+            modelBuilder.Entity<ApiResourceScope>()
+                .HasOne(t => t.Scope)
+                .WithMany(t => t.ApiResources)
+                .HasForeignKey(t => t.ScopeId);
 
             modelBuilder.Entity<ApiResourceProperty>(property =>
             {
@@ -251,9 +277,9 @@ namespace middlerApp.API.IDP
             });
 
 
-            modelBuilder.Entity<ApiScope>(scope =>
+            modelBuilder.Entity<Scope>(scope =>
             {
-                scope.ToTable("ApiScopes").HasKey(x => x.Id);
+                //scope.ToTable("ApiScopes").HasKey(x => x.Id);
 
                 scope.Property(x => x.Name).HasMaxLength(200).IsRequired();
                 scope.Property(x => x.DisplayName).HasMaxLength(200);
@@ -263,18 +289,18 @@ namespace middlerApp.API.IDP
 
                 scope.HasMany(x => x.UserClaims).WithOne(x => x.Scope).HasForeignKey(x => x.ScopeId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             });
-            modelBuilder.Entity<ApiScopeClaim>(scopeClaim =>
-            {
-                scopeClaim.ToTable("ApiScopeClaims").HasKey(x => x.Id);
+            //modelBuilder.Entity<ApiScopeClaim>(scopeClaim =>
+            //{
+            //    //scopeClaim.ToTable("ApiScopeClaims").HasKey(x => x.Id);
 
-                scopeClaim.Property(x => x.Type).HasMaxLength(200).IsRequired();
-            });
-            modelBuilder.Entity<ApiScopeProperty>(property =>
-            {
-                property.ToTable("ApiScopeProperties").HasKey(x => x.Id);
-                property.Property(x => x.Key).HasMaxLength(250).IsRequired();
-                property.Property(x => x.Value).HasMaxLength(2000).IsRequired();
-            });
+            //    scopeClaim.Property(x => x.Type).HasMaxLength(200).IsRequired();
+            //});
+            //modelBuilder.Entity<ApiScopeProperty>(property =>
+            //{
+            //    property.ToTable("ApiScopeProperties").HasKey(x => x.Id);
+            //    property.Property(x => x.Key).HasMaxLength(250).IsRequired();
+            //    property.Property(x => x.Value).HasMaxLength(2000).IsRequired();
+            //});
 
 
         }
@@ -335,11 +361,11 @@ namespace middlerApp.API.IDP
 
 
 
-            modelBuilder.Entity<UserConsent>().Property(p => p.Scopes)
-                .HasConversion(
-                    v => JsonConvert.SerializeObject(v),
-                    v => JsonConvert.DeserializeObject<List<string>>(v))
-                .Metadata.SetValueComparer(valueComparer);
+            //modelBuilder.Entity<UserConsent>().Property(p => p.Scopes)
+            //    .HasConversion(
+            //        v => JsonConvert.SerializeObject(v),
+            //        v => JsonConvert.DeserializeObject<List<string>>(v))
+            //    .Metadata.SetValueComparer(valueComparer);
 
 
 

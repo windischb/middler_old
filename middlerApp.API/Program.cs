@@ -45,9 +45,11 @@ namespace middlerApp.API
         private static void ConfigureLogging()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Verbose()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("IdentityServer4", LogEventLevel.Verbose)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
@@ -110,7 +112,16 @@ namespace middlerApp.API
             serverOptions.Listen(adminListenIp, config.AdminSettings.HttpsPort, options =>
             {
                 options.Protocols = HttpProtocols.Http1AndHttp2;
-                options.UseHttps(PathHelper.GetFullPath(config.AdminSettings.HttpsCertPath), config.AdminSettings.HttpsCertPassword);
+                options.UseHttps(PathHelper.GetFullPath(config.AdminSettings.HttpsCertPath),
+                    config.AdminSettings.HttpsCertPassword);
+            });
+
+            var idpListenIp = IPAddress.Parse(config.IdpSettings.ListeningIP);
+            serverOptions.Listen(idpListenIp, config.IdpSettings.HttpsPort, options =>
+            {
+                options.Protocols = HttpProtocols.Http1AndHttp2;
+                
+                options.UseHttps(PathHelper.GetFullPath(config.IdpSettings.HttpsCertPath), config.IdpSettings.HttpsCertPassword);
             });
 
         }

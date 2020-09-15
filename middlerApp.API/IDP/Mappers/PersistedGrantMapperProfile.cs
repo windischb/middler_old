@@ -4,7 +4,7 @@
 
 using AutoMapper;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     /// <summary>
     /// Defines entity/model mapping for persisted grants.
@@ -18,7 +18,7 @@ namespace middlerApp.API.IDP.Storage.Mappers
         /// </summary>
         public PersistedGrantMapperProfile()
         {
-            CreateMap<Entities.PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination)
+            CreateMap<Storage.Entities.PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination)
                 .ReverseMap();
         }
     }

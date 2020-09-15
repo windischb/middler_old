@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 
-namespace middlerApp.API.IDP.Storage.Mappers
+namespace middlerApp.API.IDP.Mappers
 {
     public class AuthorizationCodeMapperProfile: Profile
     {
         public AuthorizationCodeMapperProfile()
         {
-            CreateMap<Entities.AuthorizationCode, IdentityServer4.Models.AuthorizationCode>()
+            CreateMap<Storage.Entities.AuthorizationCode, IdentityServer4.Models.AuthorizationCode>()
                 .ReverseMap();
         }
     }

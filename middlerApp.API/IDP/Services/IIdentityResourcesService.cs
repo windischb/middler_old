@@ -11,16 +11,16 @@ namespace middlerApp.API.IDP.Services
     public interface IIdentityResourcesService
     {
 
-        Task<List<MIdentityResourceListDto>> GetAllIdentityResourceDtosAsync();
+        Task<List<MScopeListDto>> GetAllIdentityResourceDtosAsync();
 
-        Task<IdentityResource> GetIdentityResourceAsync(Guid id);
+        Task<Scope> GetIdentityResourceAsync(Guid id);
 
-        Task<MIdentityResourceDto> GetIdentityResourceDtoAsync(Guid id);
+        Task<MScopeDto> GetIdentityResourceDtoAsync(Guid id);
 
-        Task CreateIdentityResourceAsync(MIdentityResourceDto clientDto);
+        Task CreateIdentityResourceAsync(MScopeDto clientDto);
 
 
-        Task UpdateIdentityResourceAsync(IdentityResource updated);
+        Task UpdateIdentityResourceAsync(Scope updated);
         Task DeleteIdentityResourceAsync(params Guid[] id);
     }
 }

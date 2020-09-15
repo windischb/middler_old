@@ -133,7 +133,10 @@ namespace middlerApp.API.IDP.Services
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            return await _context.Users.FirstOrDefaultAsync(u => u.Subject == subject);
+            return await _context.Users
+                .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+                .Include(u => u.Claims)
+                .FirstOrDefaultAsync(u => u.Subject == subject);
         }
 
         public async Task AddUserAsync(MUser userToAdd)
@@ -375,6 +378,45 @@ namespace middlerApp.API.IDP.Services
             user.SecurityCode = null;
             // hash & salt the password
             user.Password = _passwordHasher.HashPassword(user, password);
+            return true;
+        }
+
+        public async Task<bool> SetPassword(Guid id, string password)
+        {
+           
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.SecurityCode = null;
+            // hash & salt the password
+            user.Password = _passwordHasher.HashPassword(user, password);
+            await _context.SaveChangesAsync();
+            EventDispatcher.DispatchUpdatedEvent("IDPUsers", _mapper.Map<MUserDto>(user));
+            return true;
+        }
+
+        public async Task<bool> ClearPassword(Guid id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.SecurityCode = null;
+            user.Password = null;
+            await _context.SaveChangesAsync();
+            EventDispatcher.DispatchUpdatedEvent("IDPUsers", _mapper.Map<MUserDto>(user));
             return true;
         }
 

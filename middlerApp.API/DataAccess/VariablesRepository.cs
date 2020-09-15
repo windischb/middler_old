@@ -14,14 +14,14 @@ namespace middlerApp.API.DataAccess
 {
     public class VariablesRepository : IVariablesRepository
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly APPDbContext _appDbContext;
 
         public IObservable<VariableStorageEvent> EventObservable => this.EventSubject.AsObservable();
 
         private Subject<VariableStorageEvent> EventSubject { get; } = new Subject<VariableStorageEvent>();
 
 
-        public VariablesRepository(AppDbContext appDbContext)
+        public VariablesRepository(APPDbContext appDbContext)
         {
             _appDbContext = appDbContext;
             //_appDbContext.Database.EnsureCreated();

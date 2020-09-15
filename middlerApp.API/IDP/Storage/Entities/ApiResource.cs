@@ -18,7 +18,7 @@ namespace middlerApp.API.IDP.Storage.Entities
         public string AllowedAccessTokenSigningAlgorithms { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
         public List<ApiResourceSecret> Secrets { get; set; }
-        public List<ApiResourceScope> Scopes { get; set; }
+        public List<ApiResourceScope> Scopes { get; set; } = new List<ApiResourceScope>();
         public List<ApiResourceClaim> UserClaims { get; set; }
         public List<ApiResourceProperty> Properties { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;

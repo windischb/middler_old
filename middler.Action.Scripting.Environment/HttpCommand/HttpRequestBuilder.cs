@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Nito.AsyncEx.Synchronous;
+using Reflectensions.ExtensionMethods;
 using Reflectensions.Helper;
 
 namespace middler.Scripting.HttpCommand
@@ -103,6 +104,16 @@ namespace middler.Scripting.HttpCommand
             return this;
         }
 
+        public HttpRequestBuilder SetBearerToken(string token)
+        {
+            return SetHeader("authorization", $"Bearer {token}");
+        }
+
+        public HttpRequestBuilder SetBasicAuthentication(string username, string password)
+        {
+            var cred = $"{username}:{password}".EncodeToBase64();
+            return SetHeader("authorization", $"Basic {cred}");
+        }
 
 
         public async Task<HttpResponse> SendRequestMessageAsync(HttpRequestMessage httpRequestMessage)

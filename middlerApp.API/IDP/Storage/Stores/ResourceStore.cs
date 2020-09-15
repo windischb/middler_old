@@ -10,7 +10,10 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using middlerApp.API.IDP.Storage.Mappers;
+using middlerApp.API.IDP.Mappers;
+using middlerApp.API.IDP.Storage.Entities;
+using ApiResource = IdentityServer4.Models.ApiResource;
+using IdentityResource = IdentityServer4.Models.IdentityResource;
 
 namespace middlerApp.API.IDP.Storage.Stores
 {
@@ -58,7 +61,7 @@ namespace middlerApp.API.IDP.Storage.Stores
 
             var apis = query
                 .Include(x => x.Secrets)
-                .Include(x => x.Scopes)
+                .Include(x => x.Scopes).ThenInclude(s => s.Scope).ThenInclude(s => s.UserClaims)
                 .Include(x => x.UserClaims)
                 .Include(x => x.Properties)
                 .AsNoTracking();
@@ -88,12 +91,12 @@ namespace middlerApp.API.IDP.Storage.Stores
 
             var query =
                 from api in Context.ApiResources
-                where api.Scopes.Where(x => names.Contains(x.Scope)).Any()
+                where api.Scopes.Where(x => names.Contains(x.Scope.Name)).Any()
                 select api;
 
-            var apis = query
+            var apis = Context.ApiResources
                 .Include(x => x.Secrets)
-                .Include(x => x.Scopes)
+                .Include(x => x.Scopes).ThenInclude(s => s.Scope).ThenInclude(s => s.UserClaims)
                 .Include(x => x.UserClaims)
                 .Include(x => x.Properties)
                 .AsNoTracking();
@@ -116,7 +119,7 @@ namespace middlerApp.API.IDP.Storage.Stores
             var scopes = scopeNames.ToArray();
 
             var query =
-                from identityResource in Context.IdentityResources
+                from identityResource in Context.Scopes.WhereIsIdentityResource()
                 where scopes.Contains(identityResource.Name)
                 select identityResource;
 
@@ -129,7 +132,8 @@ namespace middlerApp.API.IDP.Storage.Stores
 
             Logger.LogDebug("Found {scopes} identity scopes in database", results.Select(x => x.Name));
 
-            return results.Select(x => x.ToModel()).ToArray();
+            var arr = results.Select(x => x.ToIdentityResourceModel()).ToArray();
+            return arr;
         }
 
         /// <summary>
@@ -142,7 +146,7 @@ namespace middlerApp.API.IDP.Storage.Stores
             var scopes = scopeNames.ToArray();
 
             var query =
-                from scope in Context.ApiScopes
+                from scope in Context.Scopes.WhereIsApiScope()
                 where scopes.Contains(scope.Name)
                 select scope;
 
@@ -155,7 +159,8 @@ namespace middlerApp.API.IDP.Storage.Stores
 
             Logger.LogDebug("Found {scopes} scopes in database", results.Select(x => x.Name));
 
-            return results.Select(x => x.ToModel()).ToArray();
+            var arr = results.Select(x => x.ToApiScopeModel()).ToArray();
+            return arr;
         }
 
         /// <summary>
@@ -164,26 +169,26 @@ namespace middlerApp.API.IDP.Storage.Stores
         /// <returns></returns>
         public virtual async Task<Resources> GetAllResourcesAsync()
         {
-            var identity = Context.IdentityResources
+            var identity = Context.Scopes.WhereIsIdentityResource()
               .Include(x => x.UserClaims)
               .Include(x => x.Properties);
 
             var apis = Context.ApiResources
                 .Include(x => x.Secrets)
-                .Include(x => x.Scopes)
+                .Include(x => x.Scopes).ThenInclude(s => s.Scope)
                 .Include(x => x.UserClaims)
                 .Include(x => x.Properties)
                 .AsNoTracking();
             
-            var scopes = Context.ApiScopes
+            var scopes = Context.Scopes.WhereIsApiScope()
                 .Include(x => x.UserClaims)
                 .Include(x => x.Properties)
                 .AsNoTracking();
 
             var result = new Resources(
-                (await identity.ToArrayAsync()).Select(x => x.ToModel()),
+                (await identity.ToArrayAsync()).Select(x => x.ToIdentityResourceModel()),
                 (await apis.ToArrayAsync()).Select(x => x.ToModel()),
-                (await scopes.ToArrayAsync()).Select(x => x.ToModel())
+                (await scopes.ToArrayAsync()).Select(x => x.ToApiScopeModel())
             );
 
             Logger.LogDebug("Found {scopes} as all scopes, and {apis} as API resources", 

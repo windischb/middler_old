@@ -1,0 +1,133 @@
+<div class="outer" style="flex-grow: 1; height:100%" cdkDropList #nullList="cdkDropList"
+    (contextmenu)="OpenOuterContextMenu($event, outerContextMenu)">
+    <div style="padding: 2px; margin-top: 8px; max-height: calc(100% - 30px); overflow-y: auto;"
+        cdkDropList (cdkDropListDropped)="drop($event)" #rulesList="cdkDropList">
+        <div *ngIf="((actions$ | async) || []).length === 0"
+            style="text-align: center; font-size: 1.3em; font-weight: bold; color: #525e7678; line-height: 1.4em; line-height: 2em; margin: 0px 10px;">
+            <div style="font-size: 1.5em;">Currently there is nothing...</div>
+            <p>Use the ContextMenu to create your first action!</p>
+        </div>
+
+        <!-- <div class="action-item" *ngFor="let action of (actions$ | async); let i = index;"
+            [class.selected]="action.Selected" (click)="clickAction($event, action)"
+            (contextmenu)="contextAction($event, action)" cdkDrag cdkDragLockAxis="y">
+            <div style="display: flex;">
+                <div class="dragHandle" style="padding: 10px 3px 0px 5px;" cdkDragHandle>
+                    <div class="title-icon" *ngIf="prepareIcon(GetIcon(action.Item)); let icon">
+                        <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 42px; text-align: left;"
+                            nz-icon [nzType]="icon.icon" nzTheme="outline"></i>
+                        <fa-icon *ngIf="icon.type == 'fa'" style="font-size: xx-large; width: 42px; text-align: left;"
+                            nz-icon [icon]="icon.icon"></fa-icon>
+                    </div>
+                </div>
+                <div style="padding: 5px; min-width: 50%; max-width: 50%;">
+                    <div>
+
+                        <h2>{{action.Item.ActionType}}</h2>
+                    </div>
+                    <action-list-details [action]="action.Item"></action-list-details>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="action-item" *ngFor="let action of (actions$ | async); let i = index;" [class.selected]="IsActionSelected(action)"
+            [class.disabled]="!action.Enabled" (click)="ClickAction($event, action)" (dblclick)="openModal(action)"
+            (contextmenu)="openItemContextMenu($event, itemContextMenu, action)" cdkDrag cdkDragLockAxis="y">
+            <div style="display: flex;">
+                <div class="dragHandle" style="padding: 10px 0px 0px 5px;" cdkDragHandle>
+                    <div class="title-icon" *ngIf="prepareIcon(GetIcon(action)); let icon">
+                        <i *ngIf="icon.type == 'ant'" style="font-size: xx-large; width: 40px; text-align: left;"
+                            nz-icon [nzType]="icon.icon" nzTheme="outline"></i>
+                        <fa-icon *ngIf="icon.type == 'fa'" style="font-size: xx-large; width: 40px; text-align: left;"
+                            nz-icon [icon]="icon.icon"></fa-icon>
+                    </div>
+                </div>
+                <div style="padding: 5px; min-width: 50%; max-width: 50%;">
+                    <div style="font-size: large; font-weight: bold; color: #292f3b;">{{action.ActionType}}</div>
+                    <action-list-details [action]="action"></action-list-details>
+                    <!-- <div>{{rule.Item.Order}}</div> -->
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<ng-template #outerContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-submenu nzTitle="Add Action" nzIcon="menu-unfold">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="CreateAction('UrlRedirect', 'bottom')" >
+                    <i nz-icon nzType="rollback" nzTheme="outline"></i>
+                    UrlRedirect
+                </li>
+                <li nz-menu-item (click)="CreateAction('UrlRewrite', 'bottom')" >
+                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                    UrlRewrite
+                </li>
+                <li nz-menu-item (click)="CreateAction('Script', 'bottom')" >
+                    <i nz-icon nzType="code" nzTheme="outline"></i>
+                    Script
+                </li>
+            </ul>
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #itemContextMenu let-context>
+    <ul nz-menu nzMode="vertical" class="context-menu">
+        <li nz-menu-item (click)="SetActionEnabled(context.Single, true)" *ngIf="context.Single?.Enabled === false">
+            <fa-icon nz-icon [icon]="['fas', 'toggle-on']"></fa-icon>
+            Enable
+        </li>
+        <li nz-menu-item (click)="SetActionEnabled(context.Single, false)" *ngIf="context.Single?.Enabled === true">
+            <fa-icon nz-icon [icon]="['fas', 'toggle-off']"></fa-icon>
+            Disable
+        </li>
+        <li nz-menu-item (click)="openModal(context.Single)" *ngIf="context.Single">
+            <i nz-icon nzType="form" nzTheme="outline"></i>
+            Edit
+        </li>
+        <li nz-submenu nzTitle="Add Action Before" *ngIf="context.Single" nzIcon="up">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="CreateAction('UrlRedirect', 'before', context.Single)" >
+                    <i nz-icon nzType="rollback" nzTheme="outline"></i>
+                    UrlRedirect
+                </li>
+                <li nz-menu-item (click)="CreateAction('UrlRewrite', 'before', context.Single)" >
+                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                    UrlRewrite
+                </li>
+                <li nz-menu-item (click)="CreateAction('Script', 'before', context.Single)" >
+                    <i nz-icon nzType="code" nzTheme="outline"></i>
+                    Script
+                </li>
+            </ul>
+        </li>
+        <li nz-submenu nzTitle="Add Action After" *ngIf="context.Single" nzIcon="down">
+            <ul class="context-menu">
+                <li nz-menu-item (click)="CreateAction('UrlRedirect', 'after', context.Single)" >
+                    <i nz-icon nzType="rollback" nzTheme="outline"></i>
+                    UrlRedirect
+                </li>
+                <li nz-menu-item (click)="CreateAction('UrlRewrite', 'after', context.Single)" >
+                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                    UrlRewrite
+                </li>
+                <li nz-menu-item (click)="CreateAction('Script', 'after', context.Single)" >
+                    <i nz-icon nzType="code" nzTheme="outline"></i>
+                    Script
+                </li>
+            </ul>
+        </li>
+        <li nz-menu-divider></li>
+        <li nz-menu-item (click)="RemoveActions(context.Selected)">
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            Remove
+        </li>
+    </ul>
+</ng-template>
